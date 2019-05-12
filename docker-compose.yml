@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  db:
+    image: mariadb
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: escapehome
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+
+    volumes:
+      - ./mariadb/data:/var/lib/mysql
+      - ./backups:/home/backups
+
+  web:
+    build: .
+    volumes:
+      - .:/escapehome
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    restart: always
+    command: python ./escapehome/manage.py runserver 0.0.0.0:8000 --settings=escapehome.settings.local
