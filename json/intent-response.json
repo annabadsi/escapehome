@@ -1,0 +1,25 @@
+{
+	"body": {
+		"version": "1.0",
+		"response": {
+			"outputSpeech": {
+				"type": "PlainText",
+				"text": "Das hier ist eine Testansage"
+			},
+			"card": {
+				"type": "Simple",
+				"title": "SessionSpeechlet - Test",
+				"content": "SessionSpeechlet - Das hier ist eine Testansage"
+			},
+			"reprompt": {
+				"outputSpeech": {
+					"type": "PlainText",
+					"text": "Der Test hat geklaaaahappt"
+				}
+			},
+			"shouldEndSession": false,
+			"type": "_DEFAULT_RESPONSE"
+		},
+		"sessionAttributes": {}
+	}
+}
