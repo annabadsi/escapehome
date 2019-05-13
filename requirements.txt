@@ -1,0 +1,5 @@
+# home automation platform
+homeassistant==0.92.2
+
+# library for Philips Hue
+phue==1.1
