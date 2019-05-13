@@ -1,28 +1,20 @@
 run:
-ifeq ($(USE), docker)
-	docker-compose up -d	
-else 
-	python escapehome/manage.py runserver 
-endif
+	docker-compose up -d
+
+bash: 
+	docker-compose exec web bash 
+
+shell:
+	docker-compose exec web python escapehome/manage.py shell
 
 makemigrations: 
-ifeq ($(USE), docker)
-	docker-compose exec web python escapehome/manage.py makemigrations	
-else 
-	python escapehome/manage.py makemigrations 
-endif
+	docker-compose exec web python escapehome/manage.py makemigrations
 
 migrate: 
-ifeq ($(USE), docker)
-	docker-compose exec web python escapehome/manage.py migrate	
-else 
-	python escapehome/manage.py migrate 
-endif
+	docker-compose exec web python escapehome/manage.py migrate
 
 stop: 
-ifeq ($(USE), docker)
 	docker-compose stop
-endif
 
 logs: 
 	docker-compose logs -f 
