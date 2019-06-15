@@ -1,1 +1,1 @@
-from escapehome.settings.common import * 
+from escapehome.settings.common import *
