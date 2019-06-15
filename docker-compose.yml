@@ -11,6 +11,7 @@ services:
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
 
+
     volumes:
       - ./mariadb/data:/var/lib/mysql
       - ./backups:/home/backups

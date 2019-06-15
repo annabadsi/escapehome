@@ -46,6 +46,7 @@ or for your local installation
 cd escapehome
 python manage.py runserver
 ```
-
+# enviroment varibales
+to set the Alexa-Skill id go to the projectfolder (escapehome) and add the var ALEXA_APP_ID_escapehome to the new Alexa-Skill ID at the .env file (if you can not see it remember its a hidden file :D )
 # Helpful 
 * [Django Tutorial](https://docs.djangoproject.com/en/2.2/intro/tutorial01/)
