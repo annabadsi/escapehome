@@ -1,9 +1,6 @@
 #common requirements
 requests==2.22.0
 
-#for homeautomation
-homeassistant==0.92.2
-
 # specific library
 # library for Philips Hue
 phue==1.1
