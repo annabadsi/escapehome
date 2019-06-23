@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from core.models import Scenario, Riddle, Device, Lamp, Command
+from core.models import *
 
 
 @admin.register(Scenario)
@@ -17,8 +17,25 @@ class ScenariosAdmin(admin.ModelAdmin):
         'show_riddles',
     )
 
-    def show_riddles(self, obj):
+    def show_riddles(self, obj: Scenario):
         return [riddle.get('task') for riddle in obj.riddles.values('task')]
+
+
+@admin.register(ActiveScenario)
+class ActiveScenarioAdmin(admin.ModelAdmin):
+    search_fields = [
+        'scenario__name',
+    ]
+
+    list_display = (
+        'get_scenario',
+        'duration',
+        'score',
+        'state'
+    )
+
+    def get_scenario(self, obj: ActiveScenario):
+        return obj.scenario.name
 
 
 @admin.register(Riddle)

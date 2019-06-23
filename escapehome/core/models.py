@@ -69,3 +69,10 @@ class Scenario(models.Model):
     def __str__(self):
         return f'Scenario {self.id} - {self.name}'
 
+
+class ActiveScenario(models.Model):
+    scenario = models.ForeignKey(Scenario, on_delete=models.DO_NOTHING, related_name='active_scenarios')
+    players = models.IntegerField(blank=True, null=True)
+    duration = models.DurationField(blank=True, null=True)
+    score = models.IntegerField(default=0)
+    state = models.IntegerField(default=0)

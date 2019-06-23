@@ -1,13 +1,11 @@
-from core.models import Scenario
+from core.models import Scenario, ActiveScenario
 
 
-def choose_scenario(name):
+def choose_scenario(name, players):
     scenarios = Scenario.objects.filter(name__contains=name)
-    speech = f'Gut, lass uns mit dem Szenario "{name}" loslegen.'
 
     if scenarios:
-        scenario = scenarios[0]
-        return speech + f'<p>Um folgendes wird es gehen:</p> {scenario.description}'
+        active_scenario = ActiveScenario.objects.create(scenario=scenarios[0], players=players)
+        return f'<p>Um folgendes wird es gehen:</p> {active_scenario.scenario.description}'
     else:
-        return speech + f'<p>ich habe kein Szenario mit diesem Namen gefunden!</p>'
-
+        return f'<p>ich habe kein Szenario mit diesem Namen gefunden!</p>'

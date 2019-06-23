@@ -2,6 +2,8 @@ import logging
 
 from ask_sdk_core.skill_builder import SkillBuilder
 from ask_sdk_core.utils import is_request_type, is_intent_name
+from ask_sdk_model import DialogState
+from ask_sdk_model.dialog import DelegateDirective
 from ask_sdk_model.ui import SimpleCard
 
 from alexa.skills.scenario import choose_scenario
@@ -35,23 +37,38 @@ def launch_request_handler(handler_input):
     ).response
 
 
-@sb.request_handler(can_handle_func=is_intent_name("ChooseScenario"))
+@sb.request_handler(can_handle_func=lambda i: is_intent_name('ChooseScenario')(
+    i) and i.request_envelope.request.dialog_state == DialogState.COMPLETED)
 def choose_sceanrio_intent_handler(handler_input):
     """Handler for Choose Scenario Intent."""
 
     slots = handler_input.request_envelope.request.intent.slots
-    speech_text = choose_scenario(slots.get("scenario").value)
+    speech_text = choose_scenario(
+        slots.get("scenario").value,
+        slots.get("players").value
+    )
 
     return handler_input.response_builder.speak(
         speech_text
     ).set_card(
         SimpleCard(
-            "Wähle ein Szenario",
+            "Szenario Auswahl",
             speech_text
         )
     ).set_should_end_session(
-        True
+        False
     ).response
+
+
+@sb.request_handler(can_handle_func=lambda i: is_intent_name('ChooseScenario')(
+    i) and i.request_envelope.request.dialog_state != DialogState.COMPLETED)
+def in_progress_choose_sceanrio_intent_handler(handler_input):
+    current_intent = handler_input.request_envelope.request.intent
+
+    return handler_input.response_builder.add_directive(
+        DelegateDirective(
+            updated_intent=current_intent
+        )).response
 
 
 @sb.request_handler(can_handle_func=is_intent_name("AMAZON.HelpIntent"))

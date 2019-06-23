@@ -1,5 +1,5 @@
 # TODO: Dump automatisch nach DB Ändernungen in JSON-Datei von Skill speichern und updaten
-
+# TODO  SMAPI verwenden (OAuth (Login with Amazon): https://developer.amazon.com/docs/smapi/smapi-overview.html
 import json
 from django.apps import apps
 

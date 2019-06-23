@@ -33,7 +33,7 @@
           "slots": [
             {
               "name": "scenario",
-              "type": "AMAZON.Animal",
+              "type": "ESCAPEHOME_Scenario",
               "samples": [
                 "{scenario} mit {players} Spielern ",
                 "{scenario}",
@@ -92,7 +92,7 @@
           "slots": [
             {
               "name": "scenario",
-              "type": "AMAZON.Animal",
+              "type": "ESCAPEHOME_Scenario",
               "elicitationRequired": true,
               "confirmationRequired": false,
               "prompts": {
@@ -140,26 +140,8 @@
             "value": "Wie viele Spielen mit?"
           }
         ]
-      },
-      {
-        "id": "Confirm.Slot.381641564178.783526107821",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Prima, lass uns {scenario} spielen"
-          }
-        ]
-      },
-      {
-        "id": "Confirm.Slot.381641564178.746518702677",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Sehr gut, dann sind wir wohl mit {players} Spielern"
-          }
-        ]
       }
     ]
   },
-  "version": "13"
+  "version": "16"
 }
