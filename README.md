@@ -59,14 +59,14 @@ Alexa Skills Kit Command Line Interface
 https://developer.amazon.com/docs/smapi/quick-start-alexa-skills-kit-command-line-interface.html
 
 
-**get-skill**
+**get-skill** 
 ```
 ask api get-skill -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29 --stage development > json/skill.json
 ```
 
 **get-model**
 ```
-    ask api get-model -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29 --stage development -l de-DE > json/model.json
+ask api get-model -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29 --stage development -l de-DE > json/model.json
 ```
 
 **update-model**
@@ -78,6 +78,12 @@ ask api update-model -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29 -f 
 ```
 ask api get-skill-status -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29
 ```
+
+## Update Custom Slot Types
+1. `model_dump.py` ausführen
+2. `make update-model`
+3. `make skill-status`
+
 
 # Helpful 
 * [Django Tutorial](https://docs.djangoproject.com/en/2.2/intro/tutorial01/)
