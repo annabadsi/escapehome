@@ -70,6 +70,11 @@
               "name": {
                 "value": "lustige Lichter"
               }
+            },
+            {
+              "name": {
+                "value": "quiz fragen"
+              }
             }
           ],
           "name": "ESCAPEHOME_Scenario"
