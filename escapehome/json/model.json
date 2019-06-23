@@ -1,0 +1,160 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "escape home",
+      "intents": [
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": [
+            "was muss ich tun",
+            "ich verstehe diesen skill nicht",
+            "hilf mir",
+            "ich weiß nicht was ich tun soll"
+          ]
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "ChooseScenario",
+          "slots": [
+            {
+              "name": "scenario",
+              "type": "AMAZON.Animal",
+              "samples": [
+                "{scenario} mit {players} Spielern ",
+                "{scenario}",
+                "ich möchte {scenario} spielen",
+                "ich will {scenario} spielen",
+                "lass uns {scenario} spielen"
+              ]
+            },
+            {
+              "name": "players",
+              "type": "AMAZON.NUMBER",
+              "samples": [
+                "{players}",
+                "{players} Personen",
+                "es spielen {players} Personen mit",
+                "es werden {players} Personen mitspielen"
+              ]
+            }
+          ],
+          "samples": [
+            "{scenario}",
+            "wir spielen mit {players} Spielern",
+            "ich will {scenario} spielen",
+            "ich möchte {scenario} spielen",
+            "lass uns {scenario} mit {players} Personen spielen",
+            "ich möchte {scenario} zu {players} spielen"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "values": [
+            {
+              "name": {
+                "value": "lustige Lichter"
+              }
+            }
+          ],
+          "name": "ESCAPEHOME_Scenario"
+        }
+      ]
+    },
+    "dialog": {
+      "intents": [
+        {
+          "name": "ChooseScenario",
+          "confirmationRequired": true,
+          "prompts": {
+            "confirmation": "Confirm.Intent.381641564178"
+          },
+          "slots": [
+            {
+              "name": "scenario",
+              "type": "AMAZON.Animal",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.381641564178.783526107821"
+              }
+            },
+            {
+              "name": "players",
+              "type": "AMAZON.NUMBER",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.381641564178.746518702677"
+              }
+            }
+          ]
+        }
+      ],
+      "delegationStrategy": "SKILL_RESPONSE"
+    },
+    "prompts": [
+      {
+        "id": "Elicit.Slot.381641564178.783526107821",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Welches Szenario willst du spielen?"
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Intent.381641564178",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Super, wir spielen {scenario} mit {players} Spielern"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.381641564178.746518702677",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Wie viele Spielen mit?"
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Slot.381641564178.783526107821",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Prima, lass uns {scenario} spielen"
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Slot.381641564178.746518702677",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Sehr gut, dann sind wir wohl mit {players} Spielern"
+          }
+        ]
+      }
+    ]
+  },
+  "version": "13"
+}
