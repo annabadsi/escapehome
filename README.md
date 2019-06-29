@@ -48,5 +48,42 @@ python manage.py runserver
 ```
 # enviroment varibales
 to set the Alexa-Skill id go to the projectfolder (escapehome) and add the var ALEXA_APP_ID_escapehome to the new Alexa-Skill ID at the .env file (if you can not see it remember its a hidden file :D )
+
+# Endpoints
+1. POST - `api/ready`  
+Body: `{"text":"was gibt es neues?"}`
+
+
+# ASK CLI
+Alexa Skills Kit Command Line Interface  
+https://developer.amazon.com/docs/smapi/quick-start-alexa-skills-kit-command-line-interface.html
+
+
+**get-skill** 
+```
+ask api get-skill -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29 --stage development > json/skill.json
+```
+
+**get-model**
+```
+ask api get-model -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29 --stage development -l de-DE > json/model.json
+```
+
+**update-model**
+```
+ask api update-model -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29 -f json/model.json -l de-DE --stage development
+```
+
+**get-skill-status**
+```
+ask api get-skill-status -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29
+```
+
+## Update Custom Slot Types
+1. `model_dump.py` ausführen
+2. `make update-model`
+3. `make skill-status`
+
+
 # Helpful 
 * [Django Tutorial](https://docs.djangoproject.com/en/2.2/intro/tutorial01/)

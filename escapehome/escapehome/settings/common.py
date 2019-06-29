@@ -37,8 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_alexa',
     'rest_framework',
+    'core',
+    'api',
+    'django_ask_sdk'
+    # 'django_alexa',
 ]
 
 MIDDLEWARE = [
