@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'core',
     'api',
     'django_ask_sdk'
-    # 'django_alexa',
 ]
 
 MIDDLEWARE = [
