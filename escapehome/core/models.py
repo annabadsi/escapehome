@@ -61,7 +61,7 @@ class Scenario(models.Model):
     description = models.TextField(blank=True)
     riddles = models.ManyToManyField(Riddle, related_name='scenario')
     severity = models.CharField(max_length=255, default=MEDIUM, choices=STATUS_CHOICES, blank=True)
-    length = models.DurationField(default="00:30:00", blank=True, null=True)
+    length = models.DurationField(blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "Scenarios"
