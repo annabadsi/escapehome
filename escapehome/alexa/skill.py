@@ -25,6 +25,9 @@ def launch_request_handler(handler_input):
         f'<p>Welches möchtest du spielen?</p>'
     )
 
+    session_id = handler_input.request_envelope.session.session_id
+    print(session_id)
+
     return handler_input.response_builder.speak(
         speech_text
     ).set_card(
@@ -47,6 +50,8 @@ def choose_sceanrio_intent_handler(handler_input):
         slots.get("scenario").value,
         slots.get("players").value
     )
+
+    handler_input.attributes_manager.session_attributes['current_scenario'] = slots.get("scenario").value
 
     return handler_input.response_builder.speak(
         speech_text
@@ -75,7 +80,6 @@ def in_progress_choose_sceanrio_intent_handler(handler_input):
 def help_intent_handler(handler_input):
     """Handler for Help Intent."""
     speech_text = "Wähle ein Szenarium aus!"
-
     return handler_input.response_builder.speak(
         speech_text
     ).ask(
@@ -114,7 +118,7 @@ def fallback_handler(handler_input):
     """AMAZON.FallbackIntent is only available in en-US locale.
     This handler will not be triggered except in that locale, so it is safe to deploy on any locale."""
     speech = "Ich weiß nicht was du meinst."
-    reprompt = "Wähle ein Szenario aus."
+    reprompt = "Kannst du das wiederholen?"
     handler_input.response_builder.speak(speech).ask(reprompt)
     return handler_input.response_builder.response
 
