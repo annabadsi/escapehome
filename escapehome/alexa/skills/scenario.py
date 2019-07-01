@@ -1,11 +1,16 @@
-from core.models import Scenario, ActiveScenario
+from core.models import Scenario
 
-
+# TODO: kann eigentlich weg
 def choose_scenario(name, players):
-    scenarios = Scenario.objects.filter(name__contains=name)
+    scenario = Scenario.objects.get(name__contains=name)
 
-    if scenarios:
-        active_scenario = ActiveScenario.objects.create(scenario=scenarios[0], players=players)
-        return f'<p>Um folgendes wird es gehen:</p> {active_scenario.scenario.description}'
+    if scenario:
+        return (
+            scenario,
+            f'<p>Um folgendes wird es gehen:</p> {scenario.description}'
+        )
     else:
-        return f'<p>ich habe kein Szenario mit diesem Namen gefunden!</p>'
+        return (
+            None,
+            f'<p>ich habe kein Szenario mit diesem Namen gefunden!</p>'
+        )

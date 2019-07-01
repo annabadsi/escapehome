@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 
 
 class Device(models.Model):
@@ -32,11 +33,11 @@ class Riddle(models.Model):
     id = models.AutoField(primary_key=True)
     task = models.TextField()
     solution = models.TextField()
-    code = models.CharField(max_length=255)
+    code = models.IntegerField()
     commands = models.ManyToManyField(Command, blank=True, related_name='riddle')
     hints = models.TextField(blank=True)
-    correct = models.TextField(blank=True)
-    incorrect = models.TextField(blank=True)
+    correct = models.TextField(blank=True, default="Grandios, dass war richtig.")
+    incorrect = models.TextField(blank=True, default="Schade, dass war leider falsch, versuch es doch nochmal.")
 
     class Meta:
         verbose_name_plural = "Riddles"
@@ -69,10 +70,16 @@ class Scenario(models.Model):
     def __str__(self):
         return f'Scenario {self.id} - {self.name}'
 
+    @property
+    def possible_points(self):
+        return self.riddles.aggregate(Sum('code'))['code__sum']
+
 
 class ActiveScenario(models.Model):
-    scenario = models.ForeignKey(Scenario, on_delete=models.DO_NOTHING, related_name='active_scenarios')
+    scenario = models.ForeignKey(Scenario, on_delete=models.DO_NOTHING, related_name='active_scenarios', blank=True, null=True)
+    riddle = models.ForeignKey(Riddle, on_delete=models.DO_NOTHING, related_name='active_riddles', blank=True, null=True)
+    user = models.CharField(max_length=255)
     players = models.IntegerField(blank=True, null=True)
     duration = models.DurationField(blank=True, null=True)
     score = models.IntegerField(default=0)
-    state = models.IntegerField(default=0)
+    state = models.IntegerField(blank=True, null=True)
