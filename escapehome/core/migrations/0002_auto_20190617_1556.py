@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='scenario',
             name='length',
-            field=models.DurationField(blank=True, default='00:30:00', null=True),
+            field=models.DurationField(blank=True, null=True),
         ),
     ]
