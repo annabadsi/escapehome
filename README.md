@@ -53,8 +53,9 @@ to set the Alexa-Skill id go to the projectfolder (escapehome) and add the var A
 1. POST - `api/ready`  
 Body: `{"text":"was gibt es neues?"}`
 
+# Alexa Skill Management 
 
-# ASK CLI
+## ASK CLI
 Alexa Skills Kit Command Line Interface  
 https://developer.amazon.com/docs/smapi/quick-start-alexa-skills-kit-command-line-interface.html
 
@@ -77,6 +78,30 @@ ask api update-model -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29 -f 
 **get-skill-status**
 ```
 ask api get-skill-status -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29
+```
+
+## SMAPI
+Skill Management API
+https://developer.amazon.com/docs/smapi/smapi-overview.html
+
+**[get-skill](https://developer.amazon.com/docs/smapi/skill-operations.html#get-skill-information)**
+```
+GET  /v1/skills/{skillId}/stages/{stage}/manifest
+```
+
+**[get-model](https://developer.amazon.com/docs/smapi/interaction-model-operations.html#get-interaction-model)**
+```
+GET /v1/skills/{skillId}/stages/{stage}/interactionModel/locales/{locale}
+```
+
+**[update-model](https://developer.amazon.com/docs/smapi/interaction-model-operations.html#update-interaction-model)**
+```
+PUT /v1/skills/{skillId}/stages/{stage}/interactionModel/locales/{locale}
+```
+
+**[get-skill-status](https://developer.amazon.com/docs/smapi/skill-operations.html#get-skill-status)**
+```
+GET /v1/skills/{skillId}/status?resource={resource1}&resource={resource2}
 ```
 
 # Locales Arbeiten mit Alexa
