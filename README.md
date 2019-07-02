@@ -89,7 +89,6 @@ __NGROK einrichten__
 * Django starten (mit oder ohne Docker)
 
 __Daten aus dem Dump übertagen__
-* `python manage.py dumpdata > db.json`
 * `python manage.py migrate`
 * `python manage.py shell` 
 * Enter the following in the shell
@@ -97,7 +96,7 @@ __Daten aus dem Dump übertagen__
   from django.contrib.contenttypes.models import ContentType
   ContentType.objects.all().delete()
   ```
-* `python manage.py loaddata db.json`
+* `python manage.py loaddata db_dump.json`
 
 
 ## Update Custom Slot Types
