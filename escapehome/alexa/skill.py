@@ -29,7 +29,6 @@ def launch_request_handler(handler_input):
     if created or not active_scenario.scenario:
         if Scenario.objects.count() > 1:
             speech_text = (
-                f'{Scenario.objects.values()}'
                 f'Willkommen zu <lang xml:lang="en-US">Escape Home</lang>! '
                 f'<p>Es gibt {Scenario.objects.count()} verschiedene Szenarien:</p> '
                 f'{" oder ".join(Scenario.objects.values_list("name", flat=True))} '
