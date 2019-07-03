@@ -27,6 +27,8 @@ def launch_request_handler(handler_input):
     active_scenario, created = ActiveScenario.objects.get_or_create(user=user)
 
     if created or not active_scenario.scenario:
+        # TODO: Würde ich nochmal umschreiben (Simplecard ist gleich, Join geht auch mit einem Listenelement, nur den einen Satz austauschen
+        # TODO: Erfüllt nicht den Sinn von Dialog!
         if Scenario.objects.count() > 1:
             speech_text = (
                 f'Willkommen zu <lang xml:lang="en-US">Escape Home</lang>! '
@@ -156,9 +158,10 @@ def pose_riddle_intent_handler(handler_input):
             )
             set_should_end_session = True
 
+            # TODO: Ist die Frage ob das gelöscht werden soll oder lieber erhalten bleiben,
+            #  ich würde leiber ein Flag setzen der anzeigt das es beendet wurde..
             user = handler_input.request_envelope.context.system.user.user_id
-            active_scenario = ActiveScenario.objects.get(user=user)
-            active_scenario.delete()
+            ActiveScenario.objects.get(user=user).delete()
         else:
             next_riddle = scenario.riddles.all()[counter]
             speech_text = f'<p>{correct}</p>\n\n<p>Auf zum nächsten Rätsel:</p>\n<p>{next_riddle.task}</p>'
@@ -268,15 +271,15 @@ def fallback_handler(handler_input):
         speech_text = f'<p>{riddle.incorrect}</p>'
         session_attributes['score'] += MINUS_POINTS
 
-    return handler_input.response_builder\
-        .speak(speech_text)\
-        .ask(speech_text)\
-        .set_card(
+    return handler_input.response_builder.speak(
+        speech_text
+    ).ask(
+        speech_text
+    ).set_card(
         SimpleCard(
             "Du brauchst Hilfe?",
             BeautifulSoup(speech_text, features="html.parser").text)
-        )\
-        .response
+    ).response
 
 
 @sb.request_handler(can_handle_func=is_request_type("SessionEndedRequest"))
