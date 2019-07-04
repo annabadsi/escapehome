@@ -14,8 +14,14 @@
         {
           "name": "AMAZON.HelpIntent",
           "samples": [
+            "hilfe",
+            "ich bin doof",
+            "weiß ich nicht",
+            "keine Ahnung",
+            "ich weiß nicht weiter",
+            "kannst du mir einen Tipp geben",
+            "Gib mir einen Hinweis",
             "was muss ich tun",
-            "ich verstehe diesen skill nicht",
             "hilf mir",
             "ich weiß nicht was ich tun soll"
           ]
@@ -54,12 +60,36 @@
             }
           ],
           "samples": [
+            "{players}",
+            "{scenario} mit {players} Spielern",
+            "{scenario} mit {players} Personen",
+            "ich will {scenario} mit {players} Personen spielen",
             "{scenario}",
             "wir spielen mit {players} Spielern",
             "ich will {scenario} spielen",
             "ich möchte {scenario} spielen",
             "lass uns {scenario} mit {players} Personen spielen",
             "ich möchte {scenario} zu {players} spielen"
+          ]
+        },
+        {
+          "name": "PoseRiddle",
+          "slots": [
+            {
+              "name": "answer",
+              "type": "ESCAPEHOME_Riddle"
+            },
+            {
+              "name": "number",
+              "type": "AMAZON.NUMBER"
+            }
+          ],
+          "samples": [
+            "die Antwort ist {answer}",
+            "ich glaube die Antwort ist {number}",
+            "ich glaube die Antwort ist {answer}",
+            "{number}",
+            "{answer}"
           ]
         }
       ],
@@ -78,6 +108,36 @@
             }
           ],
           "name": "ESCAPEHOME_Scenario"
+        },
+        {
+          "values": [
+            {
+              "name": {
+                "value": "was du willst"
+              }
+            },
+            {
+              "name": {
+                "value": "einfach nichts"
+              }
+            },
+            {
+              "name": {
+                "value": "feiner Sand"
+              }
+            },
+            {
+              "name": {
+                "value": "weil sie Insekten sind"
+              }
+            },
+            {
+              "name": {
+                "value": "paulchen panther"
+              }
+            }
+          ],
+          "name": "ESCAPEHOME_Riddle"
         }
       ]
     },
@@ -128,7 +188,7 @@
         "variations": [
           {
             "type": "PlainText",
-            "value": "Super, wir spielen {scenario} mit {players} Spielern"
+            "value": "Super, also ist die Anzahl an Spielern {players} und wir spielen das Szenario {scenario} , stimmt's?"
           }
         ]
       },
@@ -137,11 +197,29 @@
         "variations": [
           {
             "type": "PlainText",
-            "value": "Wie viele Spielen mit?"
+            "value": "Wie viele spielen mit?"
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Slot.381641564178.783526107821",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Prima, lass uns {scenario} spielen"
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Slot.381641564178.746518702677",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Sehr gut, dann sind wir wohl mit {players} Spielern"
           }
         ]
       }
     ]
   },
-  "version": "16"
+  "version": "30"
 }
