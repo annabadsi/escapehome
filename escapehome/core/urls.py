@@ -1,5 +1,7 @@
-from django.urls import path, include
+from django.urls import path
+
+from . import views
 
 urlpatterns = [
-    # add paths here
+    path('', views.privacy, name='privacy'),
 ]

@@ -28,6 +28,7 @@ class ActiveScenarioAdmin(admin.ModelAdmin):
     ]
 
     list_display = (
+        'id',
         'get_scenario',
         'duration',
         'score',
@@ -35,7 +36,7 @@ class ActiveScenarioAdmin(admin.ModelAdmin):
     )
 
     def get_scenario(self, obj: ActiveScenario):
-        return obj.scenario.name
+        return obj.scenario.name if obj.scenario else ''
 
 
 @admin.register(Riddle)

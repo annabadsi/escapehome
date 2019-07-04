@@ -97,6 +97,26 @@ ask api update-model -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29 -f 
 ask api get-skill-status -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29
 ```
 
+# Locales Arbeiten mit Alexa
+__NGROK einrichten__
+* ngrok runterladen > https://ngrok.com/download
+* starten: `./ngrok http 8000`
+* generierte URL kopieren
+    * in Alexa Developer Console > Entpoints anpassen `https://<nummer>.ngrok.io/alexa/`, zweites Auswahlfeld beachten
+    * `<nummer>.ngrok.io` (ohne https) zu `ALLOWED_HOSTS` in settings `common.py` hinzufügen
+* Django starten (mit oder ohne Docker)
+
+__Daten aus dem Dump übertagen__
+* `python manage.py migrate`
+* `python manage.py shell` 
+* Enter the following in the shell
+  ```shell
+  from django.contrib.contenttypes.models import ContentType
+  ContentType.objects.all().delete()
+  ```
+* `python manage.py loaddata db_dump.json`
+
+
 ## Update Custom Slot Types
 1. `model_dump.py` ausführen
 2. `make update-model`

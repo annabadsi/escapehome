@@ -22,5 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(api_urls.urlpatterns)),
     path('alexa/', include(alexa_urls.urlpatterns)),
-    # path('', include('django_alexa.urls')),
+    path('privacy/', include('core.urls')),
 ]
