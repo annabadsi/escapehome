@@ -76,8 +76,10 @@ class Scenario(models.Model):
 
 
 class ActiveScenario(models.Model):
-    scenario = models.ForeignKey(Scenario, on_delete=models.DO_NOTHING, related_name='active_scenarios', blank=True, null=True)
-    riddle = models.ForeignKey(Riddle, on_delete=models.DO_NOTHING, related_name='active_riddles', blank=True, null=True)
+    scenario = models.ForeignKey(Scenario, on_delete=models.DO_NOTHING, related_name='active_scenarios', blank=True,
+                                 null=True)
+    riddle = models.ForeignKey(Riddle, on_delete=models.DO_NOTHING, related_name='active_riddles', blank=True,
+                               null=True)
     user = models.CharField(max_length=255, null=True, blank=True)
     players = models.IntegerField(blank=True, null=True)
     duration = models.DurationField(blank=True, null=True)

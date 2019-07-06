@@ -71,8 +71,9 @@ to set the Alexa-Skill id go to the projectfolder (escapehome) and add the var A
 1. POST - `api/ready`  
 Body: `{"text":"was gibt es neues?"}`
 
+# Alexa Skill Management
 
-# ASK CLI
+## ASK CLI
 Alexa Skills Kit Command Line Interface  
 https://developer.amazon.com/docs/smapi/quick-start-alexa-skills-kit-command-line-interface.html
 
@@ -97,6 +98,36 @@ ask api update-model -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29 -f 
 ask api get-skill-status -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29
 ```
 
+### Update Custom Slot Types
+1. `make get-model`
+2. copy code `scripts/model_dump.py` in python console
+3. `make update-model`
+4. `make skill-status`
+
+## SMAPI
+Skill Management API
+https://developer.amazon.com/docs/smapi/smapi-overview.html
+
+**[get-skill](https://developer.amazon.com/docs/smapi/skill-operations.html#get-skill-information)**
+```
+GET  /v1/skills/{skillId}/stages/{stage}/manifest
+```
+
+**[get-model](https://developer.amazon.com/docs/smapi/interaction-model-operations.html#get-interaction-model)**
+```
+GET /v1/skills/{skillId}/stages/{stage}/interactionModel/locales/{locale}
+```
+
+**[update-model](https://developer.amazon.com/docs/smapi/interaction-model-operations.html#update-interaction-model)**
+```
+PUT /v1/skills/{skillId}/stages/{stage}/interactionModel/locales/{locale}
+```
+
+**[get-skill-status](https://developer.amazon.com/docs/smapi/skill-operations.html#get-skill-status)**
+```
+GET /v1/skills/{skillId}/status?resource={resource1}&resource={resource2}
+```
+
 # Locales Arbeiten mit Alexa
 __NGROK einrichten__
 * ngrok runterladen > https://ngrok.com/download
@@ -115,13 +146,3 @@ __Daten aus dem Dump übertagen__
   ContentType.objects.all().delete()
   ```
 * `python manage.py loaddata db_dump.json`
-
-
-## Update Custom Slot Types
-1. `model_dump.py` ausführen
-2. `make update-model`
-3. `make skill-status`
-
-
-# Helpful 
-* [Django Tutorial](https://docs.djangoproject.com/en/2.2/intro/tutorial01/)

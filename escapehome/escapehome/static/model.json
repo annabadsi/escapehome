@@ -113,17 +113,62 @@
           "values": [
             {
               "name": {
-                "value": "was du willst"
+                "value": "paulchen panther"
               }
             },
             {
               "name": {
-                "value": "einfach nichts"
+                "value": "rosaroter panther"
               }
             },
             {
               "name": {
-                "value": "feiner Sand"
+                "value": "der rosarote Panther"
+              }
+            },
+            {
+              "name": {
+                "value": "paulchen"
+              }
+            },
+            {
+              "name": {
+                "value": "rot"
+              }
+            },
+            {
+              "name": {
+                "value": "die Farbe ist rot"
+              }
+            },
+            {
+              "name": {
+                "value": "die Lampe leuchtet rot"
+              }
+            },
+            {
+              "name": {
+                "value": "sie leuchtet rot"
+              }
+            },
+            {
+              "name": {
+                "value": "die Lampe blickt drei mal rot"
+              }
+            },
+            {
+              "name": {
+                "value": "drei mal"
+              }
+            },
+            {
+              "name": {
+                "value": "3"
+              }
+            },
+            {
+              "name": {
+                "value": "drei"
               }
             },
             {
@@ -133,7 +178,22 @@
             },
             {
               "name": {
-                "value": "paulchen panther"
+                "value": "Feiner Sand"
+              }
+            },
+            {
+              "name": {
+                "value": "10"
+              }
+            },
+            {
+              "name": {
+                "value": "fünf plus fünf ist zehn"
+              }
+            },
+            {
+              "name": {
+                "value": "die Antwort ist zehn"
               }
             }
           ],
@@ -221,5 +281,5 @@
       }
     ]
   },
-  "version": "30"
+  "version": "32"
 }
