@@ -1,5 +1,10 @@
+import json
+
 from django.db import models
 from django.db.models import Sum
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.conf import settings
 
 
 class Device(models.Model):
@@ -85,3 +90,28 @@ class ActiveScenario(models.Model):
     duration = models.DurationField(blank=True, null=True)
     score = models.IntegerField(default=0)
     state = models.IntegerField(blank=True, null=True)
+
+
+@receiver(post_save, sender=Riddle)
+def sync_slottype_riddle(sender, instance, **kwargs):
+    _sync(sender.__name__, instance.solution)
+
+
+@receiver(post_save, sender=Scenario)
+def sync_slottype_scenario(sender, instance, **kwargs):
+    _sync(sender.__name__, instance.name)
+
+
+def _sync(model_name, types):
+    types = types.split(', ') if ', ' in types else [types]
+    model_path = f'{settings.STATIC_ROOT}/model.json'
+
+    skill_model = json.loads(open(model_path).read())
+    for slot_type in skill_model['interactionModel']['languageModel']['types']:
+        if slot_type['name'] == f'ESCAPEHOME_{model_name}':
+            for value in types:
+                if {'name': {'value': value}} not in slot_type['values']:
+                    slot_type['values'].append({'name': {'value': value}})
+
+    with open(model_path, 'w', encoding='utf-8') as json_file:
+        json.dump(skill_model, json_file, ensure_ascii=False, indent=2)
