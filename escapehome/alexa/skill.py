@@ -150,7 +150,7 @@ def pose_riddle_intent_handler(handler_input):
     if answer in riddle.solution.lower().split(', '):
         correct = riddle.correct
         counter += 1
-        score += riddle.code
+        score += riddle.points
         if counter == scenario.riddles.count():
             speech_text = (
                 f"<p>Super, du hast alle Rätsel richtig beantwortet!</p>\n"

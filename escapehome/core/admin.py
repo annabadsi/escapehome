@@ -44,7 +44,7 @@ class RiddleAdmin(admin.ModelAdmin):
     search_fields = [
         'task',
         'solution',
-        'code',
+        'points',
     ]
 
     list_display = (
@@ -52,7 +52,7 @@ class RiddleAdmin(admin.ModelAdmin):
         'task',
         'solution',
         'show_commands',
-        'code',
+        'points',
     )
 
     def show_commands(self, obj):

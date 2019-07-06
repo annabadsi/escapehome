@@ -38,7 +38,7 @@ class Riddle(models.Model):
     id = models.AutoField(primary_key=True)
     task = models.TextField()
     solution = models.TextField()
-    code = models.IntegerField()
+    points = models.IntegerField()
     commands = models.ManyToManyField(Command, blank=True, related_name='riddle')
     hints = models.TextField(blank=True)
     correct = models.TextField(blank=True, default="Grandios, dass war richtig.")
@@ -77,7 +77,7 @@ class Scenario(models.Model):
 
     @property
     def possible_points(self):
-        return self.riddles.aggregate(Sum('code'))['code__sum']
+        return self.riddles.aggregate(Sum('points'))['points__sum']
 
 
 class ActiveScenario(models.Model):
