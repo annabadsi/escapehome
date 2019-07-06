@@ -5,6 +5,24 @@ escape game for your own home with Smart Home devices
 You can Setup the Project in two Ways: 
 * with Docker
 * with a virtual env
+
+### Pythonanywhere
+We deploy at Pythonanywhere in a free account. That make sometimes some struggle. 
+Steps ToDo: 
+1. check the virtualenv
+``` shell 
+(venv) 13:39 ~/EscapeHome/escapehome (master)$
+```
+You have to see the (venv) at the beginning. If not type: 
+``` shell 
+. ~/.virtualenvs/venv/bin/activate
+```
+
+2. set the right settings
+``` shell 
+export DJANGO_SETTINGS_MODULE=escapehome.settings.pythonanywhere
+```
+
 ### Docker
 Navigate to the root folder and just type: 
 
