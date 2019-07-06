@@ -83,6 +83,11 @@ https://developer.amazon.com/docs/smapi/quick-start-alexa-skills-kit-command-lin
 ask api get-skill -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29 --stage development > escapehome/escapehome/static/skill.json
 ```
 
+**[update-skill](https://developer.amazon.com/docs/smapi/ask-cli-command-reference.html#get-skill-subcommand)** 
+```
+ask api update-skill -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29 --file escapehome/escapehome/static/skill.json --stage development
+```
+
 **[get-model](https://developer.amazon.com/docs/smapi/ask-cli-command-reference.html#get-model-subcommand)**
 ```
 ask api get-model -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29 --stage development -l de-DE > escapehome/escapehome/static/model.json
@@ -99,10 +104,8 @@ ask api get-skill-status -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29
 ```
 
 ### Update Custom Slot Types
-1. `make get-model`
-2. copy code `scripts/model_dump.py` in python console
-3. `make update-model`
-4. `make skill-status`
+1. `make update-model`
+2. `make skill-status`
 
 
 ## SMAPI

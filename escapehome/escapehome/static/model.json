@@ -105,6 +105,21 @@
               "name": {
                 "value": "Quiz Fragen"
               }
+            },
+            {
+              "name": {
+                "value": "Quiz"
+              }
+            },
+            {
+              "name": {
+                "value": "Fragen"
+              }
+            },
+            {
+              "name": {
+                "value": "Lichter"
+              }
             }
           ],
           "name": "ESCAPEHOME_Scenario"
@@ -194,6 +209,26 @@
             {
               "name": {
                 "value": "die Antwort ist zehn"
+              }
+            },
+            {
+              "name": {
+                "value": "im April"
+              }
+            },
+            {
+              "name": {
+                "value": "vier"
+              }
+            },
+            {
+              "name": {
+                "value": "April"
+              }
+            },
+            {
+              "name": {
+                "value": "vierter Monat"
               }
             }
           ],
