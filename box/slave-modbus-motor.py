@@ -49,12 +49,13 @@ servo = GPIO.PWM(PIN, 50)
 state = True
 
 
-def updating_writer(a,):
+def updating_writer(a):
     """ A worker process that runs every so often and
     updates live values of the context. It should be noted
     that there is a race condition for the update.
     :param arguments: The input arguments to the call
     """
+    global state
     log.debug("read coil")
     context = a[0]
     register = 1
@@ -98,7 +99,7 @@ def run_updating_server():
     # run the server you want
     # ----------------------------------------------------------------------- # 
     time = 0.5  # 5 seconds delay
-    loop = LoopingCall(f=updating_writer, a=(context,))
+    loop = LoopingCall(f=updating_writer, a=(context, ))
     loop.start(time, now=False) # initially delay by time
     StartTcpServer(context, identity=identity, address=("0.0.0.0", 502))
 
