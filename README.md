@@ -71,7 +71,7 @@ to set the Alexa-Skill id go to the projectfolder (escapehome) and add the var A
 1. POST - `api/ready`  
 Body: `{"text":"was gibt es neues?"}`
 
-# Alexa Skill Management
+# Alexa Skill Management 
 
 ## ASK CLI
 Alexa Skills Kit Command Line Interface  
@@ -103,6 +103,7 @@ ask api get-skill-status -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29
 2. copy code `scripts/model_dump.py` in python console
 3. `make update-model`
 4. `make skill-status`
+
 
 ## SMAPI
 Skill Management API
