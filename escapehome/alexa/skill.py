@@ -15,6 +15,8 @@ sb = SkillBuilder()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+MINUS_POINTS = -1
+
 
 @sb.request_handler(can_handle_func=is_request_type("LaunchRequest"))
 def launch_request_handler(handler_input):
@@ -25,18 +27,35 @@ def launch_request_handler(handler_input):
     active_scenario, created = ActiveScenario.objects.get_or_create(user=user)
 
     if created or not active_scenario.scenario:
-        speech_text = (
-            f'Willkommen zu <lang xml:lang="en-US">Escape Home</lang>! '
-            f'<p>Es gibt {Scenario.objects.count()} verschiedene Szenarien:</p> '
-            f'{" oder ".join(Scenario.objects.values_list("name", flat=True))} '
-            f'<p>Welches möchtest du spielen?</p>'
-        )
+        # TODO: Würde ich nochmal umschreiben (Simplecard ist gleich, Join geht auch mit einem Listenelement, nur den einen Satz austauschen
+        # TODO: Erfüllt nicht den Sinn von Dialog!
+        if Scenario.objects.count() > 1:
+            speech_text = (
+                f'Willkommen zu <lang xml:lang="en-US">Escape Home</lang>! '
+                f'<p>Es gibt {Scenario.objects.count()} verschiedene Szenarien:</p> '
+                f'{" oder ".join(Scenario.objects.values_list("name", flat=True))} '
+                f'<p>Welches möchtest du spielen?</p>'
+            )
 
-        card = SimpleCard(
-            'Willkommen - Szeanrio Auwahl',
-            'Wähle aus den vorgebenen Spielen aus:\n'
-            f'{", ".join(Scenario.objects.values_list("name", flat=True))}'
-        )
+            card = SimpleCard(
+                'Willkommen - Szeanrio Auwahl',
+                'Wähle aus den vorgebenen Spielen aus:\n'
+                f'{", ".join(Scenario.objects.values_list("name", flat=True))}'
+            )
+        else:
+            scenario = Scenario.objects.all()[0]
+
+            speech_text = (
+                f'Willkommen zu <lang xml:lang="en-US">Escape Home</lang>! '
+                f'<p> Es gibt das Szenario {scenario.name}.</p>'
+                f'<p> Möchtest du es spielen? Dann sag jetzt: {scenario.name}</p>'
+            )
+
+            card = SimpleCard(
+                'Willkommen - Szeanrio Auwahl',
+                'Wähle aus den vorgebenen Spielen aus:\n'
+                f'{", ".join(Scenario.objects.values_list("name", flat=True))}'
+            )
 
     else:
         speech_text = (
@@ -138,12 +157,18 @@ def pose_riddle_intent_handler(handler_input):
                 f"<p>Du hast {score} von {scenario.possible_points} möglichen Punkten erreicht.</p>"
             )
             set_should_end_session = True
+
+            # TODO: Ist die Frage ob das gelöscht werden soll oder lieber erhalten bleiben,
+            #  ich würde leiber ein Flag setzen der anzeigt das es beendet wurde..
+            user = handler_input.request_envelope.context.system.user.user_id
+            ActiveScenario.objects.get(user=user).delete()
         else:
             next_riddle = scenario.riddles.all()[counter]
             speech_text = f'<p>{correct}</p>\n\n<p>Auf zum nächsten Rätsel:</p>\n<p>{next_riddle.task}</p>'
             session_attributes['riddle'] = next_riddle.id
     else:
-        speech_text = f'<p>{riddle.incorrect}</p>\n<p>Versuch es doch nocheinmal</p>'
+        speech_text = f'<p>{riddle.incorrect}</p>'
+        score += MINUS_POINTS
 
     session_attributes['counter'] = counter
     session_attributes['score'] = score
@@ -174,7 +199,7 @@ def help_intent_handler(handler_input):
     else:
         scenario = Scenario.objects.get(id=session_attributes['scenario'])
         riddle = scenario.riddles.get(id=session_attributes.get('riddle'))
-        session_attributes['score'] += -1
+        session_attributes['score'] += MINUS_POINTS
 
         speech_text = f'<p>Hier kommt dein Hinweis:</p>\n<p>{riddle.hints}</p>'
 
@@ -233,10 +258,28 @@ def cancel_and_stop_intent_handler(handler_input):
 def fallback_handler(handler_input):
     """AMAZON.FallbackIntent is only available in en-US locale.
     This handler will not be triggered except in that locale, so it is safe to deploy on any locale."""
-    speech = "Ich weiß nicht was du meinst."
-    reprompt = "Kannst du das wiederholen?"
-    handler_input.response_builder.speak(speech).ask(reprompt)
-    return handler_input.response_builder.response
+    session_attributes = handler_input.attributes_manager.session_attributes
+
+    if not session_attributes.get('scenario'):
+        speech_text = (
+            f'<p>Wähle ein Szenario aus.</p>\n'
+            f'<p>Es stehen: {" oder ".join(Scenario.objects.values_list("name", flat=True))} zur Auswahl.</p>'
+        )
+    else:
+        scenario = Scenario.objects.get(id=session_attributes['scenario'])
+        riddle = scenario.riddles.get(id=session_attributes.get('riddle'))
+        speech_text = f'<p>{riddle.incorrect}</p>'
+        session_attributes['score'] += MINUS_POINTS
+
+    return handler_input.response_builder.speak(
+        speech_text
+    ).ask(
+        speech_text
+    ).set_card(
+        SimpleCard(
+            "Du brauchst Hilfe?",
+            BeautifulSoup(speech_text, features="html.parser").text)
+    ).response
 
 
 @sb.request_handler(can_handle_func=is_request_type("SessionEndedRequest"))

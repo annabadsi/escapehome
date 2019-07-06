@@ -71,29 +71,29 @@ to set the Alexa-Skill id go to the projectfolder (escapehome) and add the var A
 1. POST - `api/ready`  
 Body: `{"text":"was gibt es neues?"}`
 
-# Alexa Skill Management
+# Alexa Skill Management 
 
 ## ASK CLI
 Alexa Skills Kit Command Line Interface  
 https://developer.amazon.com/docs/smapi/quick-start-alexa-skills-kit-command-line-interface.html
 
 
-**get-skill** 
+**[get-skill](https://developer.amazon.com/docs/smapi/ask-cli-command-reference.html#get-skill-subcommand)** 
 ```
-ask api get-skill -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29 --stage development > json/skill.json
-```
-
-**get-model**
-```
-ask api get-model -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29 --stage development -l de-DE > json/model.json
+ask api get-skill -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29 --stage development > escapehome/escapehome/static/skill.json
 ```
 
-**update-model**
+**[get-model](https://developer.amazon.com/docs/smapi/ask-cli-command-reference.html#get-model-subcommand)**
 ```
-ask api update-model -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29 -f json/model.json -l de-DE --stage development
+ask api get-model -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29 --stage development -l de-DE > escapehome/escapehome/static/model.json
 ```
 
-**get-skill-status**
+**[update-model](https://developer.amazon.com/docs/smapi/ask-cli-command-reference.html#update-model-subcommand)**
+```
+ask api update-model -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29 -f escapehome/escapehome/static/model.json -l de-DE --stage development
+```
+
+**[get-skill-status](https://developer.amazon.com/docs/smapi/ask-cli-command-reference.html#get-skill-status-subcommand)**
 ```
 ask api get-skill-status -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29
 ```
@@ -103,6 +103,7 @@ ask api get-skill-status -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29
 2. copy code `scripts/model_dump.py` in python console
 3. `make update-model`
 4. `make skill-status`
+
 
 ## SMAPI
 Skill Management API

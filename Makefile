@@ -1,5 +1,5 @@
 SKILLID = amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29
-FILE_PATH = escapehome/json/model.json
+STATIC_PATH = escapehome/escapehome/static
 
 run:
 	docker-compose up -d
@@ -30,8 +30,11 @@ update-requirements:
 skill-status:
 	ask api get-skill-status -s ${SKILLID}
 
+get-skill:
+	ask api get-skill -s {SKILLID} --stage development > ${STATIC_PATH}/skill.json
+
 update-model:
-	ask api update-model -s ${SKILLID} -f ${FILE_PATH} -l de-DE --stage development
+	ask api update-model -s ${SKILLID} -f ${STATIC_PATH}/model.json -l de-DE --stage development
 
 get-model:
-	ask api get-model -s ${SKILLID} --stage development -l de-DE > ${FILE_PATH}
+	ask api get-model -s ${SKILLID} --stage development -l de-DE > ${STATIC_PATH}/model.json
