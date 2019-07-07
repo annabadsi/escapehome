@@ -1,0 +1,12 @@
+{% block content %}
+    <p>Willkommen zu
+        <lang xml:lang="en-US">Escape Home</lang>
+    </p>
+    {% if scenarios.count > 1 %}
+        <p>Es gibt {{ scenarios.count }} verschiedene Szenarien: {{ scenarios | join:" oder " }}</p>
+        <p>Welches möchtest du spielen?</p>
+    {% else %}
+        f'<p> Es gibt das Szenario {{ scenarios | first }}.</p>
+        f'<p> Möchtest du es spielen? Dann sag jetzt: {{ scenarios | first }}</p>'
+    {% endif %}
+{% endblock %}

@@ -6,8 +6,8 @@ from ask_sdk_core.utils import is_request_type, is_intent_name
 from ask_sdk_model import DialogState
 from ask_sdk_model.dialog import DelegateDirective
 from ask_sdk_model.ui import SimpleCard
+from django.template.loader import get_template
 
-from alexa.skills.scenario import choose_scenario
 from core.models import Scenario, ActiveScenario
 
 sb = SkillBuilder()
@@ -27,47 +27,25 @@ def launch_request_handler(handler_input):
     active_scenario, created = ActiveScenario.objects.get_or_create(user=user)
 
     if created or not active_scenario.scenario:
-        # TODO: Würde ich nochmal umschreiben (Simplecard ist gleich, Join geht auch mit einem Listenelement, nur den einen Satz austauschen
-        # TODO: Erfüllt nicht den Sinn von Dialog!
-        if Scenario.objects.count() > 1:
-            speech_text = (
-                f'Willkommen zu <lang xml:lang="en-US">Escape Home</lang>! '
-                f'<p>Es gibt {Scenario.objects.count()} verschiedene Szenarien:</p> '
-                f'{" oder ".join(Scenario.objects.values_list("name", flat=True))} '
-                f'<p>Welches möchtest du spielen?</p>'
-            )
-
-            card = SimpleCard(
-                'Willkommen - Szeanrio Auwahl',
-                'Wähle aus den vorgebenen Spielen aus:\n'
-                f'{", ".join(Scenario.objects.values_list("name", flat=True))}'
-            )
-        else:
-            scenario = Scenario.objects.all()[0]
-
-            speech_text = (
-                f'Willkommen zu <lang xml:lang="en-US">Escape Home</lang>! '
-                f'<p> Es gibt das Szenario {scenario.name}.</p>'
-                f'<p> Möchtest du es spielen? Dann sag jetzt: {scenario.name}</p>'
-            )
-
-            card = SimpleCard(
-                'Willkommen - Szeanrio Auwahl',
-                'Wähle aus den vorgebenen Spielen aus:\n'
-                f'{", ".join(Scenario.objects.values_list("name", flat=True))}'
-            )
-
-    else:
-        speech_text = (
-            f'<p>Willkommen zurück!</p>'
-            f'<p>Das Spiel {active_scenario.scenario.name} wird fortgesetzt.</p>'
-            f'<p>Dein zuletzt gespieltes noch ungelöstes Rätsel lautet: {active_scenario.riddle.task}</p>'
+        speech_text = get_template('skill/welcome.html').render(
+            {'scenarios': Scenario.objects.all()}
         )
 
+        card = SimpleCard(
+            'Willkommen - Szenario Auwahl',
+            'Wähle aus den vorgebenen Spielen aus:\n'
+            f'{" oder ".join([s.split(", ")[0] for s in Scenario.objects.values_list("name", flat=True)])}'
+        )
+
+    else:
         session_attributes['scenario'] = active_scenario.scenario.id
         session_attributes['riddle'] = active_scenario.riddle.id
         session_attributes['counter'] = active_scenario.state
         session_attributes['score'] = active_scenario.score
+
+        speech_text = get_template('skill/welcome_back.html').render(
+            {'active_scenario': active_scenario}
+        )
 
         card = SimpleCard(
             'Willkommen zurück',
@@ -92,20 +70,18 @@ def choose_sceanrio_intent_handler(handler_input):
     counter = 0
     slots = handler_input.request_envelope.request.intent.slots
     session_attributes = handler_input.attributes_manager.session_attributes
+    scenario_slot = slots.get('scenario').value if slots.get('scenario') else None
+    scenario = Scenario.objects.get(name__contains=scenario_slot) if scenario_slot else None
 
-    scenario, speech_text = choose_scenario(
-        slots.get("scenario").value,
-        slots.get("players").value
+    speech_text = get_template('skill/scenario.html').render(
+        {'scenario': scenario, 'riddle': scenario.riddles.first()}
     )
 
-    riddle = scenario.riddles.all()[counter]
-
-    session_attributes['scenario'] = scenario.id
-    session_attributes['counter'] = counter
-    session_attributes['riddle'] = riddle.id
-    session_attributes['score'] = 0
-
-    speech_text = f'{speech_text}.\n<p>Hier kommt deine erste Frage:</p> <p>{riddle.task}</p>'
+    if scenario:
+        session_attributes['scenario'] = scenario.id
+        session_attributes['counter'] = counter
+        session_attributes['riddle'] = scenario.riddles.first().id
+        session_attributes['score'] = 0
 
     return handler_input.response_builder.speak(
         speech_text
@@ -136,6 +112,7 @@ def pose_riddle_intent_handler(handler_input):
     slots = handler_input.request_envelope.request.intent.slots
     session_attributes = handler_input.attributes_manager.session_attributes
     set_should_end_session = False
+    next_riddle = None
 
     # slots
     answer = slots.get("answer").value if slots.get("answer").value else slots.get("number").value
@@ -146,29 +123,35 @@ def pose_riddle_intent_handler(handler_input):
     riddle = scenario.riddles.get(id=session_attributes['riddle'])
     score = session_attributes['score']
 
-    # TODO: Alle Antwortmöglichkeiten nach Alexa kopieren
     if answer in riddle.solution.lower().split(', '):
-        correct = riddle.correct
+        # Richtige Antwort
         counter += 1
         score += riddle.points
         if counter == scenario.riddles.count():
-            speech_text = (
-                f"<p>Super, du hast alle Rätsel richtig beantwortet!</p>\n"
-                f"<p>Du hast {score} von {scenario.possible_points} möglichen Punkten erreicht.</p>"
-            )
+            # Gewonnen: alle Rätsel beantrwortet
             set_should_end_session = True
 
-            # TODO: Ist die Frage ob das gelöscht werden soll oder lieber erhalten bleiben,
-            #  ich würde leiber ein Flag setzen der anzeigt das es beendet wurde..
+            # TODO: active sceanario nicht löschen!
             user = handler_input.request_envelope.context.system.user.user_id
             ActiveScenario.objects.get(user=user).delete()
         else:
+            # Gehe zum nächsten Rätsel
             next_riddle = scenario.riddles.all()[counter]
-            speech_text = f'<p>{correct}</p>\n\n<p>Auf zum nächsten Rätsel:</p>\n<p>{next_riddle.task}</p>'
-            session_attributes['riddle'] = next_riddle.id
+            session_attributes['riddle'] = scenario.riddles.all()[counter].id
     else:
-        speech_text = f'<p>{riddle.incorrect}</p>'
+        # Falsche Antwort
         score += MINUS_POINTS
+
+    speech_text = get_template('skill/riddle.html').render(
+        {
+            'score': score,
+            'counter': counter,
+            'scenario': scenario,
+            'riddle': riddle,
+            'next_riddle': next_riddle,
+            'correct': answer in riddle.solution.lower().split(', '),
+        }
+    )
 
     session_attributes['counter'] = counter
     session_attributes['score'] = score
@@ -186,22 +169,59 @@ def pose_riddle_intent_handler(handler_input):
     ).response
 
 
+@sb.request_handler(can_handle_func=is_intent_name("NavigateMenu"))
+def navigate_menu_intent_intent_handler(handler_input):
+    """Handler for Help Intent."""
+    session_attributes = handler_input.attributes_manager.session_attributes
+    slots = handler_input.request_envelope.request.intent.slots
+    scenario_slot = slots.get('scenario').value if slots.get('scenario') else None
+    scenario = Scenario.objects.get(name__contains=scenario_slot) if scenario_slot else None
+    riddle = scenario.riddles.first() if scenario else None
+
+    if scenario:
+        session_attributes['scenario'] = scenario.id
+        session_attributes['riddle'] = scenario.riddles.first().id
+        session_attributes['counter'] = 0
+        session_attributes['score'] = 0
+
+    speech_text = get_template('skill/navigate_menu.html').render(
+        {
+            'scenario': scenario,
+            'riddle': riddle,
+            'scenarios': Scenario.objects.all(),
+        }
+    )
+
+    return handler_input.response_builder.speak(
+        speech_text
+    ).ask(
+        speech_text
+    ).set_card(
+        SimpleCard(
+            "Du brauchst Hilfe?",
+            BeautifulSoup(speech_text, features="html.parser").text
+        )
+    ).response
+
+
 @sb.request_handler(can_handle_func=is_intent_name("AMAZON.HelpIntent"))
 def help_intent_handler(handler_input):
     """Handler for Help Intent."""
     session_attributes = handler_input.attributes_manager.session_attributes
+    riddle = None
 
-    if not session_attributes.get('scenario'):
-        speech_text = (
-            f'<p>Wähle ein Szenario aus.</p>\n'
-            f'<p>Es stehen: {" oder ".join(Scenario.objects.values_list("name", flat=True))} zur Auswahl.</p>'
-        )
-    else:
+    if session_attributes.get('scenario'):
         scenario = Scenario.objects.get(id=session_attributes['scenario'])
         riddle = scenario.riddles.get(id=session_attributes.get('riddle'))
         session_attributes['score'] += MINUS_POINTS
 
-        speech_text = f'<p>Hier kommt dein Hinweis:</p>\n<p>{riddle.hints}</p>'
+    speech_text = get_template('skill/help.html').render(
+        {
+            'scenario': session_attributes.get('scenario'),
+            'scenarios': Scenario.objects.all(),
+            'riddle': riddle,
+        }
+    )
 
     return handler_input.response_builder.speak(
         speech_text
@@ -239,10 +259,7 @@ def cancel_and_stop_intent_handler(handler_input):
     active_scenario.state = counter
     active_scenario.save()
 
-    speech_text = (
-        f'<say-as interpret-as="interjection">ade</say-as>,\n'
-        f'<p>ich warte hier auf dich.</p>'
-    )
+    speech_text = get_template('skill/cancel_and_stop.html').render()
 
     return handler_input.response_builder.speak(
         speech_text
@@ -260,16 +277,12 @@ def fallback_handler(handler_input):
     This handler will not be triggered except in that locale, so it is safe to deploy on any locale."""
     session_attributes = handler_input.attributes_manager.session_attributes
 
-    if not session_attributes.get('scenario'):
-        speech_text = (
-            f'<p>Wähle ein Szenario aus.</p>\n'
-            f'<p>Es stehen: {" oder ".join(Scenario.objects.values_list("name", flat=True))} zur Auswahl.</p>'
-        )
-    else:
-        scenario = Scenario.objects.get(id=session_attributes['scenario'])
-        riddle = scenario.riddles.get(id=session_attributes.get('riddle'))
-        speech_text = f'<p>{riddle.incorrect}</p>'
-        session_attributes['score'] += MINUS_POINTS
+    speech_text = get_template('skill/exception.html').render(
+        {
+            'scenario': session_attributes.get('scenario'),
+            'scenarios': Scenario.objects.all(),
+        }
+    )
 
     return handler_input.response_builder.speak(
         speech_text
@@ -295,8 +308,8 @@ def all_exception_handler(handler_input, exception):
 
     # TODO: nicht nur beim Beenden speichern sondern nach jedem Request? Falls bei Fehler nicht gespeicht wird
     # attributes
-    scenario = Scenario.objects.get(id=session_attributes['scenario'])
-    riddle = scenario.riddles.get(id=session_attributes['riddle'])
+    scenario = Scenario.objects.get(id=session_attributes.get('scenario'))
+    riddle = scenario.riddles.get(id=session_attributes.get('riddle'))
     score = session_attributes['score']
     counter = session_attributes['counter']
 
@@ -310,7 +323,8 @@ def all_exception_handler(handler_input, exception):
     active_scenario.save()
 
     logger.error(exception, exc_info=True)
-    speech_text = f'<say-as interpret-as="interjection">ähm</say-as>, es gab wohl ein Problem!'
+
+    speech_text = get_template('skill/exception.html').render()
 
     handler_input.response_builder.speak(speech_text).ask(speech_text)
     return handler_input.response_builder.response

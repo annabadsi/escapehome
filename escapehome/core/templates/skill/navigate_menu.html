@@ -1,0 +1,13 @@
+{% block content %}
+    <p>Nagut, ich speichere das aktuelle Spiel für dich und wir starten ein Anderes.</p>
+
+    {% if sceanrio %}
+        <p>Dann spielen wir jetzt {{ scenario }}</p>
+        <p>Um folgendes wird es gehen: {{ scenario.description }} </p>
+        <p>Hier kommt deine erste Frage:</p>
+        <p>{{ riddle.task }}</p>
+    {% else %}
+        <p>Es gibt {{ scenarios.count }} verschiedene Szenarien: {{ scenarios | join:" oder " }}</p>
+        <p>Welches möchtest du spielen?</p>
+    {% endif %}
+{% endblock %}

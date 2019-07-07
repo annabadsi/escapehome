@@ -1,0 +1,16 @@
+{% block content %}
+
+    {% if correct %}
+        {% if counter == scenario.riddles.count %}
+            <p>Super, du hast alle Rätsel richtig beantwortet!</p>
+            <p>Du hast {{ score }} von {{ scenario.possible_points }} möglichen Punkten erreicht.</p>
+        {% else %}
+            <p>{{ riddle.correct }}</p>
+
+            <p>Auf zum nächsten Rätsel:</p>
+            <p>{{ next_riddle.task }}</p>
+        {% endif %}
+    {% else %}
+        <p>{{ riddle.incorrect }}</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,9 @@
+{% block content %}
+    {% if scenario %}
+        <p>Um folgendes wird es gehen: {{ scenario.description }} </p>
+        <p>Hier kommt deine erste Frage:</p>
+        <p>{{ riddle.task }}</p>
+    {% else %}
+        <p>ich habe kein Szenario mit diesem Namen gefunden!</p>
+    {% endif %}
+{% endblock %}

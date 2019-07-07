@@ -230,6 +230,16 @@
               "name": {
                 "value": "vierter Monat"
               }
+            },
+            {
+              "name": {
+                "value": "panther"
+              }
+            },
+            {
+              "name": {
+                "value": "sind Insekten"
+              }
             }
           ],
           "name": "ESCAPEHOME_Riddle"

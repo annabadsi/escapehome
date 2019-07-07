@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'core',
     'api',
-    'django_ask_sdk'
+    'django_ask_sdk',
 ]
 
 MIDDLEWARE = [
@@ -57,7 +57,7 @@ ROOT_URLCONF = 'escapehome.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['core'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -64,6 +64,7 @@ class Scenario(models.Model):
 
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
+    other_names = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True)
     riddles = models.ManyToManyField(Riddle, related_name='scenario')
     severity = models.CharField(max_length=255, default=MEDIUM, choices=STATUS_CHOICES, blank=True)
@@ -73,7 +74,7 @@ class Scenario(models.Model):
         verbose_name_plural = "Scenarios"
 
     def __str__(self):
-        return f'Scenario {self.id} - {self.name}'
+        return self.name
 
     @property
     def possible_points(self):
@@ -99,7 +100,7 @@ def sync_slottype_riddle(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Scenario)
 def sync_slottype_scenario(sender, instance, **kwargs):
-    _sync(sender.__name__, instance.name)
+    _sync(sender.__name__, instance.other_names)
 
 
 def _sync(model_name, types):

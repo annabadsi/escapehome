@@ -31,10 +31,10 @@ skill-status:
 	ask api get-skill-status -s ${SKILLID}
 
 get-skill:
-	ask api get-skill -s {SKILLID} --stage development > ${STATIC_PATH}/skill.json
+	ask api get-skill -s ${SKILLID} --stage development > ${STATIC_PATH}/skill.json
 
 update-skill:
-	ask api update-skill -s {SKILLID} --stage development -f ${STATIC_PATH}/skill.json
+	ask api update-skill -s ${SKILLID} --stage development -f ${STATIC_PATH}/skill.json
 
 get-model:
 	ask api get-model -s ${SKILLID} --stage development -l de-DE > ${STATIC_PATH}/model.json
