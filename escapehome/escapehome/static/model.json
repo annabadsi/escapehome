@@ -9,7 +9,16 @@
         },
         {
           "name": "AMAZON.CancelIntent",
-          "samples": []
+          "samples": [
+            "es reicht",
+            "ich will aufhören",
+            "beende den skill",
+            "ich hab keine Lust mehr",
+            "ich möchte nicht mehr spielen",
+            "ich möchte aufhören",
+            "ich mag nicht mehr spielen",
+            "beende escape Home"
+          ]
         },
         {
           "name": "AMAZON.HelpIntent",
@@ -90,6 +99,25 @@
             "ich glaube die Antwort ist {answer}",
             "{number}",
             "{answer}"
+          ]
+        },
+        {
+          "name": "NavigateMenu",
+          "slots": [
+            {
+              "name": "sceanrio",
+              "type": "ESCAPEHOME_Scenario"
+            }
+          ],
+          "samples": [
+            "zurück",
+            "gehe zurück ins Menu",
+            "keine Lust mehr",
+            "ich mag ich mehr",
+            "ich möchte das andere szenario spielen",
+            "ich möchte {sceanrio} spielen",
+            "können wir was anderes spielen",
+            "ich will was anderes spielen"
           ]
         }
       ],
@@ -230,16 +258,6 @@
               "name": {
                 "value": "vierter Monat"
               }
-            },
-            {
-              "name": {
-                "value": "panther"
-              }
-            },
-            {
-              "name": {
-                "value": "sind Insekten"
-              }
             }
           ],
           "name": "ESCAPEHOME_Riddle"
@@ -250,10 +268,8 @@
       "intents": [
         {
           "name": "ChooseScenario",
-          "confirmationRequired": true,
-          "prompts": {
-            "confirmation": "Confirm.Intent.381641564178"
-          },
+          "confirmationRequired": false,
+          "prompts": {},
           "slots": [
             {
               "name": "scenario",
@@ -273,7 +289,8 @@
                 "elicitation": "Elicit.Slot.381641564178.746518702677"
               }
             }
-          ]
+          ],
+          "delegationStrategy": "SKILL_RESPONSE"
         }
       ],
       "delegationStrategy": "SKILL_RESPONSE"
@@ -326,5 +343,5 @@
       }
     ]
   },
-  "version": "32"
+  "version": "39"
 }
