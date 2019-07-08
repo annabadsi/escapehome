@@ -5,11 +5,9 @@ class KNX(Protocol):
     """
         This is the class for Phillips Hue Stuff
     """
-    
-    def __init__(self, id, type): 
-        pass
 
-    def execute(self, id, value):
+    @classmethod
+    def execute(cls, id, value):
         #
         # This method execute the queries to the physical device
         #
