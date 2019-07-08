@@ -1,18 +1,19 @@
-from phue import Bridge
+import requests 
 
-# IP Adresse der Hue Bridge rausfinden:
-# https://www.meethue.com/api/nupnp
-IP_ADDRESS = '192.168.178.67'
+devices = {}
+wait_time = 0.5
 
-b = Bridge(IP_ADDRESS)
+def update_devices(): 
+    """
+        update the devices dic and get new devices (if there are new)
+    """
+    pass
 
-# nur einmal, zu Hue Bridge connecten
-# b.connect()
+def check_server(wait_time=0.5): 
+    """
+        send a request to django and check what he has to do 
+    """
+    pass
 
-# API Status
-# - Lampen: Zustand, Name, Produktname
-# - Gruppen: Wohnzimmer, Küche, Zimmer,..
-# - Configuration: "Natürliches Aufwachen" Einstellungen
-# - Regeln: Dimmer Tastenbelegung,
-# - Sensoren: Bewegungsmelder -  Zustand, Temperatur
-b.get_api()
+if __name__ == "__main__":
+    pass
