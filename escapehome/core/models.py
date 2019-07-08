@@ -12,10 +12,30 @@ class Device(models.Model):
 
 
 class Lamp(Device):
+    RED = 'RED'
+    ORGANGE = 'ORGANGE'
+    YELLOW = 'YELLOW'
+    BLUE = 'BLUE'
+    MAGENTA = 'MAGENTA'
+    CYAN = 'CYAN'
+    GREEN = 'GREEN'
+    WHITE = 'WHITE'
+
+    COLOR_CHOICES = (
+        ('FF00FF', MAGENTA),
+        ('ff0000', RED),
+        ('ffa500', ORGANGE),
+        ('f5ff00', YELLOW),
+        ('0000ff', BLUE),
+        ('00ffff', CYAN),
+        ('00f700', GREEN),
+        ('ffffff', WHITE),
+    )
+
     lamp_id = models.IntegerField()
     name = models.CharField(max_length=255)
     on = models.BooleanField(default=False)
-    color = models.CharField(max_length=7, default='#ffffff', help_text='hex-value, default white')
+    color = models.CharField(max_length=7, default=WHITE, choices=COLOR_CHOICES, help_text='hex-value, default white')
     room = models.CharField(max_length=255, blank=True)
     brightness = models.IntegerField(default=254, blank=True, help_text='254 = 100%, 127 = 50%, ...')
 
