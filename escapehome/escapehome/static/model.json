@@ -258,6 +258,51 @@
               "name": {
                 "value": "vierter Monat"
               }
+            },
+            {
+              "name": {
+                "value": "am Fenster"
+              }
+            },
+            {
+              "name": {
+                "value": "Lampe am Fenster"
+              }
+            },
+            {
+              "name": {
+                "value": "Fenster"
+              }
+            },
+            {
+              "name": {
+                "value": "Stehlampe in der Ecke"
+              }
+            },
+            {
+              "name": {
+                "value": "die Stehlampe"
+              }
+            },
+            {
+              "name": {
+                "value": "Stehlampe"
+              }
+            },
+            {
+              "name": {
+                "value": "Decke"
+              }
+            },
+            {
+              "name": {
+                "value": "Deckenlampe"
+              }
+            },
+            {
+              "name": {
+                "value": "sind Insekten"
+              }
             }
           ],
           "name": "ESCAPEHOME_Riddle"
