@@ -1,6 +1,7 @@
-requests
 Django==2.1.5
 python-dotenv==0.10.2
 djangorestframework==3.9.0
 django-ask-sdk==0.1.1
 beautifulsoup4==4.7.1
+phue==1.1
+rgbxy==0.5
