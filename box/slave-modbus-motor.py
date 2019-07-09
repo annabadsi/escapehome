@@ -26,6 +26,17 @@ motor_opend = True
 magnet_opend = False
 
 
+def move_motor(state):
+    servo.start(7.5)
+    if state:  # box opens
+        log.debug("Drehung auf 0 Grad (box auf)")
+        servo.ChangeDutyCycle(2.5)
+    else:  # box closes
+        log.debug("Drehung auf 90 Grad (box zu)")
+        servo.ChangeDutyCycle(7.5)
+    servo.stop()
+
+
 def updating_motor(a):
     global motor_opend
     context = a[0]
@@ -35,19 +46,14 @@ def updating_motor(a):
     values = context[slave_id].getValues(register, address, count=1)
     if values[0] != motor_opend:
         motor_opend = values[0]
-        if motor_opend == True:
-            log.debug("Drehung auf 0 Grad (box auf)")
-            servo.ChangeDutyCycle(2.5)
-        else:
-            log.debug("Drehung auf 90 Grad (box zu)")
-            servo.ChangeDutyCycle(7.5)
+        move_motor(motor_opend)
 
 
 def updating_magnet_in_context(a):
     global magnet_opend
     new_value = GPIO.input(MAGNET_PIN)
     if new_value != magnet_opend:
-	magnet_opend = new_value
+        magnet_opend = new_value
         log.debug("set magnet in context 0x02: {}".format(new_value))
         context = a[0]
         register = 1
@@ -84,10 +90,8 @@ def run_updating_server():
 
 if __name__ == "__main__":
     try:
-        servo.start(7.5)
         run_updating_server()
     except KeyboardInterrupt:
         print("Terminating")
     finally:
-        servo.stop()
         GPIO.cleanup()
