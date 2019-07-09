@@ -10,48 +10,45 @@ from django.conf import settings
 class Device(models.Model):
     id = models.AutoField(primary_key=True)
 
+    def __str__(self):
+        return f'Device {self.id}'
+
 
 class Lamp(Device):
-    RED = 'RED'
-    ORGANGE = 'ORGANGE'
-    YELLOW = 'YELLOW'
-    BLUE = 'BLUE'
-    MAGENTA = 'MAGENTA'
-    CYAN = 'CYAN'
-    GREEN = 'GREEN'
-    WHITE = 'WHITE'
-
-    COLOR_CHOICES = (
-        ('FF00FF', MAGENTA),
-        ('ff0000', RED),
-        ('ffa500', ORGANGE),
-        ('f5ff00', YELLOW),
-        ('0000ff', BLUE),
-        ('00ffff', CYAN),
-        ('00f700', GREEN),
-        ('ffffff', WHITE),
-    )
-
     lamp_id = models.IntegerField()
     name = models.CharField(max_length=255)
-    on = models.BooleanField(default=False)
-    color = models.CharField(max_length=7, default=WHITE, choices=COLOR_CHOICES, help_text='hex-value, default white')
     room = models.CharField(max_length=255, blank=True)
-    brightness = models.IntegerField(default=254, blank=True, help_text='254 = 100%, 127 = 50%, ...')
 
     def __str__(self):
-        return f'Lamp {self.id} - {self.name} in {self.room}'
+        return f'Lamp {self.lamp_id} - {self.name} in {self.room}'
+
+
+class Action(models.Model):
+    name = models.CharField(primary_key=True, max_length=255, unique=True)
+    function = models.CharField(max_length=255)
+    parameters = models.TextField(help_text='als dict', blank=True, null=True)
+
+    def __str__(self):
+        return f'Action {self.name}'
 
 
 class Command(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, unique=True)
-    function = models.CharField(max_length=255)
-    config = models.TextField(help_text='in JSON')
-    devices = models.ManyToManyField(Device, blank=True, related_name='device')
+    actions = models.ManyToManyField(Action, through='OrderedAction', related_name='action', blank=True)
+    devices = models.ManyToManyField(Device, related_name='device', blank=True)
 
     def __str__(self):
-        return f'Command {self.id} - {self.name}'
+        return f'Command {self.name}'
+
+
+class OrderedAction(models.Model):
+    action = models.ForeignKey(Action, on_delete=models.DO_NOTHING)
+    command = models.ForeignKey(Command, on_delete=models.DO_NOTHING)
+    order = models.IntegerField()
+
+    class Meta:
+        ordering = ['order', ]
 
 
 class Riddle(models.Model):

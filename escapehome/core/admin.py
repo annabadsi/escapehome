@@ -75,17 +75,36 @@ class LampAdmin(admin.ModelAdmin):
     list_display = (
         'name',
         'room',
-        'brightness',
-        'color',
     )
+
+
+class OrderedActionActionAdmin(admin.TabularInline):
+    model = OrderedAction
+    extra = 1  # how many rows to show
 
 
 @admin.register(Command)
 class CommandAdmin(admin.ModelAdmin):
+    inlines = (
+        OrderedActionActionAdmin,
+    )
+
     search_fields = [
         'name',
     ]
 
     list_display = (
         'name',
+    )
+
+
+@admin.register(Action)
+class ActionAdmin(admin.ModelAdmin):
+    search_fields = [
+        'name',
+    ]
+
+    list_display = (
+        'name',
+        'function'
     )

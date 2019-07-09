@@ -9,7 +9,7 @@ from ask_sdk_model.ui import SimpleCard
 from django.template.loader import get_template
 
 from core.models import Scenario, ActiveScenario
-from hue.lights import Light
+from hue.lights import Hue
 
 sb = SkillBuilder()
 
@@ -40,8 +40,7 @@ def launch_request_handler(handler_input):
 
         # TODO: Das übernimmt der PI dann
         if active_scenario.riddle.commands.all():
-            command = active_scenario.riddle.commands.first()
-            execute_command(command)
+            execute_command(active_scenario.riddle.commands.all())
 
         speech_text = get_template('skill/welcome_back.html').render(
             {'active_scenario': active_scenario}
@@ -135,8 +134,7 @@ def pose_riddle_intent_handler(handler_input):
 
             # TODO: Das übernimmt der PI dann
             if next_riddle.commands.all():
-                command = next_riddle.commands.first()
-                execute_command(command)
+                execute_command(next_riddle.commands.all())
 
             session_attributes['riddle'] = scenario.riddles.all()[counter].id
     else:
@@ -331,11 +329,14 @@ def all_exception_handler(handler_input, exception):
     return handler_input.response_builder.response
 
 
-def execute_command(command):
-    device = command.devices.first()
-    light = Light(device.lamp.lamp_id)
-    func = getattr(light, command.function)
-    func(**eval(command.config))
+def execute_command(commands):
+    h = Hue()
+    for command in commands:
+        for action in command.actions.all().order_by('orderedaction'):
+            func = getattr(h, action.function)
+            lights = command.devices.values_list('lamp__lamp_id', flat=True)
+            h.lights = lights
+            func(**eval(action.parameters))
 
 
 skill = sb.create()
