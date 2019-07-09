@@ -35,7 +35,7 @@ def read_via_tcp_modbus(address):
 if __name__ == '__main__':
     opend = read_via_tcp_modbus(MAGNET_ADDRESS)
     print('Is it open? {}'.format(opend))
-    #write_via_tcp_modbus(MOTOR_ADDRESS, False)
-    #time.sleep(10)
-    #write_via_tcp_modbus(MOTOR_ADDRESS, True)
-    #time.sleep(2)
+    write_via_tcp_modbus(MOTOR_ADDRESS, False)
+    time.sleep(10)
+    write_via_tcp_modbus(MOTOR_ADDRESS, True)
+    time.sleep(2)
