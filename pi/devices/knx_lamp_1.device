@@ -1,0 +1,21 @@
+{
+    "type": "Lamp",
+    "protocol": "knx",
+    "id": "0/0/3", 
+    "pk": "1",
+    "methods": {
+        "on": {
+            "values": 1, 
+            "type": "int",
+            "description": "This switch on the light", 
+            "command": null
+            
+        }, 
+        "off": {
+            "values": 0, 
+            "type": "int", 
+            "description": "This switch off the light",
+            "command": null
+        }
+    }
+}

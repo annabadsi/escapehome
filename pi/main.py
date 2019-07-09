@@ -1,18 +1,71 @@
-from phue import Bridge
+import requests 
+from time import sleep
+import os
+import json
+import threading
 
-# IP Adresse der Hue Bridge rausfinden:
-# https://www.meethue.com/api/nupnp
-IP_ADDRESS = '192.168.178.67'
+API_URL = "https://homeescape.pythonanywhere.com/api/ready/"
 
-b = Bridge(IP_ADDRESS)
+devices = {}
+execute_thread = None
+wait_time = 0.5
 
-# nur einmal, zu Hue Bridge connecten
-# b.connect()
+def update_devices(): 
+    """
+        update the devices dic and get new devices (if there are new)
+    """
+    devices = {}
+    # open devices
+    device_list = os.listdir("devices/")
+    for dev in device_list: 
+        f = open("devices/" + dev)
+        s = f.read()
+        j = json.loads(s)
+        devices[j['id']] = j
 
-# API Status
-# - Lampen: Zustand, Name, Produktname
-# - Gruppen: Wohnzimmer, Küche, Zimmer,..
-# - Configuration: "Natürliches Aufwachen" Einstellungen
-# - Regeln: Dimmer Tastenbelegung,
-# - Sensoren: Bewegungsmelder -  Zustand, Temperatur
-b.get_api()
+def execute_steps(args): 
+    """
+        execute the json input from Server
+
+        {
+            meta{
+                step_duration: 1, #duration between steps in secconds
+                loop: 0, # repeat mode (0 = infinity or number of loops)
+                loop_break_duration: 1, # duration between last step and restart at first step
+                                # at loop
+                    }
+            steps{
+                step{
+                    position: 1, # to make a order of steps
+                    function: “function_name”,
+        values: {
+        ‘brightness’: 100,
+        } #value for step
+        stop: “”  
+                }
+            }
+        }
+    """
+    print(args)
+
+def check_server(wait_time=0.5): 
+    """
+        send a request to django and check what he has to do 
+    """
+    res = requests.post(API_URL,json={"text":"was gibt es neues?" })
+    
+    if res.json(): 
+        # stop currcent thread
+        global execute_thread
+        if execute_thread: 
+            execute_thread.join()
+        # execute steps in thread
+        th = threading.Thread(target=execute_steps, args=(res.json()))
+        th.start()
+        execute_thread = th
+    sleep(wait_time)
+
+if __name__ == "__main__":
+    while True: 
+        check_server(wait_time=5)
+
