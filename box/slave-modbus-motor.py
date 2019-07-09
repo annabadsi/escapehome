@@ -46,14 +46,14 @@ def updating_motor(a):
 def updating_magnet_in_context(a):
     global magnet_opend
     new_value = GPIO.input(MAGNET_PIN)
-    log.debug("check if box is opend or closed by magnet")
     if new_value != magnet_opend:
-        log.debug("set magnet in context 0x02")
+	magnet_opend = new_value
+        log.debug("set magnet in context 0x02: {}".format(new_value))
         context = a[0]
         register = 1
         slave_id = 0x00
         address = 0x02
-        values = [new_value]
+        values = [magnet_opend]
         context[slave_id].setValues(register, address, values)
 
 
@@ -78,7 +78,7 @@ def run_updating_server():
     motor_loop = LoopingCall(f=updating_motor, a=(context,))
     magnet_loop = LoopingCall(f=updating_magnet_in_context, a=(context,))
     motor_loop.start(0.5, now=False)
-    magnet_loop.start(0.1, now=False)
+    magnet_loop.start(0.5, now=False)
     StartTcpServer(context, identity=identity, address=("0.0.0.0", 502))
 
 
