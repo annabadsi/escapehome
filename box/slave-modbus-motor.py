@@ -7,6 +7,8 @@ from pymodbus.datastore import ModbusSlaveContext, ModbusServerContext
 from twisted.internet.task import LoopingCall
 import RPi.GPIO as GPIO
 import logging
+import time
+import os
 
 FORMAT = ('%(asctime)-15s %(threadName)-15s'
           ' %(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s')
@@ -14,30 +16,31 @@ logging.basicConfig(format=FORMAT)
 log = logging.getLogger()
 log.setLevel(logging.DEBUG)
 
-SERVO_PIN = 12
-MAGNET_PIN = 15
-
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(SERVO_PIN, GPIO.OUT)
+MOTOR_PIN = 18
+MAGNET_PIN = 22
+GPIO.setmode(GPIO.BCM)
 GPIO.setup(MAGNET_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-
-servo = GPIO.PWM(SERVO_PIN, 50)
 motor_opend = True
-magnet_opend = False
 
 
 def move_motor(state):
-    servo.start(7.5)
-    if state:  # box opens
-        log.debug("Drehung auf 0 Grad (box auf)")
-        servo.ChangeDutyCycle(2.5)
-    else:  # box closes
-        log.debug("Drehung auf 90 Grad (box zu)")
-        servo.ChangeDutyCycle(7.5)
-    servo.stop()
+    os.system('gpio -g mode {} pwm'.format(MOTOR_PIN))
+    os.system('gpio pwm-ms')
+    os.system('gpio pwmc 192')
+    os.system('gpio pwmr 2000')
+    if state:
+        log.debug("Box auf")
+	os.system('gpio -g pwm {} 60'.format(MOTOR_PIN))
+        time.sleep(1)
+    else:
+        log.debug("Box zu")
+	os.system('gpio -g pwm {} 145'.format(MOTOR_PIN))
+        time.sleep(1)
+    os.system('gpio -g mode 18 input')
 
 
-def updating_motor(a):
+def update_context(a):
+    # check motor update
     global motor_opend
     context = a[0]
     register = 1
@@ -47,20 +50,10 @@ def updating_motor(a):
     if values[0] != motor_opend:
         motor_opend = values[0]
         move_motor(motor_opend)
-
-
-def updating_magnet_in_context(a):
-    global magnet_opend
-    new_value = GPIO.input(MAGNET_PIN)
-    if new_value != magnet_opend:
-        magnet_opend = new_value
-        log.debug("set magnet in context 0x02: {}".format(new_value))
-        context = a[0]
-        register = 1
-        slave_id = 0x00
-        address = 0x02
-        values = [magnet_opend]
-        context[slave_id].setValues(register, address, values)
+    # update magnet in context
+    address = 0x02
+    values = [GPIO.input(MAGNET_PIN)]
+    context[slave_id].setValues(register, address, values)
 
 
 def run_updating_server():
@@ -81,10 +74,8 @@ def run_updating_server():
     identity.ModelName = 'pymodbus Server'
     identity.MajorMinorRevision = '2.2.0'
 
-    motor_loop = LoopingCall(f=updating_motor, a=(context,))
-    magnet_loop = LoopingCall(f=updating_magnet_in_context, a=(context,))
-    motor_loop.start(0.5, now=False)
-    magnet_loop.start(0.5, now=False)
+    loop = LoopingCall(f=update_context, a=(context,))
+    loop.start(0.5, now=False)
     StartTcpServer(context, identity=identity, address=("0.0.0.0", 502))
 
 
