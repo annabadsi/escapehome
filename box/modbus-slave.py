@@ -20,7 +20,7 @@ MOTOR_PIN = 18
 MAGNET_PIN = 22
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(MAGNET_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-motor_opend = True
+motor_opened = True
 
 
 def move_motor(state):
@@ -30,26 +30,26 @@ def move_motor(state):
     os.system('gpio pwmr 2000')
     if state:
         log.debug("Box auf")
-	os.system('gpio -g pwm {} 60'.format(MOTOR_PIN))
+        os.system('gpio -g pwm {} 60'.format(MOTOR_PIN))
         time.sleep(1)
     else:
         log.debug("Box zu")
-	os.system('gpio -g pwm {} 145'.format(MOTOR_PIN))
+        os.system('gpio -g pwm {} 145'.format(MOTOR_PIN))
         time.sleep(1)
     os.system('gpio -g mode 18 input')
 
 
 def update_context(a):
     # check motor update
-    global motor_opend
+    global motor_opened
     context = a[0]
     register = 1
     slave_id = 0x00
     address = 0x01
     values = context[slave_id].getValues(register, address, count=1)
-    if values[0] != motor_opend:
-        motor_opend = values[0]
-        move_motor(motor_opend)
+    if values[0] != motor_opened:
+        motor_opened = values[0]
+        move_motor(motor_opened)
     # update magnet in context
     address = 0x02
     values = [GPIO.input(MAGNET_PIN)]
