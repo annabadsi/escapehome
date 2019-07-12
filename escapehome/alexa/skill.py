@@ -9,6 +9,7 @@ from ask_sdk_model.ui import SimpleCard
 from django.template.loader import get_template
 
 from core.models import Scenario, ActiveScenario
+from hue.lights import Hue
 
 sb = SkillBuilder()
 
@@ -31,33 +32,26 @@ def launch_request_handler(handler_input):
             {'scenarios': Scenario.objects.all()}
         )
 
-        card = SimpleCard(
-            'Willkommen - Szenario Auwahl',
-            'Wähle aus den vorgebenen Spielen aus:\n'
-            f'{" oder ".join([s.split(", ")[0] for s in Scenario.objects.values_list("name", flat=True)])}'
-        )
-
     else:
         session_attributes['scenario'] = active_scenario.scenario.id
         session_attributes['riddle'] = active_scenario.riddle.id
         session_attributes['counter'] = active_scenario.state
         session_attributes['score'] = active_scenario.score
 
+        # TODO: Das übernimmt der PI dann
+        if active_scenario.riddle.commands.all():
+            execute_command(active_scenario.riddle.commands.all())
+
         speech_text = get_template('skill/welcome_back.html').render(
             {'active_scenario': active_scenario}
-        )
-
-        card = SimpleCard(
-            'Willkommen zurück',
-            f'Das Spiel {active_scenario.scenario.name} wird fortgesetzt.\n\n'
-            f'Dein noch ungelöstes Rätsel lautet:\n'
-            f'{active_scenario.riddle.task}'
         )
 
     return handler_input.response_builder.speak(
         speech_text
     ).set_card(
-        card
+        SimpleCard(
+            BeautifulSoup(speech_text, features="html.parser").text
+        )
     ).set_should_end_session(
         False
     ).response
@@ -137,6 +131,11 @@ def pose_riddle_intent_handler(handler_input):
         else:
             # Gehe zum nächsten Rätsel
             next_riddle = scenario.riddles.all()[counter]
+
+            # TODO: Das übernimmt der PI dann
+            if next_riddle.commands.all():
+                execute_command(next_riddle.commands.all())
+
             session_attributes['riddle'] = scenario.riddles.all()[counter].id
     else:
         # Falsche Antwort
@@ -328,6 +327,16 @@ def all_exception_handler(handler_input, exception):
 
     handler_input.response_builder.speak(speech_text).ask(speech_text)
     return handler_input.response_builder.response
+
+
+def execute_command(commands):
+    h = Hue()
+    for command in commands:
+        for action in command.actions.all().order_by('orderedaction'):
+            func = getattr(h, action.function)
+            lights = command.devices.values_list('lamp__lamp_id', flat=True)
+            h.lights = lights
+            func(**eval(action.parameters))
 
 
 skill = sb.create()
