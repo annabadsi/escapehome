@@ -8,11 +8,7 @@ class Protocol(ABC):
         super().__init__()
     
     @abstractmethod
-    def execute(self, id, value):
-        pass 
-
-    @abstractmethod
-    def send(self):
+    def execute(self, args):
         pass 
 
     

@@ -9,7 +9,7 @@ class PHue(Protocol):
     def __init__(self, id, type): 
         self.IP_ADDRESS = '192.168.178.67'
     @classmethod
-    def execute(cls):
+    def execute(cls, args):
         #
         # This method execute the queries to the physical device
         #
