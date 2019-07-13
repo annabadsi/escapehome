@@ -1,13 +1,16 @@
-from protocol import Protocol
 from phue import Bridge
 
-class PHue(Protocol): 
+from pi.protocol.protocol import Protocol
+
+
+class PHue(Protocol):
     """
         This is the class for Phillips Hue Stuff
     """
-    
-    def __init__(self, id, type): 
+
+    def __init__(self, protocol_id, protocol_type):
         self.IP_ADDRESS = '192.168.178.67'
+
     @classmethod
     def execute(cls, args):
         #
@@ -15,9 +18,8 @@ class PHue(Protocol):
         #
         pass
 
-    def connect(self): 
+    def connect(self):
         b = Bridge(self.IP_ADDRESS)
 
         # nur einmal, zu Hue Bridge connecten
         b.connect()
-    
