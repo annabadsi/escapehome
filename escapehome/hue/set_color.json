@@ -1,17 +1,52 @@
 {
+  //  allgemein über alle Actions und Steps
   "meta": {
-    "step_duration": 1,
-    "loop": 0,
-    "loop_break_duration": 1
+    // infinity, garnicht: 0, sonst: beliebige zahl
+    "loop": 0
   },
-  "steps": {
-    "step": {
-      "position": 1,
-      "function": "function_name",
-      "values": {
-        "brightness": 100
-      },
-      "stop": ""
+  "commands": [
+    {
+      "device": "[5]",
+      //"device": "[5, 3]",
+      "protocol": "phue",
+      "actions": [
+        {
+          "order": 1,
+          "name": "Warte für 3 Sekunden",
+          "function": "wait",
+          "parameters": "{'sleep_time': 3}"
+        },
+        {
+          "order": 2,
+          "name": "Farbe auf grün setzen",
+          "function": "set_color",
+          "parameters": "{'hex_value': 00f700}"
+        }
+      ]
+    },
+    {
+      "device": "[0/0/3]",
+      "protocol": "knx",
+      "actions": [
+        {
+          "order": 1,
+          "name": "KNX Lampe einschalten",
+          "function": "on",
+          "parameters": "{'value': 1}"
+        },
+        {
+          "order": 1,
+          "name": "Warte für 3 Sekunden",
+          "function": "wait",
+          "parameters": "{'sleep_time': 3}"
+        },
+        {
+          "order": 1,
+          "name": "KNX Lampe ausschalten",
+          "function": "on",
+          "parameters": "{'value': 0}"
+        }
+      ]
     }
-  }
+  ]
 }
