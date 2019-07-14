@@ -1,5 +1,8 @@
+from ask_sdk_model.ui import SimpleCard
+from bs4 import BeautifulSoup
+from django.template.loader import get_template
+
 from core.models import Scenario, ActiveScenario
-from hue.lights import Hue
 
 
 def launch_request(handler_input):
@@ -22,7 +25,7 @@ def launch_request(handler_input):
 
         # TODO: Das übernimmt der PI dann
         if active_scenario.riddle.commands.all():
-            execute_command(active_scenario.riddle.commands.all())
+            pass
 
         speech_text = get_template('skill/welcome_back.html').render(
             {'active_scenario': active_scenario}

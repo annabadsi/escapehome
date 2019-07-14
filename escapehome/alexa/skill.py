@@ -1,16 +1,13 @@
 import logging
 
-from bs4 import BeautifulSoup
 from ask_sdk_core.skill_builder import SkillBuilder
 from ask_sdk_core.utils import is_request_type, is_intent_name
 from ask_sdk_model import DialogState
 from ask_sdk_model.dialog import DelegateDirective
-from ask_sdk_model.ui import SimpleCard
-from django.template.loader import get_template
 
+from alexa.request_handler.launch_request_handler import *
 from core.models import Scenario, ActiveScenario
 from hue.lights import Hue
-from request_handler import launch_request
 
 sb = SkillBuilder()
 
@@ -134,7 +131,7 @@ def pose_riddle_intent_handler(handler_input):
 
             # TODO: Das übernimmt der PI dann
             if next_riddle.commands.all():
-                execute_command(next_riddle.commands.all())
+                pass
 
             session_attributes['riddle'] = scenario.riddles.all()[counter].id
     else:
@@ -293,11 +290,11 @@ def fallback_handler(handler_input):
         .speak(speech_text) \
         .ask(speech_text) \
         .set_card(
-            SimpleCard(
-                "Du brauchst Hilfe?",
-                BeautifulSoup(speech_text, features="html.parser").text
-            )
-        ).response
+        SimpleCard(
+            "Du brauchst Hilfe?",
+            BeautifulSoup(speech_text, features="html.parser").text
+        )
+    ).response
 
 
 @sb.request_handler(can_handle_func=is_request_type("SessionEndedRequest"))
