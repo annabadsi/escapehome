@@ -19,13 +19,14 @@ class Modbus(Protocol):
     """
 
     @staticmethod
-    def execute(value, *address):
+    def execute(*value, **address):
         """
             This function writes a new value to a device of the given ip address.
             The value has to be a boolean. For example: True, to open the box by the motor (False -> close the box).
         """
         try:
-            ip_address, device_address = address
+            ip_address = address['ip_address']
+            device_address = address['device_address']
             client = ModbusTcpClient(ip_address, port=502, timeout=10)
             client.write_coil(device_address, value)
             result = client.read_coils(device_address, 1)
