@@ -9,5 +9,5 @@ class Protocol(ABC):
         super().__init__()
 
     @abstractmethod
-    def execute(self, value, *address):
+    def execute(self, *args, **kwargs):
         pass
