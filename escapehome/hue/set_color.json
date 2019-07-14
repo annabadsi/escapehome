@@ -1,0 +1,17 @@
+{
+  "meta": {
+    "step_duration": 1,
+    "loop": 0,
+    "loop_break_duration": 1
+  },
+  "steps": {
+    "step": {
+      "position": 1,
+      "function": "function_name",
+      "values": {
+        "brightness": 100
+      },
+      "stop": ""
+    }
+  }
+}
