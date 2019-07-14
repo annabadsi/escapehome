@@ -7,6 +7,7 @@ import protocol as p
 import ast
 
 API_URL = "https://homeescape.pythonanywhere.com/api/commands/"
+API_RESPONSE_URL = "https://homeescape.pythonanywhere.com/api/cancel/"
 
 devices = {}
 execute_threads = []
@@ -92,8 +93,17 @@ def check_server(wait_time=0.5):
                 execute_thread.join()
     sleep(wait_time)
 
+def check_box(wait_time=5): 
+    """
+    Check the Box if the user opens it
+    """
+    ip_address, device_address = ('123.2.1.2', '1')
+    if p.Modbus.read(ip_address, device_address): 
+        res = requests.post(API_RESPONSE_URL, json={"exit_game": True})
+        exit(0)
 
 if __name__ == "__main__":
     # inital the protocols
+    c_th = threading.Thread(target=check_box, args=())
     while True:
         check_server(wait_time=5)
