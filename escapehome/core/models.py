@@ -32,6 +32,9 @@ class Device(models.Model):
         if isinstance(device, KNXLamp):
             return device.group_adddress
 
+    def as_json(self):
+        return self.get_child().as_json()
+
 
 class HueLamp(Device):
     lamp_id = models.IntegerField()
@@ -41,6 +44,9 @@ class HueLamp(Device):
     def __str__(self):
         return f'HueLamp {self.lamp_id} - {self.name} in {self.room}'
 
+    def as_json(self):
+        return self.lamp_id
+
 
 class HueRemoteControl(Device):
     control_id = models.IntegerField()
@@ -49,6 +55,9 @@ class HueRemoteControl(Device):
     def __str__(self):
         return f'HueRemoteControl {self.control_id} - {self.name}'
 
+    def as_json(self):
+        return self.control_id
+
 
 class KNXLamp(Device):
     group_adddress = models.CharField(max_length=255)
@@ -56,11 +65,17 @@ class KNXLamp(Device):
     def __str__(self):
         return f'KNXLamp {self.group_adddress}'
 
+    def as_json(self):
+        return self.group_adddress
+
 
 class KNXShutter(Device):
 
     def __str__(self):
         return f'KNXShutter {self.id}'
+
+    def as_json(self):
+        return {}
 
 
 class Action(models.Model):
@@ -71,15 +86,44 @@ class Action(models.Model):
     def __str__(self):
         return f'Action {self.name}'
 
+    def as_json(self):
+        return dict(
+            name=self.name,
+            function=self.function,
+            parameters=self.parameters,
+        )
+
 
 class Command(models.Model):
+    KNX = 'KNX'
+    HUE = 'PHue'
+    PROTOCOL_CHOICES = (
+        (KNX, 'knx'),
+        (HUE, 'philips hue'),
+    )
+
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, unique=True)
+    protocol = models.CharField(max_length=255, choices=PROTOCOL_CHOICES)
     actions = models.ManyToManyField(Action, through='OrderedAction', related_name='action', blank=True)
     devices = models.ManyToManyField(Device, related_name='device', blank=True)
 
     def __str__(self):
         return f'Command {self.name}'
+
+    def as_json(self):
+        return dict(
+            name=self.name,
+            protocol=self.protocol,
+            actions=[
+                action.as_json()
+                for action in self.actions.all().order_by('orderedaction')
+            ],
+            devices=[
+                device.as_json()
+                for device in self.devices.all()
+            ],
+        )
 
 
 class OrderedAction(models.Model):
@@ -106,6 +150,11 @@ class Riddle(models.Model):
 
     def __str__(self):
         return f'Riddle {self.id} - {self.task}'
+
+    def as_json(self):
+        return dict(
+            commands=[command.as_json() for command in self.commands.all()],
+        )
 
 
 class Scenario(models.Model):
