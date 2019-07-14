@@ -60,7 +60,7 @@ class RiddleAdmin(admin.ModelAdmin):
 
 
 @admin.register(HueLamp)
-class LampAdmin(admin.ModelAdmin):
+class HueLampAdmin(admin.ModelAdmin):
     search_fields = [
         'name',
     ]
@@ -72,8 +72,20 @@ class LampAdmin(admin.ModelAdmin):
     )
 
 
+@admin.register(HueRemoteControl)
+class HueRemoteControlAdmin(admin.ModelAdmin):
+    search_fields = [
+        'name',
+    ]
+
+    list_display = (
+        'control_id',
+        'name',
+    )
+
+
 @admin.register(KNXLamp)
-class LampAdmin(admin.ModelAdmin):
+class KNXLampAdmin(admin.ModelAdmin):
     pass
 
 
