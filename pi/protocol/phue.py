@@ -10,9 +10,10 @@ class PHue(Protocol):
 
     def __init__(self, protocol_id, protocol_type):
         self.IP_ADDRESS = '192.168.178.67'
+        super().__init__(protocol_id, protocol_type)
 
     @classmethod
-    def execute(cls, args):
+    def execute(cls, value, *address):
         #
         # This method execute the queries to the physical device
         #
