@@ -27,6 +27,8 @@ class Device(models.Model):
         device = self.get_child()
         if isinstance(device, HueLamp):
             return device.lamp_id
+        if isinstance(device, HueRemoteControl):
+            return device.control_id
 
 
 class HueLamp(Device):
@@ -39,12 +41,11 @@ class HueLamp(Device):
 
 
 class HueRemoteControl(Device):
-    lamp_id = models.IntegerField()
+    control_id = models.IntegerField()
     name = models.CharField(max_length=255)
-    room = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
-        return f'HueRemoteControl {self.lamp_id} - {self.name} in {self.room}'
+        return f'HueRemoteControl {self.control_id} - {self.name}'
 
 
 class KNXLamp(Device):
