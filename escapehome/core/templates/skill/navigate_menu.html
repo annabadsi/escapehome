@@ -7,7 +7,14 @@
         <p>Hier kommt deine erste Frage:</p>
         <p>{{ riddle.task }}</p>
     {% else %}
-        <p>Es gibt {{ scenarios.count }} verschiedene Szenarien: {{ scenarios | join:" oder " }}</p>
-        <p>Welches möchtest du spielen?</p>
+        {% if scenarios.count > 1 %}
+            <p>Es gibt {{ scenarios.count }} verschiedene Szenarien: {{ scenarios | join:" oder " }}</p>
+            <p>Welches möchtest du spielen?</p>
+        {% elif scenarios.count == 1 %}
+            <p> Es gibt das Szenario {{ scenarios | first }}.</p>
+            <p> Möchtest du es spielen? Dann sag jetzt: {{ scenarios | first }}</p>
+        {% else %}
+            <p> Es gibt noch keine Szenarien, lege zunächst eines an!</p>
+        {% endif %}
     {% endif %}
 {% endblock %}

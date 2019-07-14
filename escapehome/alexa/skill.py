@@ -10,6 +10,7 @@ from django.template.loader import get_template
 
 from core.models import Scenario, ActiveScenario
 from hue.lights import Hue
+from request_handler import launch_request
 
 sb = SkillBuilder()
 
@@ -22,34 +23,34 @@ MINUS_POINTS = -1
 @sb.request_handler(can_handle_func=is_request_type("LaunchRequest"))
 def launch_request_handler(handler_input):
     """Handler for Skill Launch."""
+    launch_request(handler_input)
+
+
+@sb.request_handler(can_handle_func=lambda i: is_intent_name('ChooseScenario')(
+    i) and i.request_envelope.request.dialog_state == DialogState.COMPLETED)
+def choose_sceanrio_intent_handler(handler_input):
+    """Handler for Choose Scenario Intent."""
+    counter = 0
+    slots = handler_input.request_envelope.request.intent.slots
     session_attributes = handler_input.attributes_manager.session_attributes
+    scenario_slot = slots.get('scenario').value if slots.get('scenario') else None
+    scenario = Scenario.objects.get(name__contains=scenario_slot) if scenario_slot else None
 
-    user = handler_input.request_envelope.context.system.user.user_id
-    active_scenario, created = ActiveScenario.objects.get_or_create(user=user)
+    speech_text = get_template('skill/scenario.html').render(
+        {'scenario': scenario, 'riddle': scenario.riddles.first()}
+    )
 
-    if created or not active_scenario.scenario:
-        speech_text = get_template('skill/welcome.html').render(
-            {'scenarios': Scenario.objects.all()}
-        )
-
-    else:
-        session_attributes['scenario'] = active_scenario.scenario.id
-        session_attributes['riddle'] = active_scenario.riddle.id
-        session_attributes['counter'] = active_scenario.state
-        session_attributes['score'] = active_scenario.score
-
-        # TODO: Das übernimmt der PI dann
-        if active_scenario.riddle.commands.all():
-            execute_command(active_scenario.riddle.commands.all())
-
-        speech_text = get_template('skill/welcome_back.html').render(
-            {'active_scenario': active_scenario}
-        )
+    if scenario:
+        session_attributes['scenario'] = scenario.id
+        session_attributes['counter'] = counter
+        session_attributes['riddle'] = scenario.riddles.first().id
+        session_attributes['score'] = 0
 
     return handler_input.response_builder.speak(
         speech_text
     ).set_card(
         SimpleCard(
+            f'{counter + 1}. Rästel für Szenario: {scenario.name}',
             BeautifulSoup(speech_text, features="html.parser").text
         )
     ).set_should_end_session(
@@ -57,10 +58,9 @@ def launch_request_handler(handler_input):
     ).response
 
 
-@sb.request_handler(can_handle_func=lambda i: is_intent_name('ChooseScenario')(
-    i) and i.request_envelope.request.dialog_state == DialogState.COMPLETED)
-def choose_sceanrio_intent_handler(handler_input):
-    """Handler for Choose Scenario Intent."""
+@sb.request_handler(can_handle_func=is_intent_name("CloseBoxStartGame"))
+def close_box_starte_game_intent_handler(handler_input):
+    """Handler to close box and start the game"""
     counter = 0
     slots = handler_input.request_envelope.request.intent.slots
     session_attributes = handler_input.attributes_manager.session_attributes
@@ -125,7 +125,7 @@ def pose_riddle_intent_handler(handler_input):
             # Gewonnen: alle Rätsel beantwortet
             set_should_end_session = True
 
-            # TODO: active sceanario nicht löschen!
+            # TODO: active sceanario in history speichern
             user = handler_input.request_envelope.context.system.user.user_id
             ActiveScenario.objects.get(user=user).delete()
         else:
@@ -272,26 +272,32 @@ def cancel_and_stop_intent_handler(handler_input):
 
 @sb.request_handler(can_handle_func=is_intent_name("AMAZON.FallbackIntent"))
 def fallback_handler(handler_input):
-    """AMAZON.FallbackIntent is only available in en-US locale.
-    This handler will not be triggered except in that locale, so it is safe to deploy on any locale."""
+    """Fallback Handler"""
     session_attributes = handler_input.attributes_manager.session_attributes
+    riddle = None
 
-    speech_text = get_template('skill/exception.html').render(
+    if session_attributes.get('scenario'):
+        scenario = Scenario.objects.get(id=session_attributes['scenario'])
+        riddle = scenario.riddles.get(id=session_attributes.get('riddle'))
+        session_attributes['score'] += MINUS_POINTS
+
+    speech_text = get_template('skill/fallback.html').render(
         {
             'scenario': session_attributes.get('scenario'),
             'scenarios': Scenario.objects.all(),
+            'riddle': riddle,
         }
     )
 
-    return handler_input.response_builder.speak(
-        speech_text
-    ).ask(
-        speech_text
-    ).set_card(
-        SimpleCard(
-            "Du brauchst Hilfe?",
-            BeautifulSoup(speech_text, features="html.parser").text)
-    ).response
+    return handler_input.response_builder \
+        .speak(speech_text) \
+        .ask(speech_text) \
+        .set_card(
+            SimpleCard(
+                "Du brauchst Hilfe?",
+                BeautifulSoup(speech_text, features="html.parser").text
+            )
+        ).response
 
 
 @sb.request_handler(can_handle_func=is_request_type("SessionEndedRequest"))
