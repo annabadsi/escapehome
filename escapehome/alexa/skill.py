@@ -122,7 +122,7 @@ def pose_riddle_intent_handler(handler_input):
         counter += 1
         score += riddle.points
         if counter == scenario.riddles.count():
-            # Gewonnen: alle Rätsel beantrwortet
+            # Gewonnen: alle Rätsel beantwortet
             set_should_end_session = True
 
             # TODO: active sceanario nicht löschen!

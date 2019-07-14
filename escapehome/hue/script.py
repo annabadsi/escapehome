@@ -1,8 +1,8 @@
 from core.models import Riddle
 from hue.lights import Hue
 
-# TODO woher weiß man welches Protocoll verwenden werden muss?
-# TODO abhängig von Model Class Name
+
+# Test Schript um die Commands / Actions aus den Models auszuführen
 h = Hue()
 
 # Lampe an, warten, aus

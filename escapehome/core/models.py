@@ -29,6 +29,8 @@ class Device(models.Model):
             return device.lamp_id
         if isinstance(device, HueRemoteControl):
             return device.control_id
+        if isinstance(device, KNXLamp):
+            return device.group_adddress
 
 
 class HueLamp(Device):
@@ -49,9 +51,10 @@ class HueRemoteControl(Device):
 
 
 class KNXLamp(Device):
+    group_adddress = models.CharField(max_length=255)
 
     def __str__(self):
-        return f'KNXLamp {self.id}'
+        return f'KNXLamp {self.group_adddress}'
 
 
 class KNXShutter(Device):
