@@ -127,5 +127,5 @@ ALEXA_API_URL = 'https://api.amazonalexa.com'
 ALEXA_SKILL_STAGE = 'development'
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-PASSWORD_FILEPATH = PROJECT_DIR + '/passwords.json'
-PASSWORDS = json.load(open(PASSWORD_FILEPATH))
+# PASSWORD_FILEPATH = PROJECT_DIR + '/passwords.json'
+# PASSWORDS = json.load(open(PASSWORD_FILEPATH))
