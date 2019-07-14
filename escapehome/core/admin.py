@@ -59,23 +59,22 @@ class RiddleAdmin(admin.ModelAdmin):
         return [riddle.get('name') for riddle in obj.commands.values('name')]
 
 
-@admin.register(Device)
-class DeviceAdmin(admin.ModelAdmin):
-    list_display = (
-        'id',
-    )
-
-
-@admin.register(Lamp)
+@admin.register(HueLamp)
 class LampAdmin(admin.ModelAdmin):
     search_fields = [
         'name',
     ]
 
     list_display = (
+        'lamp_id',
         'name',
         'room',
     )
+
+
+@admin.register(KNXLamp)
+class LampAdmin(admin.ModelAdmin):
+    pass
 
 
 class OrderedActionActionAdmin(admin.TabularInline):

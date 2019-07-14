@@ -11,16 +11,52 @@ class Device(models.Model):
     id = models.AutoField(primary_key=True)
 
     def __str__(self):
-        return f'Device {self.id}'
+        return self.get_child().__str__()
+
+    def get_child(self):
+        if hasattr(self, 'huelamp'):
+            return self.huelamp
+        if hasattr(self, 'hueremotecontrol'):
+            return self.hueremotecontrol
+        if hasattr(self, 'knxlamp'):
+            return self.knxlamp
+        if hasattr(self, 'knxshutter'):
+            return self.knxshutter
+
+    def get_id(self):
+        device = self.get_child()
+        if isinstance(device, HueLamp):
+            return device.lamp_id
 
 
-class Lamp(Device):
+class HueLamp(Device):
     lamp_id = models.IntegerField()
     name = models.CharField(max_length=255)
     room = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
-        return f'Lamp {self.lamp_id} - {self.name} in {self.room}'
+        return f'HueLamp {self.lamp_id} - {self.name} in {self.room}'
+
+
+class HueRemoteControl(Device):
+    lamp_id = models.IntegerField()
+    name = models.CharField(max_length=255)
+    room = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return f'HueRemoteControl {self.lamp_id} - {self.name} in {self.room}'
+
+
+class KNXLamp(Device):
+
+    def __str__(self):
+        return f'KNXLamp {self.id}'
+
+
+class KNXShutter(Device):
+
+    def __str__(self):
+        return f'KNXShutter {self.id}'
 
 
 class Action(models.Model):
