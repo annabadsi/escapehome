@@ -1,7 +1,7 @@
 import logging
 from pymodbus.client.sync import ModbusTcpClient
 
-from pi.protocol.protocol import Protocol
+from .protocol import Protocol
 
 FORMAT = ('%(asctime)-15s %(threadName)-15s '
           '%(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s')
@@ -17,9 +17,12 @@ class Modbus(Protocol):
             - Motor: 1
             - Magnet: 2
     """
+    @staticmethod
+    def execute(device, action):
+        Modbus.send(value, address)
 
     @staticmethod
-    def execute(*value, **address):
+    def send(*value, **address):
         """
             This function writes a new value to a device of the given ip address.
             The value has to be a boolean. For example: True, to open the box by the motor (False -> close the box).

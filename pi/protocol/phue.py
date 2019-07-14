@@ -1,6 +1,6 @@
 from phue import Bridge
 
-from pi.protocol.protocol import Protocol
+from .protocol import Protocol
 
 
 class PHue(Protocol):
@@ -13,12 +13,15 @@ class PHue(Protocol):
         self.IP_ADDRESS = '192.168.178.67'
         
 
-    @classmethod
-    def execute(cls, *value, **address):
+    @staticmethod
+    def execute(device, action):
         #
         # This method execute the queries to the physical device
         #
         pass
+
+    def send(*value, **address):
+        pass 
 
     def connect(self):
         b = Bridge(self.IP_ADDRESS)

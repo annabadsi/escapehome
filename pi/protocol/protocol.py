@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-
+from time import sleep
 
 class Protocol(ABC):
 
@@ -9,5 +9,12 @@ class Protocol(ABC):
         super().__init__()
 
     @abstractmethod
-    def execute(self, *args, **kwargs):
+    def execute(device, action):
         pass
+
+    @abstractmethod
+    def send(*args, **kwargs):
+        pass
+    
+    def wait(wait_time):
+        sleep(wait_time)

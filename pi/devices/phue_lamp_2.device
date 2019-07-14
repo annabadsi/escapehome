@@ -2,7 +2,7 @@
     "type": "Lamp",
     "protocol": "phue",
     "id": "3", 
-    "pk": "1",
+    "pk": "2",
     "methods": {
         "on": {
             "values": 1, 
