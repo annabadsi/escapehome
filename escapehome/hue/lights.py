@@ -74,6 +74,7 @@ class Hue:
 
     def blink(self, tr_time, blink_count):
         sleep_time = float(tr_time + 1) / 10.0
+        self.turn_on()
 
         for light_id in self.lights:
             light = HueLight(self.bridge, light_id)
@@ -88,3 +89,5 @@ class Hue:
 
                 self.bridge.set_light(light.light_id, state)
                 time.sleep(sleep_time)
+
+        self.turn_off()
