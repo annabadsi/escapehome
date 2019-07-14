@@ -60,6 +60,7 @@ def check_server(wait_time=0.5):
     """
     global execute_threads
     global last_response
+    
     res = requests.post(API_URL, json={"text": "was gibt es neues?"})
     if res.text == last_response: 
         sleep(wait_time)

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from time import sleep
+import ast
 
 class Protocol(ABC):
 
@@ -16,5 +17,6 @@ class Protocol(ABC):
     def send(*args, **kwargs):
         pass
     
-    def wait(wait_time):
+    def wait(parameters):
+        wait_time = ast.literal_eval(parameters)['sleep_time']
         sleep(wait_time)
