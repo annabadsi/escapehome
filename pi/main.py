@@ -11,6 +11,7 @@ API_URL = "https://homeescape.pythonanywhere.com/api/commands/"
 devices = {}
 execute_threads = []
 wait_time = 0.5
+last_response = None
 
 
 def update_devices():
@@ -57,13 +58,17 @@ def check_server(wait_time=0.5):
     """
     send a request to django and check what he has to do
     """
+    global execute_threads
+    global last_response
     res = requests.post(API_URL, json={"text": "was gibt es neues?"})
-    
+    if res.text == last_response: 
+        sleep(wait_time)
+        return
+
     data = json.loads(res.text)
     if data:
         try:
             # stop currcent thread
-            global execute_threads
             if execute_threads:
                 for execute_thread in execute_threads:
                     execute_thread.join()
@@ -79,6 +84,11 @@ def check_server(wait_time=0.5):
         except Exception as e: 
             print("Error in json")
             print(e)
+    else: 
+        # stop currcent thread 
+        if execute_threads:
+            for execute_thread in execute_threads:
+                execute_thread.join()
     sleep(wait_time)
 
 
