@@ -5,7 +5,7 @@ from ask_sdk_core.utils import is_request_type, is_intent_name
 from ask_sdk_model import DialogState
 from ask_sdk_model.dialog import DelegateDirective
 
-from alexa.request_handler.launch_request_handler import *
+from alexa.request_handler.launch import *
 from core.models import Scenario, ActiveScenario
 from hue.lights import Hue
 
@@ -20,7 +20,7 @@ MINUS_POINTS = -1
 @sb.request_handler(can_handle_func=is_request_type("LaunchRequest"))
 def launch_request_handler(handler_input):
     """Handler for Skill Launch."""
-    launch_request(handler_input)
+    return launch_request(handler_input)
 
 
 @sb.request_handler(can_handle_func=lambda i: is_intent_name('ChooseScenario')(
