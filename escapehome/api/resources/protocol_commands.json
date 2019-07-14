@@ -1,13 +1,10 @@
 {
-  //  allgemein über alle Actions und Steps
   "meta": {
-    // infinity, garnicht: 0, sonst: beliebige zahl
     "loop": 0
   },
   "commands": [
     {
       "device": "[5]",
-      //"device": "[5, 3]",
       "protocol": "phue",
       "actions": [
         {
