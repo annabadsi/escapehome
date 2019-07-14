@@ -9,10 +9,10 @@ class KNX(Protocol):
     """
 
     @classmethod
-    def execute(cls, args):
+    def execute(cls, value, *address):
         #
         # This method execute the queries to the physical device
         #
-        res = os.system("knxtool groupwrite ip:localhost {groupadress} {value}".format(args))
+        res = os.system(f"knxtool groupwrite ip:localhost {address} {value}")
         if res:
             raise Exception("There was an error on KNX execution")
