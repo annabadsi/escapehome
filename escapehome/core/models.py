@@ -22,6 +22,8 @@ class Device(models.Model):
             return self.knxlamp
         if hasattr(self, 'knxshutter'):
             return self.knxshutter
+        if hasattr(self, 'modbusmotor'):
+            return self.modbusmotor
 
     def get_id(self):
         device = self.get_child()
@@ -31,6 +33,8 @@ class Device(models.Model):
             return device.control_id
         if isinstance(device, KNXLamp):
             return device.group_adddress
+        if isinstance(device, ModbusMotor):
+            return device.device_address
 
     def as_json(self):
         return self.get_child().as_json()
@@ -57,6 +61,16 @@ class HueRemoteControl(Device):
 
     def as_json(self):
         return self.control_id
+
+
+class ModbusMotor(Device):
+    device_address = models.IntegerField()
+
+    def __str__(self):
+        return f'ModbusMotor {self.device_address}'
+
+    def as_json(self):
+        return self.device_address
 
 
 class KNXLamp(Device):
@@ -197,6 +211,8 @@ class ActiveScenario(models.Model):
     duration = models.DurationField(blank=True, null=True)
     score = models.IntegerField(default=0)
     state = models.IntegerField(blank=True, null=True)
+    box = models.BooleanField(default=True, blank=True, null=True,
+                              help_text='"true": box ist offen, "false": box ist geschlossen')
 
 
 @receiver(post_save, sender=Riddle)

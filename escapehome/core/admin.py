@@ -89,6 +89,11 @@ class KNXLampAdmin(admin.ModelAdmin):
     pass
 
 
+@admin.register(ModbusMotor)
+class ModbusMotor(admin.ModelAdmin):
+    pass
+
+
 class OrderedActionActionAdmin(admin.TabularInline):
     model = OrderedAction
     extra = 1  # how many rows to show
