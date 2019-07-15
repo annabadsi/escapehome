@@ -25,7 +25,7 @@ def commands(request):
             data = json.load(json_file)
     except:
         print("Fehler!")
-        data = ''
+        data = {}
 
     return Response(status=200, data=data)
 
