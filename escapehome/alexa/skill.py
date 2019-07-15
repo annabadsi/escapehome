@@ -14,7 +14,6 @@ from alexa.request_handler.helper.help import help_request
 from alexa.request_handler.helper.navigate_menu import navigate_menu_request
 from alexa.request_handler.launch import launch_request
 from alexa.request_handler.pose_riddle import pose_riddle_request
-from hue.lights import Hue
 
 sb = SkillBuilder()
 
@@ -94,16 +93,6 @@ def session_ended_request_handler(handler_input):
 def all_exception_handler(handler_input, exception):
     """Catch all exception handler, log exception and respond with custom message."""
     exception_request(handler_input, exception, logger)
-
-
-def execute_command(commands):
-    h = Hue()
-    for command in commands:
-        for action in command.actions.all().order_by('orderedaction'):
-            func = getattr(h, action.function)
-            lights = command.devices.values_list('lamp__lamp_id', flat=True)
-            h.lights = lights
-            func(**eval(action.parameters))
 
 
 skill = sb.create()
