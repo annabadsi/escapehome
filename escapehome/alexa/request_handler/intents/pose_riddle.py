@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from django.template.loader import get_template
 
 from alexa.request_handler.buildin.fallback import fallback_request
+from api.views import create_json
 from core.models import Scenario, ActiveScenario
 
 
@@ -39,10 +40,7 @@ def pose_riddle_request(handler_input, minus_points):
             else:
                 # Gehe zum nächsten Rätsel
                 next_riddle = scenario.riddles.all()[counter]
-
-                # TODO: Das übernimmt der PI dann
-                if next_riddle.commands.all():
-                    pass
+                create_json(next_riddle)
 
                 session_attributes['riddle'] = scenario.riddles.all()[counter].id
         else:
