@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from api.serializers import ReadySerializer
+from core.models import Riddle
 from escapehome import settings
 
 
@@ -27,3 +28,18 @@ def commands(request):
         data = ''
 
     return Response(status=200, data=data)
+
+
+def create_json(riddle: Riddle):
+    with open(f'{settings.PROJECT_DIR}/escapehome/api/resources/protocol_commands.json', 'w') as json_file:
+        if riddle.commands.all():
+            json.dump(
+                riddle.as_json(),
+                json_file,
+                indent=2
+            )
+        else:
+            json.dump(
+                {},
+                json_file
+            )

@@ -2,7 +2,7 @@ from ask_sdk_model.ui import SimpleCard
 from bs4 import BeautifulSoup
 from django.template.loader import get_template
 
-from api.json_command_creator import create_json
+from api.views import create_json
 from core.models import Scenario, ActiveScenario
 
 
@@ -24,8 +24,7 @@ def launch_request(handler_input):
         session_attributes['counter'] = active_scenario.state
         session_attributes['score'] = active_scenario.score
 
-        if active_scenario.riddle.commands.all():
-            create_json(active_scenario.riddle)
+        create_json(active_scenario.riddle)
 
         speech_text = get_template('skill/welcome_back.html').render(
             {'active_scenario': active_scenario}
