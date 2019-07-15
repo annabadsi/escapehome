@@ -10,9 +10,7 @@ from core.models import Scenario, ActiveScenario
 def pose_riddle_request(handler_input, minus_points):
     """Handler for Pose Riddle Intent."""
     session_attributes = handler_input.attributes_manager.session_attributes
-    if not session_attributes.get('scenario'):
-        return fallback_request(handler_input, minus_points)
-    else:
+    if session_attributes.get('scenario') and session_attributes.get('riddle'):
         slots = handler_input.request_envelope.request.intent.slots
         set_should_end_session = False
         next_riddle = None
@@ -72,3 +70,6 @@ def pose_riddle_request(handler_input, minus_points):
         ).set_should_end_session(
             set_should_end_session
         ).response
+    else:
+        return fallback_request(handler_input, minus_points)
+

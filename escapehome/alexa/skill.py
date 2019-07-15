@@ -44,7 +44,7 @@ def choose_sceanrio_intent_handler(handler_input):
 @sb.request_handler(can_handle_func=is_intent_name("CloseBoxStartGame"))
 def close_box_start_game_intent_handler(handler_input):
     """Handler to close box and start the game"""
-    return close_box_start_game_request(handler_input)
+    return close_box_start_game_request(handler_input, MINUS_POINTS)
 
 
 @sb.request_handler(can_handle_func=is_intent_name("PoseRiddle"))

@@ -9,11 +9,13 @@ def help_request(handler_input, minus_points):
     """Handler for Help Intent."""
     session_attributes = handler_input.attributes_manager.session_attributes
 
-    if session_attributes.get('scenario'):
+    if session_attributes.get('scenario') and session_attributes.get('riddle'):
         scenario = Scenario.objects.get(id=session_attributes['scenario'])
         riddle = scenario.riddles.get(id=session_attributes.get('riddle'))
         session_attributes['score'] += minus_points
         speech_text = get_template('skill/hint.html').render({'riddle': riddle})
+    elif session_attributes.get('scenario'):
+        speech_text = get_template('skill/close_box.html').render()
     else:
         speech_text = get_template('skill/choose_scenario.html').render(
             {
