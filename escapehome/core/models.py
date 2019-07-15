@@ -211,7 +211,7 @@ class ActiveScenario(models.Model):
     duration = models.DurationField(blank=True, null=True)
     score = models.IntegerField(default=0)
     state = models.IntegerField(blank=True, null=True)
-    box = models.BooleanField(default=True, blank=True, null=True,
+    box = models.BooleanField(default=False, blank=True, null=True,
                               help_text='"true": box ist offen, "false": box ist geschlossen')
 
 

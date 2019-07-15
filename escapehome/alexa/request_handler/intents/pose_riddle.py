@@ -2,15 +2,23 @@ from ask_sdk_model.ui import SimpleCard
 from bs4 import BeautifulSoup
 from django.template.loader import get_template
 
+from alexa.request_handler.buildin.cancel_and_stop import cancel_and_stop_request
 from alexa.request_handler.buildin.fallback import fallback_request
 from api.views import create_json
 from core.models import Scenario, ActiveScenario
 
 
-def pose_riddle_request(handler_input, minus_points):
+def pose_riddle_request(handler_input, minus_points, quit_minus_points):
     """Handler for Pose Riddle Intent."""
     session_attributes = handler_input.attributes_manager.session_attributes
-    if session_attributes.get('scenario') and session_attributes.get('riddle'):
+    user = handler_input.request_envelope.context.system.user.user_id
+    active_scenario = ActiveScenario.objects.get(user=user)
+
+    # if box was opened in game
+    if not session_attributes.get('box') and active_scenario.box:
+        return cancel_and_stop_request(handler_input, quit_minus_points)
+
+    if session_attributes.get('scenario') and not session_attributes.get('box'):
         slots = handler_input.request_envelope.request.intent.slots
         set_should_end_session = False
         next_riddle = None
@@ -35,6 +43,7 @@ def pose_riddle_request(handler_input, minus_points):
                 # TODO: active sceanario in history speichern
                 user = handler_input.request_envelope.context.system.user.user_id
                 ActiveScenario.objects.get(user=user).delete()
+                # TODO: box öffnen
             else:
                 # Gehe zum nächsten Rätsel
                 next_riddle = scenario.riddles.all()[counter]
@@ -71,5 +80,5 @@ def pose_riddle_request(handler_input, minus_points):
             set_should_end_session
         ).response
     else:
-        return fallback_request(handler_input, minus_points)
+        return fallback_request(handler_input, minus_points, quit_minus_points)
 

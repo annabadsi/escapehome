@@ -3,6 +3,7 @@
     {% if correct %}
         {% if counter == scenario.riddles.count %}
             <p>Super, du hast alle Rätsel richtig beantwortet!</p>
+            <p>Die Box öffnet sich nun wieder, damit du den Schlüssel entnehmen kannst. Jetzt bist du frei!</p>
             <p>Du hast {{ score }} von {{ scenario.possible_points }} möglichen Punkten erreicht.</p>
         {% else %}
             <p>{{ riddle.correct }}</p>

@@ -13,11 +13,15 @@ def launch_request(handler_input):
     user = handler_input.request_envelope.context.system.user.user_id
     active_scenario, created = ActiveScenario.objects.get_or_create(user=user)
 
+    session_attributes['box'] = True
+
+    # new game
     if created or not active_scenario.scenario:
         speech_text = get_template('skill/welcome.html').render(
             {'scenarios': Scenario.objects.all()}
         )
 
+    # continue game
     else:
         session_attributes['scenario'] = active_scenario.scenario.id
         session_attributes['riddle'] = active_scenario.riddle.id
