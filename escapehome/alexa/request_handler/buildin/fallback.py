@@ -8,20 +8,19 @@ from core.models import Scenario
 def fallback_request(handler_input, minus_points):
     """Fallback Handler"""
     session_attributes = handler_input.attributes_manager.session_attributes
-    riddle = None
 
     if session_attributes.get('scenario'):
         scenario = Scenario.objects.get(id=session_attributes['scenario'])
         riddle = scenario.riddles.get(id=session_attributes.get('riddle'))
         session_attributes['score'] += minus_points
-
-    speech_text = get_template('skill/fallback.html').render(
-        {
-            'scenario': session_attributes.get('scenario'),
-            'scenarios': Scenario.objects.all(),
-            'riddle': riddle,
-        }
-    )
+        speech_text = get_template('skill/wrong_answer.html').render({'riddle': riddle})
+    else:
+        speech_text = get_template('skill/choose_scenario.html').render(
+            {
+                'scenario': session_attributes.get('scenario'),
+                'scenarios': Scenario.objects.all(),
+            }
+        )
 
     return handler_input.response_builder.speak(
             speech_text
