@@ -86,12 +86,30 @@ class HueRemoteControlAdmin(admin.ModelAdmin):
 
 @admin.register(KNXLamp)
 class KNXLampAdmin(admin.ModelAdmin):
-    pass
+    search_fields = [
+        'name',
+        'modus',
+    ]
+
+    list_display = (
+        'group_adddress',
+        'name',
+    )
 
 
 @admin.register(KNXShutter)
 class KNXShutterAdmin(admin.ModelAdmin):
-    pass
+    search_fields = [
+        'name',
+        'modus',
+    ]
+
+    list_display = (
+        'group_adddress',
+        'name',
+        'modus',
+    )
+
 
 
 @admin.register(ModbusMotor)

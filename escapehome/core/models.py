@@ -77,9 +77,10 @@ class ModbusMotor(Device):
 
 class KNXLamp(Device):
     group_adddress = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
 
     def __str__(self):
-        return f'KNXLamp {self.group_adddress}'
+        return f'KNXLamp {self.name}'
 
     def as_json(self):
         return self.group_adddress
@@ -87,9 +88,11 @@ class KNXLamp(Device):
 
 class KNXShutter(Device):
     group_adddress = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    modus = models.CharField(max_length=255)
 
     def __str__(self):
-        return f'KNXShutter {self.group_adddress}'
+        return f'KNXShutter {self.name}'
 
     def as_json(self):
         return self.group_adddress
