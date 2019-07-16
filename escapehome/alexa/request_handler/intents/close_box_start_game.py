@@ -1,7 +1,9 @@
 from ask_sdk_model.ui import SimpleCard
 from bs4 import BeautifulSoup
 from django.template.loader import get_template
-from core.models import Scenario, ActiveScenario
+
+from api.views import box_command_to_json
+from core.models import Scenario, ActiveScenario, Command
 from alexa.request_handler.buildin.fallback import fallback_request
 
 
@@ -28,7 +30,7 @@ def close_box_start_game_request(handler_input, minus_points, quit_minus_points)
                 False
             ).response
         else:
-            # TODO: box schließen
+            box_command_to_json(Command.objects.get(name='modbus box schließen'), user)
             session_attributes['box'] = False
             scenario = Scenario.objects.get(id=session_attributes['scenario'])
 

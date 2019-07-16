@@ -111,16 +111,18 @@ class Action(models.Model):
 class Command(models.Model):
     KNX = 'KNX'
     HUE = 'PHue'
+    MODBUS = 'Modbus'
     PROTOCOL_CHOICES = (
         (KNX, 'knx'),
         (HUE, 'philips hue'),
+        (MODBUS, 'modbus'),
     )
 
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, unique=True)
     protocol = models.CharField(max_length=255, choices=PROTOCOL_CHOICES)
-    actions = models.ManyToManyField(Action, through='OrderedAction', related_name='action', blank=True)
-    devices = models.ManyToManyField(Device, related_name='device', blank=True)
+    actions = models.ManyToManyField(Action, through='OrderedAction', related_name='command', blank=True)
+    devices = models.ManyToManyField(Device, related_name='command', blank=True)
 
     def __str__(self):
         return f'Command {self.name}'

@@ -4,8 +4,8 @@ from django.template.loader import get_template
 
 from alexa.request_handler.buildin.cancel_and_stop import cancel_and_stop_request
 from alexa.request_handler.buildin.fallback import fallback_request
-from api.views import create_json
-from core.models import Scenario, ActiveScenario
+from api.views import riddle_commands_to_json, box_command_to_json
+from core.models import Scenario, ActiveScenario, Command
 
 
 def pose_riddle_request(handler_input, minus_points, quit_minus_points):
@@ -43,11 +43,11 @@ def pose_riddle_request(handler_input, minus_points, quit_minus_points):
                 # TODO: active sceanario in history speichern
                 user = handler_input.request_envelope.context.system.user.user_id
                 ActiveScenario.objects.get(user=user).delete()
-                # TODO: box öffnen
+                box_command_to_json(Command.objects.get(name='modbus box öffnen'), user)
             else:
                 # Gehe zum nächsten Rätsel
                 next_riddle = scenario.riddles.all()[counter]
-                create_json(next_riddle)
+                riddle_commands_to_json(next_riddle, user)
 
                 session_attributes['riddle'] = scenario.riddles.all()[counter].id
         else:
