@@ -89,6 +89,11 @@ class KNXLampAdmin(admin.ModelAdmin):
     pass
 
 
+@admin.register(KNXShutter)
+class KNXShutterAdmin(admin.ModelAdmin):
+    pass
+
+
 @admin.register(ModbusMotor)
 class ModbusMotor(admin.ModelAdmin):
     pass
