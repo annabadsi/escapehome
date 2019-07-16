@@ -22,6 +22,8 @@ class Device(models.Model):
             return self.knxlamp
         if hasattr(self, 'knxshutter'):
             return self.knxshutter
+        if hasattr(self, 'modbusmotor'):
+            return self.modbusmotor
 
     def get_id(self):
         device = self.get_child()
@@ -31,6 +33,8 @@ class Device(models.Model):
             return device.control_id
         if isinstance(device, KNXLamp):
             return device.group_adddress
+        if isinstance(device, ModbusMotor):
+            return device.device_address
 
     def as_json(self):
         return self.get_child().as_json()
@@ -57,6 +61,16 @@ class HueRemoteControl(Device):
 
     def as_json(self):
         return self.control_id
+
+
+class ModbusMotor(Device):
+    device_address = models.IntegerField()
+
+    def __str__(self):
+        return f'ModbusMotor {self.device_address}'
+
+    def as_json(self):
+        return self.device_address
 
 
 class KNXLamp(Device):
@@ -140,6 +154,7 @@ class Riddle(models.Model):
     task = models.TextField()
     solution = models.TextField()
     points = models.IntegerField()
+    loop = models.IntegerField(default=99, help_text='0 (only once) - 99 (infinity)')
     commands = models.ManyToManyField(Command, blank=True, related_name='riddle')
     hints = models.TextField(blank=True)
     correct = models.TextField(blank=True, default="Grandios, dass war richtig.")
@@ -151,8 +166,12 @@ class Riddle(models.Model):
     def __str__(self):
         return f'Riddle {self.id} - {self.task}'
 
-    def as_json(self):
+    def as_json(self, user_id):
         return dict(
+            meta=dict(
+                loop=self.loop,
+                user_id=user_id,
+            ),
             commands=[command.as_json() for command in self.commands.all()],
         )
 
@@ -197,6 +216,8 @@ class ActiveScenario(models.Model):
     duration = models.DurationField(blank=True, null=True)
     score = models.IntegerField(default=0)
     state = models.IntegerField(blank=True, null=True)
+    box = models.BooleanField(default=False, blank=True, null=True,
+                              help_text='"true": box ist offen, "false": box ist geschlossen')
 
 
 @receiver(post_save, sender=Riddle)

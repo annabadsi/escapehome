@@ -1,9 +1,0 @@
-{% block content %}
-    {% if not scenario %}
-        <p>Wähle ein Szenario aus.</p>
-        <p>Es stehen: {{ scenarios | join:" oder " }} zur Auswahl.</p>
-    {% else %}
-        <p>{{ riddle.incorrect }} </p>
-    {% endif %}
-
-{% endblock %}

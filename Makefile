@@ -1,4 +1,5 @@
 SKILLID = amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29
+PROFILE = default
 STATIC_PATH = escapehome/escapehome/static
 
 run:
@@ -28,16 +29,16 @@ update-requirements:
 	docker-compose exec web pip freeze > requirements_docker.txt
 
 skill-status:
-	ask api get-skill-status -s ${SKILLID}
+	ask api get-skill-status -s ${SKILLID} -p ${PROFILE}
 
 get-skill:
-	ask api get-skill -s ${SKILLID} --stage development > ${STATIC_PATH}/skill.json
+	ask api get-skill -s ${SKILLID} -p ${PROFILE} --stage development > ${STATIC_PATH}/skill.json
 
 update-skill:
-	ask api update-skill -s ${SKILLID} --stage development -f ${STATIC_PATH}/skill.json
+	ask api update-skill -s ${SKILLID} -p ${PROFILE} --stage development -f ${STATIC_PATH}/skill.json
 
 get-model:
-	ask api get-model -s ${SKILLID} --stage development -l de-DE > ${STATIC_PATH}/model.json
+	ask api get-model -s ${SKILLID} -p ${PROFILE} --stage development -l de-DE > ${STATIC_PATH}/model.json
 
 update-model:
-	ask api update-model -s ${SKILLID} -f ${STATIC_PATH}/model.json -l de-DE --stage development
+	ask api update-model -s ${SKILLID} -p ${PROFILE} -f ${STATIC_PATH}/model.json -l de-DE --stage development
