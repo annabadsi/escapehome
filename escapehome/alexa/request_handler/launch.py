@@ -34,12 +34,5 @@ def launch_request(handler_input):
             {'active_scenario': active_scenario}
         )
 
-    return handler_input.response_builder.speak(
-        speech_text
-    ).set_card(
-        SimpleCard(
-            BeautifulSoup(speech_text, features="html.parser").text
-        )
-    ).set_should_end_session(
-        False
-    ).response
+    handler_input.response_builder.speak(speech_text).ask(speech_text)
+    return handler_input.response_builder.response

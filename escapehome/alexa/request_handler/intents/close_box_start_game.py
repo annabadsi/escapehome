@@ -39,9 +39,10 @@ def close_box_start_game_request(handler_input, minus_points, quit_minus_points)
                 session_attributes['score'] = 0
 
             counter = session_attributes['counter']
+            riddle = scenario.riddles.get(id=session_attributes['riddle'])
 
             speech_text = get_template('skill/first_riddle.html').render(
-                {'scenario': scenario, 'riddle': scenario.riddles.first()}
+                {'scenario': scenario, 'riddle': riddle}
             )
 
             return handler_input.response_builder.speak(
