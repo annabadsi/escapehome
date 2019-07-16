@@ -1,8 +1,8 @@
 from django.conf.urls import url
 
-from api.views import ready, commands
+from api.views import commands, cancel
 
 urlpatterns = [
-    url(r'^ready/$', ready),
     url(r'^commands/$', commands),
+    url(r'^cancel/$', cancel),
 ]

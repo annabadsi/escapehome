@@ -154,6 +154,7 @@ class Riddle(models.Model):
     task = models.TextField()
     solution = models.TextField()
     points = models.IntegerField()
+    loop = models.IntegerField(default=99, help_text='0 (only once) - 99 (infinity)')
     commands = models.ManyToManyField(Command, blank=True, related_name='riddle')
     hints = models.TextField(blank=True)
     correct = models.TextField(blank=True, default="Grandios, dass war richtig.")
@@ -165,8 +166,12 @@ class Riddle(models.Model):
     def __str__(self):
         return f'Riddle {self.id} - {self.task}'
 
-    def as_json(self):
+    def as_json(self, user_id):
         return dict(
+            meta=dict(
+                loop=self.loop,
+                user_id=user_id,
+            ),
             commands=[command.as_json() for command in self.commands.all()],
         )
 

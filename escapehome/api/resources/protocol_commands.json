@@ -1,4 +1,8 @@
 {
+  "meta": {
+    "loop": 99,
+    "user_id": "123456"
+  },
   "commands": [
     {
       "name": "Farbenwechsel Sofa",
