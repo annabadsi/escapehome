@@ -35,8 +35,9 @@ def get_protocol(protocol):
     return getattr(p, protocol)
 
 def execute_actions(protocol,device, actions): 
-    for action in actions: 
-        protocol.execute(device, action)
+    while True:
+        for action in actions: 
+            protocol.execute(device, action)
 
 def execute_commands(*args):
     """
@@ -44,6 +45,7 @@ def execute_commands(*args):
 
     args is a list of commands 
     """
+    print(args)
     for command in args: 
         devices = ast.literal_eval(command['device'])
         for device in devices: 
@@ -54,20 +56,32 @@ def execute_commands(*args):
             th.start()
     
 
+def ping_server(): 
+    res = requests.post(API_URL, json={"text": "was gibt es neues?"}, timeout=2)
+    result = res.text
+    res.connection.close()
+    return result
 
-def check_server(wait_time=0.5):
+def ping_file(): 
+    dat = open("test/test.json").read()
+    return dat
+    
+def check_server(server=True):
     """
     send a request to django and check what he has to do
     """
     global execute_threads
     global last_response
-    
-    res = requests.post(API_URL, json={"text": "was gibt es neues?"})
-    if res.text == last_response: 
-        sleep(wait_time)
+    if server:
+        response = ping_server()
+    else: 
+        response = ping_file()
+    if response == last_response:
+        print('i do nothing') 
         return
-
-    data = json.loads(res.text)
+    last_response = response
+    data = json.loads(response)
+    print('data', data)
     if data:
         try:
             # stop currcent thread
@@ -91,7 +105,8 @@ def check_server(wait_time=0.5):
         if execute_threads:
             for execute_thread in execute_threads:
                 execute_thread.join()
-    sleep(wait_time)
+    
+    
 
 def check_box(wait_time=5): 
     """
@@ -104,6 +119,12 @@ def check_box(wait_time=5):
 
 if __name__ == "__main__":
     # inital the protocols
-    c_th = threading.Thread(target=check_box, args=())
+    #c_th = threading.Thread(target=check_box, args=())
+    wait_time=5
     while True:
-        check_server(wait_time=5)
+        try:
+            check_server(False)
+        except Exception as e: 
+            print(e)
+        sleep(wait_time)
+
