@@ -77,7 +77,6 @@ Body: `{"text":"was gibt es neues?"}`
 Alexa Skills Kit Command Line Interface  
 https://developer.amazon.com/docs/smapi/quick-start-alexa-skills-kit-command-line-interface.html
 
-
 **[get-skill](https://developer.amazon.com/docs/smapi/ask-cli-command-reference.html#get-skill-subcommand)** 
 ```
 ask api get-skill -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29 --stage development > escapehome/escapehome/static/skill.json
@@ -104,6 +103,13 @@ ask api get-skill-status -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29
 ```
 
 ### Update Custom Slot Types
+Beim ersten Mal für Authentifizierung: `ask init --no-browser`
+
+Daten von Alexa holen: (nur einmal zu Beginn)
+1. `make get-model`
+2. `make get-skill`
+
+Daten von Django zu Alexa übertragen:
 1. `make update-model`
 2. `make skill-status`
 
