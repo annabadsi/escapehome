@@ -33,6 +33,8 @@ class Device(models.Model):
             return device.control_id
         if isinstance(device, KNXLamp):
             return device.group_adddress
+        if isinstance(device, KNXShutter):
+            return device.group_adddress
         if isinstance(device, ModbusMotor):
             return device.device_address
 
@@ -84,12 +86,13 @@ class KNXLamp(Device):
 
 
 class KNXShutter(Device):
+    group_adddress = models.CharField(max_length=255)
 
     def __str__(self):
-        return f'KNXShutter {self.id}'
+        return f'KNXShutter {self.group_adddress}'
 
     def as_json(self):
-        return {}
+        return self.group_adddress
 
 
 class Action(models.Model):
