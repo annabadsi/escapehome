@@ -1,0 +1,64 @@
+{
+    "meta": {
+        "loop": 0
+    },
+    "commands": [
+      {
+        "device": "['0/0/2']",
+        "protocol": "KNX",
+        "actions": [
+          {
+            "order": 1,
+            "name": "KNX Lampe einschalten",
+            "function": "on",
+            "parameters": "{'value': 1}"
+          },
+          {
+            "order": 2,
+            "name": "Warte für 5 Sekunden",
+            "function": "wait",
+            "parameters": "{'sleep_time': 5}"
+          },
+          {
+            "order": 3,
+            "name": "KNX Lampe ausschalten",
+            "function": "off",
+            "parameters": "{'value': 0}"
+          },
+          {
+            "order": 4,
+            "name": "Warte für 3 Sekunden",
+            "function": "wait",
+            "parameters": "{'sleep_time': 3}"
+          }]
+      }, {
+        "device": "['0/0/1']",
+        "protocol": "KNX",
+        "actions": [
+          {
+            "order": 1,
+            "name": "KNX Lampe einschalten",
+            "function": "on",
+            "parameters": "{'value': 1}"
+          },
+          {
+            "order": 2,
+            "name": "Warte für 5 Sekunden",
+            "function": "wait",
+            "parameters": "{'sleep_time': 6}"
+          },
+          {
+            "order": 3,
+            "name": "KNX Lampe ausschalten",
+            "function": "off",
+            "parameters": "{'value': 0}"
+          },
+          {
+            "order": 4,
+            "name": "Warte für 3 Sekunden",
+            "function": "wait",
+            "parameters": "{'sleep_time': 3}"
+          }]
+      }]
+}
+

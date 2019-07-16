@@ -35,8 +35,9 @@ def get_protocol(protocol):
     return getattr(p, protocol)
 
 def execute_actions(protocol,device, actions): 
-    for action in actions: 
-        protocol.execute(device, action)
+    while True:
+        for action in actions: 
+            protocol.execute(device, action)
 
 def execute_commands(*args):
     """
@@ -55,24 +56,32 @@ def execute_commands(*args):
             th.start()
     
 
+def ping_server(): 
+    res = requests.post(API_URL, json={"text": "was gibt es neues?"}, timeout=2)
+    result = res.text
+    res.connection.close()
+    return result
 
-def check_server():
+def ping_file(): 
+    dat = open("test/test.json").read()
+    return dat
+    
+def check_server(server=True):
     """
     send a request to django and check what he has to do
     """
     global execute_threads
     global last_response
-
-    res = requests.post(API_URL, json={"text": "was gibt es neues?"}, timeout=2)
-    print(res.__dict__)
-    print(res.text, last_response)
-    if res.text == last_response:
-        res.connection.close()
+    if server:
+        response = ping_server()
+    else: 
+        response = ping_file()
+    if response == last_response:
         print('i do nothing') 
         return
-    last_response = res.text
-    data = json.loads(res.text)
-    res.connection.close()
+    last_response = response
+    data = json.loads(response)
+    print('data', data)
     if data:
         try:
             # stop currcent thread
@@ -114,7 +123,7 @@ if __name__ == "__main__":
     wait_time=5
     while True:
         try:
-            check_server()
+            check_server(False)
         except Exception as e: 
             print(e)
         sleep(wait_time)
