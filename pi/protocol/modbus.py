@@ -1,5 +1,6 @@
 import logging
 from pymodbus.client.sync import ModbusTcpClient
+import ast
 
 from .protocol import Protocol
 
@@ -19,19 +20,26 @@ class Modbus(Protocol):
     """
     @staticmethod
     def execute(device, action):
-        Modbus.send(value, address)
+        try:
+            fun = getattr(Modbus, action['function'])
+            fun(action['parameters'])
+        except Exception: 
+            Modbus.send(device,value=action)
+        
 
     @staticmethod
-    def send(*value, **address):
+    def send(*address, **value):
         """
             This function writes a new value to a device of the given ip address.
             The value has to be a boolean. For example: True, to open the box by the motor (False -> close the box).
         """
+        #print(value,' | ', address)
         try:
-            ip_address = address['ip_address']
-            device_address = address['device_address']
+            ip_address = address[0]
+            device_address = 1 #address['device_address']
             client = ModbusTcpClient(ip_address, port=502, timeout=10)
-            client.write_coil(device_address, value)
+            v = ast.literal_eval(value['value']['parameters'])['value']
+            client.write_coil(device_address, v)
             result = client.read_coils(device_address, 1)
             log.debug(result)
             client.close()
