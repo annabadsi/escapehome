@@ -44,6 +44,7 @@ def execute_commands(*args):
 
     args is a list of commands 
     """
+    print(args)
     for command in args: 
         devices = ast.literal_eval(command['device'])
         for device in devices: 
@@ -55,19 +56,23 @@ def execute_commands(*args):
     
 
 
-def check_server(wait_time=0.5):
+def check_server():
     """
     send a request to django and check what he has to do
     """
     global execute_threads
     global last_response
-    
-    res = requests.post(API_URL, json={"text": "was gibt es neues?"})
-    if res.text == last_response: 
-        sleep(wait_time)
-        return
 
+    res = requests.post(API_URL, json={"text": "was gibt es neues?"}, timeout=2)
+    print(res.__dict__)
+    print(res.text, last_response)
+    if res.text == last_response:
+        res.connection.close()
+        print('i do nothing') 
+        return
+    last_response = res.text
     data = json.loads(res.text)
+    res.connection.close()
     if data:
         try:
             # stop currcent thread
@@ -91,7 +96,8 @@ def check_server(wait_time=0.5):
         if execute_threads:
             for execute_thread in execute_threads:
                 execute_thread.join()
-    sleep(wait_time)
+    
+    
 
 def check_box(wait_time=5): 
     """
@@ -104,6 +110,12 @@ def check_box(wait_time=5):
 
 if __name__ == "__main__":
     # inital the protocols
-    c_th = threading.Thread(target=check_box, args=())
+    #c_th = threading.Thread(target=check_box, args=())
+    wait_time=5
     while True:
-        check_server(wait_time=5)
+        try:
+            check_server()
+        except Exception as e: 
+            print(e)
+        sleep(wait_time)
+
