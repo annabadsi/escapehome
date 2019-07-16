@@ -4,61 +4,33 @@
     },
     "commands": [
       {
-        "device": "['0/0/2']",
-        "protocol": "KNX",
+        "device": "['192.168.43.151']",
+        "protocol": "Modbus",
         "actions": [
-          {
-            "order": 1,
-            "name": "KNX Lampe einschalten",
-            "function": "on",
-            "parameters": "{'value': 1}"
-          },
-          {
-            "order": 2,
-            "name": "Warte für 5 Sekunden",
-            "function": "wait",
-            "parameters": "{'sleep_time': 5}"
-          },
-          {
-            "order": 3,
-            "name": "KNX Lampe ausschalten",
-            "function": "off",
-            "parameters": "{'value': 0}"
-          },
-          {
-            "order": 4,
-            "name": "Warte für 3 Sekunden",
-            "function": "wait",
-            "parameters": "{'sleep_time': 3}"
-          }]
-      }, {
-        "device": "['0/0/1']",
-        "protocol": "KNX",
-        "actions": [
-          {
-            "order": 1,
-            "name": "KNX Lampe einschalten",
-            "function": "on",
-            "parameters": "{'value': 1}"
-          },
-          {
-            "order": 2,
-            "name": "Warte für 5 Sekunden",
-            "function": "wait",
-            "parameters": "{'sleep_time': 6}"
-          },
-          {
-            "order": 3,
-            "name": "KNX Lampe ausschalten",
-            "function": "off",
-            "parameters": "{'value': 0}"
-          },
-          {
-            "order": 4,
-            "name": "Warte für 3 Sekunden",
-            "function": "wait",
-            "parameters": "{'sleep_time': 3}"
-          }]
+              {
+                "order": 1,
+                "name": "Warte 2 sekunden",
+                "function": "wait",
+                "parameters": "{'sleep_time': 2}"
+              },
+              {
+                "order": 2,
+                "name": "oeffne box",
+                "function": "open",
+                "parameters": "{'value': True}"
+              },
+              {
+                "order": 3,
+                "name": "warte fur 2 sekunden",
+                "function": "wait",
+                "parameters": "{'sleep_time': 2}"
+              },
+              {
+                "order": 4,
+                "name": "schliesse box",
+                "function": "close",
+                "parameters": "{'value': False}"
+              }]
       }]
 }
 

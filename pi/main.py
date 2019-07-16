@@ -35,9 +35,8 @@ def get_protocol(protocol):
     return getattr(p, protocol)
 
 def execute_actions(protocol,device, actions): 
-    while True:
-        for action in actions: 
-            protocol.execute(device, action)
+    for action in actions: 
+        protocol.execute(device, action)
 
 def execute_commands(*args):
     """
