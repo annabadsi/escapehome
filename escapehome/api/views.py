@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from api.serializers import CancelSerializer
-from core.models import Riddle, ActiveScenario
+from core.models import Riddle, ActiveScenario, Command
 from escapehome import settings
 
 
@@ -37,16 +37,32 @@ def cancel(request):
     return Response(status=200, data=None)
 
 
-def create_json(riddle: Riddle, user_id: str):
+def create_json(data: dict):
     with open(f'{settings.PROJECT_DIR}/escapehome/api/resources/protocol_commands.json', 'w') as json_file:
-        if riddle.commands.all():
-            json.dump(
-                riddle.as_json(user_id),
-                json_file,
-                indent=2
-            )
-        else:
-            json.dump(
-                {},
-                json_file
-            )
+        json.dump(
+            data,
+            json_file,
+            indent=2
+        )
+
+
+def riddle_commands_to_json(riddle: Riddle, user_id: str):
+    if riddle.commands.all():
+        create_json(riddle.as_json(user_id))
+    else:
+        create_json({})
+
+
+def box_command_to_json(command: Command, user_id: str, ):
+    create_json(
+        {
+            'meta':
+                {
+                    'loop': 1,
+                    'user_id': user_id
+                },
+            'commands': [
+                command.as_json()
+            ]
+        }
+    )

@@ -1,15 +1,17 @@
 from django.template.loader import get_template
 
-from core.models import Scenario, ActiveScenario
+from api.views import box_command_to_json
+from core.models import Scenario, ActiveScenario, Command
 
 
 def exception_request(handler_input, exception, logger):
     """Catch all exception handler, log exception and respond with custom message."""
     session_attributes = handler_input.attributes_manager.session_attributes
+    user = handler_input.request_envelope.context.system.user.user_id
 
     if not session_attributes.get('box'):
         # reopen box
-        # TODO: box öffnen
+        box_command_to_json(Command.objects.get(name='modbus box öffnen'), user)
         session_attributes['box'] = True
 
         # get session attributes
@@ -19,7 +21,6 @@ def exception_request(handler_input, exception, logger):
         counter = session_attributes['counter']
 
         # save attributes in database
-        user = handler_input.request_envelope.context.system.user.user_id
         active_scenario = ActiveScenario.objects.get(user=user)
         active_scenario.scenario = scenario
         active_scenario.riddle = riddle
