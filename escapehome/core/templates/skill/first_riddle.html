@@ -1,6 +1,8 @@
 {% block content %}
     <p>Sehr gut dann geht es jetzt los.</p>
-    <audio src="https://homeescape.pythonanywhere.com/static/harrypotter.mp3"/>
+    {% if intro %}
+        <audio src="{{ intro }}"></audio>
+    {% endif %}
     <p> {{ scenario.description }} </p>
     <p>Hier kommt die Frage:</p>
     <p>{{ riddle.task }}</p>

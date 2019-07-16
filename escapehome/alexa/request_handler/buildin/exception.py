@@ -14,7 +14,8 @@ def exception_request(handler_input, exception, logger):
         box_command_to_json(Command.objects.get(name='modbus box öffnen'), user)
         session_attributes['box'] = True
 
-        if session_attributes.get('scenario') and session_attributes.get('riddle') and session_attributes.get('score') and session_attributes.get('counter'):
+        if session_attributes.get('scenario') and session_attributes.get('riddle') and session_attributes.get(
+                'score') and session_attributes.get('counter'):
             # get session attributes
             scenario = Scenario.objects.get(id=session_attributes['scenario'])
             riddle = scenario.riddles.get(id=session_attributes['riddle'])
@@ -29,7 +30,7 @@ def exception_request(handler_input, exception, logger):
             active_scenario.state = counter
             active_scenario.save()
         else:
-            print("Something went wrong in exception handling")
+            print("Something went wrong while handling the exception")
 
     logger.error(exception, exc_info=True)
 
