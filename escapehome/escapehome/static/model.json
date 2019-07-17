@@ -119,6 +119,20 @@
             "können wir was anderes spielen",
             "ich will was anderes spielen"
           ]
+        },
+        {
+          "name": "CloseBoxStartGame",
+          "slots": [],
+          "samples": [
+            "bin soweit",
+            "bin bereit",
+            "bin ich",
+            "die box ist zu",
+            "Ja",
+            "Erledigt",
+            "Hab ich gemacht",
+            "Die Box ist jetzt zu"
+          ]
         }
       ],
       "types": [
@@ -126,27 +140,17 @@
           "values": [
             {
               "name": {
-                "value": "Lustige Lichter"
+                "value": "Gefangen in Hogwarts"
               }
             },
             {
               "name": {
-                "value": "Quiz Fragen"
+                "value": "Harry Potter"
               }
             },
             {
               "name": {
-                "value": "Quiz"
-              }
-            },
-            {
-              "name": {
-                "value": "Fragen"
-              }
-            },
-            {
-              "name": {
-                "value": "Lichter"
+                "value": "Hogwarts"
               }
             }
           ],
@@ -156,152 +160,42 @@
           "values": [
             {
               "name": {
-                "value": "paulchen panther"
+                "value": "Gryffindor"
               }
             },
             {
               "name": {
-                "value": "rosaroter panther"
+                "value": "An die Farben von Gryffindor"
               }
             },
             {
               "name": {
-                "value": "der rosarote Panther"
+                "value": "Farben von Gryffindor,"
               }
             },
             {
               "name": {
-                "value": "paulchen"
+                "value": "neundreiviertel"
               }
             },
             {
               "name": {
-                "value": "rot"
+                "value": "Lumos"
               }
             },
             {
               "name": {
-                "value": "die Farbe ist rot"
+                "value": "Lumos Maxima"
               }
             },
             {
               "name": {
-                "value": "die Lampe leuchtet rot"
+                "value": "Lumos Solem"
               }
             },
             {
               "name": {
-                "value": "sie leuchtet rot"
-              }
-            },
-            {
-              "name": {
-                "value": "die Lampe blickt drei mal rot"
-              }
-            },
-            {
-              "name": {
-                "value": "drei mal"
-              }
-            },
-            {
-              "name": {
-                "value": "3"
-              }
-            },
-            {
-              "name": {
-                "value": "drei"
-              }
-            },
-            {
-              "name": {
-                "value": "weil sie Insekten sind"
-              }
-            },
-            {
-              "name": {
-                "value": "Feiner Sand"
-              }
-            },
-            {
-              "name": {
-                "value": "10"
-              }
-            },
-            {
-              "name": {
-                "value": "fünf plus fünf ist zehn"
-              }
-            },
-            {
-              "name": {
-                "value": "die Antwort ist zehn"
-              }
-            },
-            {
-              "name": {
-                "value": "im April"
-              }
-            },
-            {
-              "name": {
-                "value": "vier"
-              }
-            },
-            {
-              "name": {
-                "value": "April"
-              }
-            },
-            {
-              "name": {
-                "value": "vierter Monat"
-              }
-            },
-            {
-              "name": {
-                "value": "am Fenster"
-              }
-            },
-            {
-              "name": {
-                "value": "Lampe am Fenster"
-              }
-            },
-            {
-              "name": {
-                "value": "Fenster"
-              }
-            },
-            {
-              "name": {
-                "value": "Stehlampe in der Ecke"
-              }
-            },
-            {
-              "name": {
-                "value": "die Stehlampe"
-              }
-            },
-            {
-              "name": {
-                "value": "Stehlampe"
-              }
-            },
-            {
-              "name": {
-                "value": "Decke"
-              }
-            },
-            {
-              "name": {
-                "value": "Deckenlampe"
-              }
-            },
-            {
-              "name": {
-                "value": "sind Insekten"
+                "value": "Alohomora"
               }
             }
           ],
@@ -388,5 +282,5 @@
       }
     ]
   },
-  "version": "39"
+  "version": "5"
 }

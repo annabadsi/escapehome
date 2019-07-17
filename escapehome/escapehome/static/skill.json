@@ -3,7 +3,7 @@
     "apis": {
       "custom": {
         "endpoint": {
-          "uri": "https://39e41545.ngrok.io/alexa/",
+          "uri": "https://85527d0c.ngrok.io/alexa/",
           "sslCertificateType": "Wildcard"
         },
         "interfaces": []
