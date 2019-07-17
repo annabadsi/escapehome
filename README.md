@@ -1,29 +1,36 @@
 # EscapeHome
 escape game for your own home with Smart Home devices
 
+## Pythonanywhere
+We deploy at Pythonanywhere in a free account. That make sometimes some struggle. 
+Steps ToDo:
+1. start new bash console (console > oher: bash) 
+2. start the virtualenv, after that you see the `(venv) at the beginning.
+    ```` shell 
+    source .virtualenvs/venv/bin/activate
+    ````
+3. set the pythonanywhere settings
+    ``` shell 
+    export DJANGO_SETTINGS_MODULE=escapehome.settings.pythonanywhere
+    ```
+4. aktuelle Daten holen:
+    ```shell
+    git pull
+    ```
+5. migrate database - can take a few minutes
+    ```shell
+    cd EscapeHome/escapehome/
+    python manage.py migrate
+    ```
+    
+
 # Installation 
 You can Setup the Project in two Ways: 
 * with Docker
 * with a virtual env
 
-### Pythonanywhere
-We deploy at Pythonanywhere in a free account. That make sometimes some struggle. 
-Steps ToDo: 
-1. check the virtualenv
-``` shell 
-(venv) 13:39 ~/EscapeHome/escapehome (master)$
-```
-You have to see the (venv) at the beginning. If not type: 
-``` shell 
-. ~/.virtualenvs/venv/bin/activate
-```
 
-2. set the right settings
-``` shell 
-export DJANGO_SETTINGS_MODULE=escapehome.settings.pythonanywhere
-```
-
-### Docker
+## Docker
 Navigate to the root folder and just type: 
 
 ```shell
@@ -32,7 +39,7 @@ make run
 
 This can take a longer time so grab you a coffee ☕
 
-### local setup
+## local setup
 If you do not want to use Docker you have to setup by your own
 
 1. create a virtual env and active 
@@ -64,12 +71,15 @@ or for your local installation
 cd escapehome
 python manage.py runserver
 ```
-# enviroment varibales
+**enviroment varibales**
 to set the Alexa-Skill id go to the projectfolder (escapehome) and add the var ALEXA_APP_ID_escapehome to the new Alexa-Skill ID at the .env file (if you can not see it remember its a hidden file :D )
 
 # Endpoints
-1. POST - `api/ready`  
-Body: `{"text":"was gibt es neues?"}`
+1. GET - `api/commands`  
+
+1. POST - `api/cancel`  
+Body: `{"exit_game": "true", "user": "<user_id>"}
+`
 
 # Alexa Skill Management 
 
