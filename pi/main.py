@@ -3,6 +3,7 @@ from time import sleep
 import os
 import json
 import threading
+# TODO: Wird bei mir rot makiert "no modul named protocol"
 import protocol as p
 import ast
 
@@ -26,7 +27,7 @@ def update_devices():
         f = open("devices/" + dev)
         s = f.read()
         j = json.loads(s)
-        if j['protocol'] not in devices: 
+        if j['protocol'] not in devices:
             devices[j['protocol']] = {}
         devices[j['protocol']][j['id']] = j
 
@@ -34,9 +35,11 @@ def update_devices():
 def get_protocol(protocol):
     return getattr(p, protocol)
 
-def execute_actions(protocol,device, actions): 
-    for action in actions: 
+
+def execute_actions(protocol, device, actions):
+    for action in actions:
         protocol.execute(device, action)
+
 
 def execute_commands(*args):
     """
@@ -45,26 +48,35 @@ def execute_commands(*args):
     args is a list of commands 
     """
     print(args)
-    for command in args: 
+    for command in args:
         devices = ast.literal_eval(command['device'])
-        for device in devices: 
+        for device in devices:
             print(device)
             # execute steps for each device
-            th = threading.Thread(target=execute_actions, args=(get_protocol(command['protocol']),device, command['actions']))
+            th = threading.Thread(
+                target=execute_actions,
+                args=(
+                    get_protocol(command['protocol']),
+                    device,
+                    command['actions']),
+            )
             execute_threads.append(th)
             th.start()
-    
 
-def ping_server(): 
+
+def ping_server():
+    # TODO: Paramter "text" weg machen
     res = requests.post(API_URL, json={"text": "was gibt es neues?"}, timeout=2)
     result = res.text
     res.connection.close()
     return result
 
-def ping_file(): 
+# TODO: nur Test, noch rausnehmen
+def ping_file():
     dat = open("test/test.json").read()
     return dat
-    
+
+
 def check_server(server=True):
     """
     send a request to django and check what he has to do
@@ -73,10 +85,10 @@ def check_server(server=True):
     global last_response
     if server:
         response = ping_server()
-    else: 
+    else:
         response = ping_file()
     if response == last_response:
-        print('i do nothing') 
+        print('i do nothing')
         return
     last_response = response
     data = json.loads(response)
@@ -89,41 +101,47 @@ def check_server(server=True):
                     execute_thread.join()
             # execute steps in thread
             if data['meta']['loop'] == 0:
-                th = threading.Thread(target=execute_commands, args=(data['commands']))
+                th = threading.Thread(
+                    target=execute_commands,
+                    args=(data['commands'])
+                )
                 execute_threads.append(th)
                 th.start()
-            else: 
-                for _ in range(data['meta']['loop']): 
+            else:
+                # TODO: Bei mir ist unendlich aktuell die Zahl 99, führt das zu Problemen?
+                for _ in range(data['meta']['loop']):
                     execute_commands(data['commands'])
-            
-        except Exception as e: 
+
+        except Exception as e:
             print("Error in json")
             print(e)
-    else: 
+    else:
         # stop currcent thread 
         if execute_threads:
             for execute_thread in execute_threads:
                 execute_thread.join()
-    
-    
 
-def check_box(wait_time=5): 
+
+# TODO: wait_time wird hier wohl nicht verwendet!
+def check_box(wait_time=5):
     """
     Check the Box if the user opens it
     """
+    # TODO: In Config auslagern ?
     ip_address, device_address = ('123.2.1.2', '1')
-    if p.Modbus.read(ip_address, device_address): 
+    if p.Modbus.read(ip_address, device_address):
+        # TODO: user_id fehlt
         res = requests.post(API_RESPONSE_URL, json={"exit_game": True})
         exit(0)
 
+
 if __name__ == "__main__":
     # inital the protocols
-    #c_th = threading.Thread(target=check_box, args=())
-    wait_time=5
+    # c_th = threading.Thread(target=check_box, args=())
+    wait_time = 5
     while True:
         try:
             check_server(False)
-        except Exception as e: 
+        except Exception as e:
             print(e)
         sleep(wait_time)
-

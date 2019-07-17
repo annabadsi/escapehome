@@ -9,6 +9,7 @@ class Protocol(ABC):
         self.type = protocol_type
         super().__init__()
 
+    # TODO: Wieso haben die Funktionen hier kein `self`?
     @abstractmethod
     def execute(device, action):
         pass
@@ -16,7 +17,7 @@ class Protocol(ABC):
     @abstractmethod
     def send(*args, **kwargs):
         pass
-    
+
     def wait(parameters):
         wait_time = ast.literal_eval(parameters)['sleep_time']
         sleep(wait_time)
