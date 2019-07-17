@@ -74,7 +74,7 @@ def fallback_handler(handler_input):
     return fallback_request(handler_input, MINUS_POINTS, QUIT_MINUS_POINTS)
 
 
-@sb.request_handler(can_handle_func=is_request_type("SessionEndedRequest")) # TODO name richtig?
+@sb.request_handler(can_handle_func=is_request_type("SessionEndedRequest"))
 def session_ended_request_handler(handler_input):
     """Handler for Session End."""
     # TODO: do something (tritt zB. auf wenn handler methode nicht gefunden wird)

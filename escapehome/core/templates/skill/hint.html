@@ -1,4 +1,3 @@
 {% block content %}
-    <p>Hier kommt dein Hinweis:</p>
-    <p>{{ riddle.hints }}</p>
+    <p>{{ riddle.hints | safe }}</p>
 {% endblock %}

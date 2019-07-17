@@ -1,5 +1,20 @@
 {% block content %}
     <p>Willkommen zurück!</p>
-    <p>Um das Spiel {{ active_scenario.scenario.name }} fortzusetzen, schließe dich in den Raum ein indem du dich befindest und lege den Schlüssel in die blaue Box.</p>
-    <p> Klappe den Deckel der Box zu und schließe das Türchen an der Rückseite der Box, falls es nicht bereits zu ist.</p>
+    {% if active_scenario.box %}
+        <p>
+            Um das Spiel {{ active_scenario.scenario.name }} fortzusetzen, schließe dich in den Raum ein,
+            indem du dich befindest, und lege den Schlüssel wie letztes Mal auch in die blaue Box.
+        </p>
+        <p>
+            Klappe den Deckel der Box zu und schließe das Türchen an der Rückseite,
+            falls dies nicht bereits verschlossen ist.
+        </p>
+    {% else %}
+        <p>Es scheint so, als hättest du dich wieder im Raum eingeschlossen und den Schlüssel in der Box verstaut.</p>
+        <p>Dann setzen wir das Spiel nun fort.</p>
+    {% endif %}
+    <p>
+        Bist du soweit?
+    </p>
+
 {% endblock %}

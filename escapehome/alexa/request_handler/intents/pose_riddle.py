@@ -46,10 +46,10 @@ def pose_riddle_request(handler_input, minus_points, quit_minus_points):
                 box_command_to_json(Command.objects.get(name='modbus box öffnen'), user)
             else:
                 # Gehe zum nächsten Rätsel
-                next_riddle = scenario.riddles.all()[counter]
+                next_riddle = scenario.riddles.all().order_by('orderedriddle')[counter]
                 riddle_commands_to_json(next_riddle, user)
 
-                session_attributes['riddle'] = scenario.riddles.all()[counter].id
+                session_attributes['riddle'] = next_riddle.id
         else:
             # Falsche Antwort
             score += minus_points
@@ -81,4 +81,3 @@ def pose_riddle_request(handler_input, minus_points, quit_minus_points):
         ).response
     else:
         return fallback_request(handler_input, minus_points, quit_minus_points)
-

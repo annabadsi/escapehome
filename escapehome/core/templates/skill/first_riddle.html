@@ -1,9 +1,8 @@
 {% block content %}
     <p>Sehr gut dann geht es jetzt los.</p>
-    {% if intro %}
-        <audio src="{{ intro }}"></audio>
+    {% if scenario %}
+        <p>{{ scenario.description | safe }}</p>
     {% endif %}
-    <p> {{ scenario.description }} </p>
-    <p>Hier kommt die Frage:</p>
-    <p>{{ riddle.task }}</p>
+    <break time="2s"/>
+    <p>{{ riddle.task | safe }}</p>
 {% endblock %}

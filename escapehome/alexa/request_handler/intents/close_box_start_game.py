@@ -34,19 +34,25 @@ def close_box_start_game_request(handler_input, minus_points, quit_minus_points)
             session_attributes['box'] = False
             scenario = Scenario.objects.get(id=session_attributes['scenario'])
 
-            # new game will be started else game will be continued
+            # new game will be started
             if not session_attributes.get('riddle'):
-                session_attributes['counter'] = 0
-                session_attributes['riddle'] = scenario.riddles.first().id
+                riddle = scenario.riddles.order_by('orderedriddle').first()
+                counter = 0
                 session_attributes['score'] = 0
+                session_attributes['counter'] = counter
+                session_attributes['riddle'] = riddle.id
 
-            counter = session_attributes['counter']
-            riddle = scenario.riddles.get(id=session_attributes['riddle'])
+                speech_text = get_template('skill/first_riddle.html').render(
+                    {'scenario': scenario, 'riddle': riddle}
+                )
+            # game will be continued
+            else:
+                counter = session_attributes['counter']
+                riddle = scenario.riddles.get(id=session_attributes['riddle'])
 
-            speech_text = get_template('skill/first_riddle.html').render(
-                {'scenario': scenario, 'riddle': riddle,
-                 'intro': 'https://homeescape.pythonanywhere.com/static/harrypotter.mp3'}
-            )
+                speech_text = get_template('skill/first_riddle.html').render(
+                    {'scenario': None, 'riddle': riddle}
+                )
 
             return handler_input.response_builder.speak(
                 speech_text
