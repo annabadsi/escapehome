@@ -3,8 +3,17 @@ from django.contrib import admin
 from core.models import *
 
 
+class OrderedRiddleAdmin(admin.TabularInline):
+    model = OrderedRiddle
+    extra = 1  # how many rows to show
+
+
 @admin.register(Scenario)
 class ScenariosAdmin(admin.ModelAdmin):
+    inlines = (
+        OrderedRiddleAdmin,
+    )
+
     search_fields = [
         'name',
         'description',
@@ -14,11 +23,8 @@ class ScenariosAdmin(admin.ModelAdmin):
     list_display = (
         'name',
         'severity',
-        'show_riddles',
+        'length',
     )
-
-    def show_riddles(self, obj: Scenario):
-        return [riddle.get('task') for riddle in obj.riddles.values('task')]
 
 
 @admin.register(ActiveScenario)
@@ -109,7 +115,6 @@ class KNXShutterAdmin(admin.ModelAdmin):
         'name',
         'modus',
     )
-
 
 
 @admin.register(ModbusMotor)

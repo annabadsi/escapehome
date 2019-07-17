@@ -199,7 +199,7 @@ class Scenario(models.Model):
     name = models.CharField(max_length=255)
     other_names = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True)
-    riddles = models.ManyToManyField(Riddle, related_name='scenario')
+    riddles = models.ManyToManyField(Riddle, through='OrderedRiddle', related_name='scenario', blank=True)
     severity = models.CharField(max_length=255, default=MEDIUM, choices=STATUS_CHOICES, blank=True)
     length = models.DurationField(blank=True, null=True)
 
@@ -212,6 +212,15 @@ class Scenario(models.Model):
     @property
     def possible_points(self):
         return self.riddles.aggregate(Sum('points'))['points__sum']
+
+
+class OrderedRiddle(models.Model):
+    riddle = models.ForeignKey(Riddle, on_delete=models.DO_NOTHING)
+    scenario = models.ForeignKey(Scenario, on_delete=models.DO_NOTHING)
+    order = models.IntegerField()
+
+    class Meta:
+        ordering = ['order', ]
 
 
 class ActiveScenario(models.Model):

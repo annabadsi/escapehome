@@ -1,56 +1,21 @@
 {
   "meta": {
-    "loop": 99,
-    "user_id": "123456"
+    "loop": 1,
+    "user_id": "user"
   },
   "commands": [
     {
-      "name": "Farbenwechsel Sofa",
-      "protocol": "PHue",
+      "name": "modbus box schlie\u00dfen",
+      "protocol": "Modbus",
       "actions": [
         {
-          "name": "Farbe Rot",
-          "function": "set_color",
-          "parameters": "{'hex_value': 'ff0000'}"
-        },
-        {
-          "name": "Warten 3",
-          "function": "wait",
-          "parameters": "{'sleep_time': 3}"
-        },
-        {
-          "name": "Farbe Gelb",
-          "function": "set_color",
-          "parameters": "{'hex_value': 'f5ff00'}"
-        },
-        {
-          "name": "Warten 3",
-          "function": "wait",
-          "parameters": "{'sleep_time': 3}"
-        },
-        {
-          "name": "Lampe aus",
-          "function": "turn_off",
-          "parameters": ""
+          "name": "box schlie\u00dfen",
+          "function": "close",
+          "parameters": "{'value': False}"
         }
       ],
       "devices": [
-        5
-      ]
-    },
-    {
-      "name": "Sofa blinken",
-      "protocol": "PHue",
-      "actions": [
-        {
-          "name": "blink 5",
-          "function": "blink",
-          "parameters": "{'tr_time': 5, 'blink_count': 5}"
-        }
-      ],
-      "devices": [
-        5,
-        7
+        1
       ]
     }
   ]
