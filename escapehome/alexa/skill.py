@@ -87,5 +87,6 @@ def all_exception_handler(handler_input, exception):
     """Catch all exception handler, log exception and respond with custom message."""
     return exception_request(handler_input, exception, logger)
 
+# TODO: Fehler falls Wort nicht verstanden?? ask_sdk_runtime.exceptions.DispatchException: Unable to find a suitable request handler
 
 skill = sb.create()
