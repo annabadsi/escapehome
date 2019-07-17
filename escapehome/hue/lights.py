@@ -6,8 +6,8 @@ from phue import Bridge, Light as HueLight
 # https://www.meethue.com/api/nupnp
 from rgbxy import Converter
 
-IP_ADDRESS = '10.27.99.18'
-# IP_ADDRESS = '192.168.178.67'
+# IP_ADDRESS = '10.27.99.18'
+IP_ADDRESS = '192.168.178.88'
 WHITE = 'ffffff'
 RED = 'ff0000'
 
@@ -72,22 +72,26 @@ class Hue:
             self.bridge.set_light(self.lights, anim_out)
             time.sleep(sleep_time)
 
-    def blink(self, tr_time, blink_count):
+    def blink(self, tr_time, blink_count, hex_color=WHITE):
         sleep_time = float(tr_time + 1) / 10.0
-        self.turn_on()
 
-        for light_id in self.lights:
-            light = HueLight(self.bridge, light_id)
-            for i in range(0, blink_count * 2):
-                state = {
-                    'transitiontime': tr_time,
-                    'on': not light.on,
-                    'bri': light.brightness,
-                    'sat': light.saturation,
-                    'hue': light.hue
-                }
+        for i in range(0, blink_count):
+            state_on = {
+                'transitiontime': tr_time,
+                'on': True,
+                'bri': 254,
+                'sat': 254,
+                'xy': list(Converter().hex_to_xy(hex_color))
+            }
 
-                self.bridge.set_light(light.light_id, state)
-                time.sleep(sleep_time)
+            state_off = {
+                'transitiontime': tr_time,
+                'on': False,
+            }
+
+            self.bridge.set_light(self.lights, state_on)
+            time.sleep(sleep_time)
+            self.bridge.set_light(self.lights, state_off)
+            time.sleep(sleep_time)
 
         self.turn_off()
