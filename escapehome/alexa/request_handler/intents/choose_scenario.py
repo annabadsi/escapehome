@@ -22,7 +22,7 @@ def in_progress_choose_sceanrio_request(handler_input, minus_points, quit_minus_
         try:
             slots = handler_input.request_envelope.request.intent.slots
             scenario_slot = slots.get('scenario').value if slots.get('scenario') else None
-            Scenario.objects.get(name__contains=scenario_slot) if scenario_slot else None
+            Scenario.objects.get(other_names__contains=scenario_slot) if scenario_slot else None
         except Scenario.DoesNotExist:
             return fallback_request(handler_input, minus_points, quit_minus_points)
 
@@ -44,6 +44,7 @@ def choose_sceanrio_request(handler_input, minus_points, quit_minus_points):
 
     # if scenario set in session
     if not session_attributes.get('scenario'):
+
         slots = handler_input.request_envelope.request.intent.slots
         scenario_slot = slots.get('scenario').value if slots.get('scenario') else None
         try:
@@ -61,6 +62,7 @@ def choose_sceanrio_request(handler_input, minus_points, quit_minus_points):
                 False
             ).response
         except Scenario.DoesNotExist:
+            print('Scenario.DoesNotExist')
             return fallback_request(handler_input, minus_points, quit_minus_points)
     else:
         return fallback_request(handler_input, minus_points, quit_minus_points)

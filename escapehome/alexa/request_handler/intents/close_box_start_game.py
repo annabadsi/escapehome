@@ -19,11 +19,12 @@ def close_box_start_game_request(handler_input, minus_points, quit_minus_points)
         # check if box is closed at all
         if active_scenario.box:
             speech_text = get_template('skill/close_box.html').render()
+
             return handler_input.response_builder.speak(
                 speech_text
             ).set_card(
                 SimpleCard(
-                    "Schließe auch die hintere Tür der Box.",
+                    "Spiel Vorbereitungen",
                     BeautifulSoup(speech_text, features="html.parser").text
                 )
             ).set_should_end_session(
@@ -32,7 +33,7 @@ def close_box_start_game_request(handler_input, minus_points, quit_minus_points)
         else:
             box_command_to_json(Command.objects.get(name='modbus box schließen'), user)
             session_attributes['box'] = False
-            scenario = Scenario.objects.get(other_names__contains=session_attributes['scenario'])
+            scenario = Scenario.objects.get(id=session_attributes['scenario'])
 
             # new game will be started
             if not session_attributes.get('riddle'):

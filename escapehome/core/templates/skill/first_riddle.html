@@ -2,7 +2,7 @@
     <p>Sehr gut dann geht es jetzt los.</p>
     {% if scenario %}
         <p>{{ scenario.description | safe }}</p>
+        <break time="2s"/>
     {% endif %}
-    <break time="2s"/>
     <p>{{ riddle.task | safe }}</p>
 {% endblock %}
