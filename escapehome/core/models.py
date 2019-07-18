@@ -1,4 +1,5 @@
 import json
+from datetime import timedelta
 
 from django.db import models
 from django.db.models import Sum
@@ -230,7 +231,7 @@ class ActiveScenario(models.Model):
                                null=True)
     user = models.CharField(max_length=255, null=True, blank=True)
     players = models.IntegerField(blank=True, null=True)
-    duration = models.DurationField(blank=True, null=True)
+    duration = models.DurationField(blank=True, null=True, default=timedelta)
     score = models.IntegerField(default=0)
     state = models.IntegerField(blank=True, null=True)
     box = models.BooleanField(default=False, blank=True, null=True,

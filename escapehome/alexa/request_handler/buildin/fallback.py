@@ -21,14 +21,17 @@ def fallback_request(handler_input, minus_points, quit_minus_points):
         scenario = Scenario.objects.get(id=session_attributes['scenario'])
         riddle = scenario.riddles.get(id=session_attributes.get('riddle'))
         session_attributes['score'] += minus_points
+        header = 'Falsche Antwort'
         speech_text = get_template('skill/wrong_answer.html').render({'riddle': riddle})
 
     # if scenario is selected but box is still open
     elif session_attributes.get('scenario'):
+        header = 'Spiel Vorbereitungen'
         speech_text = get_template('skill/close_box.html').render()
 
     # if scenario still isn't selected
     else:
+        header = 'Szeanrio Auswahl'
         speech_text = get_template('skill/choose_scenario.html').render(
             {
                 'scenario': session_attributes.get('scenario'),
@@ -42,7 +45,7 @@ def fallback_request(handler_input, minus_points, quit_minus_points):
             speech_text
         ).set_card(
             SimpleCard(
-                "Du brauchst Hilfe?",
+                header,
                 BeautifulSoup(speech_text, features="html.parser").text
             )
         ).response

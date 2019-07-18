@@ -1,3 +1,5 @@
+import datetime
+
 from ask_sdk_model.ui import SimpleCard
 from bs4 import BeautifulSoup
 from django.template.loader import get_template
@@ -21,12 +23,17 @@ def cancel_and_stop_request(handler_input, quit_minus_points):
         # get scenario from session attributes
         scenario = Scenario.objects.filter(id=session_attributes.get('scenario', None)).first()
 
+        # get playing time
+        start_time = datetime.datetime.strptime(session_attributes.get('start_time'), '%Y-%m-%d %H:%M:%S.%f')
+        now = datetime.datetime.now()
+
         # save attributes in database
         active_scenario = ActiveScenario.objects.get(user=user)
         active_scenario.scenario = scenario
         active_scenario.riddle = scenario.riddles.filter(id=session_attributes.get('riddle', None)).first()
         active_scenario.state = session_attributes.get('counter', 0)
         active_scenario.score = session_attributes.get('score', 0) + quit_minus_points
+        active_scenario.duration += (now - start_time)
         active_scenario.save()
 
     speech_text = get_template('skill/cancel_and_stop.html').render({'ingame': in_game})

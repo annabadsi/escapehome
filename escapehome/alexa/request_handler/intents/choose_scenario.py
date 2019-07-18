@@ -55,7 +55,7 @@ def choose_sceanrio_request(handler_input, minus_points, quit_minus_points):
                 speech_text
             ).set_card(
                 SimpleCard(
-                    f'Szenario: {scenario.name}',
+                    f'Spiel Vorbereitungen',
                     BeautifulSoup(speech_text, features="html.parser").text
                 )
             ).set_should_end_session(
