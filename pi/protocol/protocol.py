@@ -21,6 +21,5 @@ class Protocol(ABC):
         pass
 
     @staticmethod
-    def wait(parameters):
-        wait_time = ast.literal_eval(parameters)['sleep_time']
-        sleep(wait_time)
+    def wait(**kwargs):
+        sleep(sleep_time)

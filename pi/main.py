@@ -2,16 +2,21 @@ import requests
 from time import sleep
 import os
 import json
-import threading
+from threading import Thread
 # TODO: Wird bei mir rot makiert "no modul named protocol"
 import protocol as p
 import ast
+import configparser
 
 API_URL = "https://homeescape.pythonanywhere.com/api/commands/"
 API_RESPONSE_URL = "https://homeescape.pythonanywhere.com/api/cancel/"
+BOX_IP = None
+BOX_MOTOR_ID = None
 
 devices = {}
-execute_threads = []
+execute_thread = None
+command_threads = []
+
 wait_time = 0.5
 last_response = None
 
@@ -41,32 +46,34 @@ def execute_actions(protocol, device, actions):
         protocol.execute(device, action)
 
 
-def execute_commands(*args):
+def execute_commands(loops, args):
     """
     execute the json input from Server
 
     args is a list of commands 
     """
-    print(args)
-    for command in args:
-        devices = ast.literal_eval(command['device'])
-        for device in devices:
-            print(device)
-            # execute steps for each device
-            th = threading.Thread(
-                target=execute_actions,
-                args=(
-                    get_protocol(command['protocol']),
-                    device,
-                    command['actions']),
-            )
-            execute_threads.append(th)
-            th.start()
+    for _ in range(loops):
+        print('in the loop')
+        for command in args:
+            devices = ast.literal_eval(command['device'])
+            for device in devices:
+                print(device)
+                # execute steps for each device
+                th = Thread(
+                    target=execute_actions,
+                    args=(
+                        get_protocol(command['protocol']),
+                        device,
+                        command['actions']),
+                )
+                command_threads.append(th)
+                th.start()
+            for cth in command_threads: 
+                cth.join()
 
 
 def ping_server():
-    # TODO: Paramter "text" weg machen
-    res = requests.post(API_URL, json={"text": "was gibt es neues?"}, timeout=2)
+    res = requests.post(API_URL, timeout=2)
     result = res.text
     res.connection.close()
     return result
@@ -81,37 +88,37 @@ def check_server(server=True):
     """
     send a request to django and check what he has to do
     """
-    global execute_threads
+    global execute_thread
+    global command_threads
     global last_response
     if server:
         response = ping_server()
     else:
         response = ping_file()
     if response == last_response:
-        print('i do nothing')
+        print('i do nothing', execute_thread, command_threads)
         return
     last_response = response
     data = json.loads(response)
-    print('data', data)
     if data:
         try:
             # stop currcent thread
-            if execute_threads:
-                for execute_thread in execute_threads:
-                    execute_thread.join()
+            if execute_thread:
+                execute_thread.join()
+            
+            if command_threads: 
+                for cth in command_threads: 
+                    cth.join()
+                command_threads = []
             # execute steps in thread
-            if data['meta']['loop'] == 0:
-                th = threading.Thread(
+            execute_thread = Thread(
                     target=execute_commands,
-                    args=(data['commands'])
+                    args=(data['meta']['loop'], data['commands'])
                 )
-                execute_threads.append(th)
-                th.start()
-            else:
-                # TODO: Bei mir ist unendlich aktuell die Zahl 99, führt das zu Problemen?
-                for _ in range(data['meta']['loop']):
-                    execute_commands(data['commands'])
-
+            print('!!', execute_thread)
+            execute_thread.start()
+            print('&&', execute_thread)
+            
         except Exception as e:
             print("Error in json")
             print(e)
@@ -127,9 +134,7 @@ def check_box(wait_time=5):
     """
     Check the Box if the user opens it
     """
-    # TODO: In Config auslagern ?
-    ip_address, device_address = ('123.2.1.2', '1')
-    if p.Modbus.read(ip_address, device_address):
+    if p.Modbus.read(BOX_IP, BOX_MOTOR_ID):
         # TODO: user_id fehlt
         res = requests.post(API_RESPONSE_URL, json={"exit_game": True})
         exit(0)
@@ -138,10 +143,19 @@ def check_box(wait_time=5):
 if __name__ == "__main__":
     # inital the protocols
     # c_th = threading.Thread(target=check_box, args=())
+
+    #make configurations
+    config = configparser.ConfigParser()
+    if not BOX_IP or not BOX_MOTOR_ID: 
+        f = config.read("conf/modbus.conf")
+        BOX_IP = config['DEFAULT']['IP_ADDRESS']
+        BOX_MOTOR_ID = config['DEFAULT']['BOX_MOTOR_ID']
+     
     wait_time = 5
     while True:
-        try:
-            check_server(False)
-        except Exception as e:
-            print(e)
-        sleep(wait_time)
+       try:
+           #check_box()
+           check_server(False)
+       except Exception as e:
+           print(e)
+       sleep(wait_time)

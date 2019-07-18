@@ -1,11 +1,11 @@
 {
     "meta": {
-        "loop": 0
+        "loop": 2
     },
     "commands": [
       {
-        "device": "['192.168.43.151']",
-        "protocol": "Modbus",
+        "device": "[1]",
+        "protocol": "PHue",
         "actions": [
               {
                 "order": 1,
@@ -15,9 +15,37 @@
               },
               {
                 "order": 2,
-                "name": "oeffne box",
-                "function": "open",
-                "parameters": "{'value': True}"
+                "name": "turn_on",
+                "function": "turn_on",
+                "parameters": "{}"
+              },
+              {
+                "order": 3,
+                "name": "warte fur 2 sekunden",
+                "function": "alarm",
+                "parameters": "{'tr_time': 2, 'blink_count':4}"
+              },
+              {
+                "order": 4,
+                "name": "turn_off",
+                "function": "turn_off",
+                "parameters": "{}"
+              }]
+      },{
+        "device": "[0/0/2]",
+        "protocol": "KNX",
+        "actions": [
+              {
+                "order": 1,
+                "name": "Warte 2 sekunden",
+                "function": "wait",
+                "parameters": "{'sleep_time': 2}"
+              },
+              {
+                "order": 2,
+                "name": "turn_on",
+                "function": "turn_on",
+                "parameters": "{'value': 1}"
               },
               {
                 "order": 3,
@@ -27,9 +55,9 @@
               },
               {
                 "order": 4,
-                "name": "schliesse box",
-                "function": "close",
-                "parameters": "{'value': False}"
+                "name": "turn_off",
+                "function": "turn_off",
+                "parameters": "{'value': 0}"
               }]
       }]
 }
