@@ -6,7 +6,7 @@ from .protocol import Protocol
 
 WHITE = 'ffffff'
 RED = 'ff0000'
-# TODO: Kann sich immer wieder ändern, in Config schreiben?
+# TODO: in conf > hue.conf schreiben!
 IP_ADDRESS = '192.168.178.67'
 
 
@@ -15,7 +15,6 @@ class PHue(Protocol):
         This is the class for Phillips Hue Stuff
     """
 
-    # TODO: Error: Signature of method 'PHue.execute()' does not match signature of base method in class 'Protocol'
     @staticmethod
     def execute(device, action):
         #
@@ -28,9 +27,10 @@ class PHue(Protocol):
             fun(device, ast.literal_eval(action['parameters']))
         except Exception:
             print("execute without function")
-            # TODO: Wann tritt dieser Fall auf?
+            # TODO: Wann tritt dieser Fall auf? funktioniert nicht!
             PHue.send(ast.literal_eval(action['parameters']), address=device)
 
+    @staticmethod
     def send(*address, **value):
         print(address, value)
         b = Bridge(IP_ADDRESS)
@@ -39,9 +39,11 @@ class PHue(Protocol):
             value
         )
 
+    @staticmethod
     def turn_on(device, parameter):
         PHue.set_color(device, WHITE)
 
+    @staticmethod
     def turn_off(device, parameter):
         value = {
             'transitiontime': 1,
@@ -50,6 +52,7 @@ class PHue(Protocol):
         PHue.send(device, value)
 
     # TODO: alarm(self, tr_time, blink_count, hex_color=RED) --> Parameter auschreiben?
+    @staticmethod
     def alarm(device, parameter):
         hex_color = parameter['hex_color'] if 'hex_color' in parameter else RED
         anim_in = {
@@ -77,24 +80,26 @@ class PHue(Protocol):
             PHue.set_color(device, anim_out)
             sleep(parameter['sleep_time'])
 
-    # TODO: Error: Usually first parameter of a method is named 'self'
-    def set_color(device, parameter):
+    @staticmethod
+    def set_color(device, hex_value):
         value = {
             'transitiontime': 1,
             'on': True,
             'bri': 254,
             'sat': 254,
-            'xy': list(Converter().hex_to_xy(parameter['hex_value']))
+            'xy': list(Converter().hex_to_xy(hex_value))
         }
         PHue.send(device, value)
 
     # TODO: Error: Signature of method 'PHue.wait()' does not match signature of base method in class 'Protocol'
+    @staticmethod
     def wait(device, parameters):
         wait_time = parameters['sleep_time']
         sleep(wait_time)
 
-    # TODO: alle Methoden sollten ein self haben..
-    def connect(self):
+    # TODO: rausnehmen?
+    @staticmethod
+    def connect():
         b = Bridge(IP_ADDRESS)
 
         # nur einmal, zu Hue Bridge connecten

@@ -9,7 +9,6 @@ class KNX(Protocol):
     This is the class for Phillips Hue Stuff
     """
 
-    # TODO: Signature of method 'Modbus.execute()' does not match signature of base method in class 'Protocol'
     @staticmethod
     def execute(device, action):
         #
@@ -29,7 +28,6 @@ class KNX(Protocol):
             )
         # KNX.execute(value, address)
 
-    # TODO: Signature of method 'Modbus.execute()' does not match signature of base method in class 'Protocol'
     @staticmethod
     def send(*value, **address):
         print(f"knxtool groupswrite ip:localhost {address['address']} {value[0]}")

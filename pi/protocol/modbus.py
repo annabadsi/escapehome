@@ -19,7 +19,6 @@ class Modbus(Protocol):
         - Magnet: 2
     """
 
-    # TODO: Signature of method 'Modbus.execute()' does not match signature of base method in class 'Protocol'
     @staticmethod
     def execute(device, action):
         try:
@@ -28,7 +27,6 @@ class Modbus(Protocol):
         except Exception:
             Modbus.send(device, value=action)
 
-    # TODO: Signature of method 'Modbus.execute()' does not match signature of base method in class 'Protocol'
     @staticmethod
     def send(*address, **value):
         """
@@ -38,7 +36,8 @@ class Modbus(Protocol):
         # print(value,' | ', address)
         try:
             ip_address = address[0]
-            device_address = 1  # address['device_address']
+            # TODO: address['device_address']
+            device_address = 1
             client = ModbusTcpClient(ip_address, port=502, timeout=10)
             v = ast.literal_eval(value['value']['parameters'])['value']
             client.write_coil(device_address, v)
