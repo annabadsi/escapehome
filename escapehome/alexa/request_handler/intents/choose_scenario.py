@@ -42,11 +42,12 @@ def choose_sceanrio_request(handler_input, minus_points, quit_minus_points):
     if not session_attributes.get('box') and active_scenario.box:
         return cancel_and_stop_request(handler_input, quit_minus_points)
 
+    # if scenario set in session
     if not session_attributes.get('scenario'):
         slots = handler_input.request_envelope.request.intent.slots
         scenario_slot = slots.get('scenario').value if slots.get('scenario') else None
         try:
-            scenario = Scenario.objects.get(name__contains=scenario_slot) if scenario_slot else None
+            scenario = Scenario.objects.get(other_names__contains=scenario_slot) if scenario_slot else None
             session_attributes['scenario'] = scenario.id
             speech_text = get_template('skill/close_box.html').render()
             return handler_input.response_builder.speak(
