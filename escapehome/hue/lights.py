@@ -7,7 +7,8 @@ from phue import Bridge, Light as HueLight
 from rgbxy import Converter
 
 # IP_ADDRESS = '10.27.99.18'
-IP_ADDRESS = '192.168.178.88'
+# IP_ADDRESS = '192.168.178.88'
+IP_ADDRESS = '172.20.10.7'
 WHITE = 'ffffff'
 RED = 'ff0000'
 
