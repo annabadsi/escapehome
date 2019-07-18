@@ -31,6 +31,8 @@ class KNX(Protocol):
     @staticmethod
     def send(*value, **address):
         print(f"knxtool groupswrite ip:localhost {address['address']} {value[0]}")
-        res = os.system("knxtool groupswrite ip:localhost {address} {value}".format(address=address['address'],value=value[0]))
+        res = os.system(
+            "knxtool groupswrite ip:localhost {address} {value}".format(address=address['address'], value=value[0])
+        )
         if res:
             raise Exception("There was an error on KNX execution")

@@ -1,7 +1,6 @@
 from phue import Bridge
 from rgbxy import Converter
 from time import sleep
-import ast
 from .protocol import Protocol
 
 WHITE = 'ffffff'
@@ -12,21 +11,17 @@ IP_ADDRESS = '192.168.43.155'
 
 class PHue(Protocol):
     """
-        This is the class for Phillips Hue Stuff
+    This is the class for Phillips Hue Stuff
     """
 
     @staticmethod
     def execute(device, action):
-        #
         # This method execute the queries to the physical device
-        #
         try:
             fun = getattr(PHue, action['function'])
-            # TODO: func(device, **eval(action.parameters)), parameter in funktionen ausschreiben..
             fun(device, **eval(action['parameters']))
         except Exception as e:
             print("execute without function")
-            # TODO: Wann tritt dieser Fall auf? funktioniert nicht!
             PHue.send(device, *eval(action['parameters']))
 
     @staticmethod
@@ -52,7 +47,6 @@ class PHue(Protocol):
         }
         PHue.send(device, value)
 
-    # TODO: alarm(self, tr_time, blink_count, hex_color=RED) --> Parameter auschreiben?
     @staticmethod
     def alarm(device, tr_time, blink_count, hex_color=RED):
         anim_in = {
@@ -71,7 +65,6 @@ class PHue(Protocol):
 
         }
 
-        # TODO: muss verwendet werden.. statt parameter['sleep_time'] unten
         sleep_time = float(tr_time + 1) / 10.0
 
         for i in range(0, blink_count):
@@ -80,7 +73,8 @@ class PHue(Protocol):
             PHue.send(device, anim_out)
             sleep(sleep_time)
 
-    def wait(device, sleep_time): 
+    @staticmethod
+    def wait(device, sleep_time):
         sleep(sleep_time)
 
     @staticmethod
@@ -94,7 +88,7 @@ class PHue(Protocol):
         }
         PHue.send(device, value)
 
-    # TODO: rausnehmen?
+    # TODO: rausnehmen? b returnen?
     @staticmethod
     def connect():
         b = Bridge(IP_ADDRESS)
