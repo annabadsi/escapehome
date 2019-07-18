@@ -2,7 +2,6 @@ from ask_sdk_model.ui import SimpleCard
 from bs4 import BeautifulSoup
 from django.template.loader import get_template
 
-from api.views import riddle_commands_to_json
 from core.models import Scenario, ActiveScenario
 
 
@@ -28,11 +27,10 @@ def launch_request(handler_input):
         session_attributes['counter'] = active_scenario.state
         session_attributes['score'] = active_scenario.score
 
-        riddle_commands_to_json(active_scenario.riddle, user)
-
         speech_text = get_template('skill/welcome_back.html').render(
             {'active_scenario': active_scenario}
         )
 
+    # TODO Simple Card wieder einfügen?
     handler_input.response_builder.speak(speech_text).ask(speech_text)
     return handler_input.response_builder.response
