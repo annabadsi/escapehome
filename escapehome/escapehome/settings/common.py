@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/2.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
-import json
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -24,8 +23,11 @@ SECRET_KEY = 'vs$ay%ryai1uff5pi(*3cap)g(@+&ppzz43330xrch$&6c9&e&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
-
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'homeescape.pythonanywhere.com',
+]
 
 # Application definition
 
@@ -75,12 +77,26 @@ WSGI_APPLICATION = 'escapehome.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if os.environ.get('DJANGO_SETTINGS_MODULE') == 'escapehome.settings.pythonanywhere':
+    # pythonanywhere
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'homeescape$homeescape',
+            'USER': 'homeescape',
+            'PASSWORD': 'BzgU3t93qMQEBxdEEbTYRBv3',
+            'HOST': 'homeescape.mysql.pythonanywhere-services.com',
+            'PORT': '3306',
+        }
     }
-}
+else:
+    # local
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
