@@ -22,6 +22,8 @@ class PHue(Protocol):
             fun(device, **eval(action['parameters']))
         except Exception as e:
             print("execute without function")
+            print(e)
+            print(action['parameters'])
             PHue.send(device, *eval(action['parameters']))
 
     @staticmethod
@@ -72,6 +74,31 @@ class PHue(Protocol):
             sleep(sleep_time)
             PHue.send(device, anim_out)
             sleep(sleep_time)
+
+    @staticmethod
+    def blink(device, tr_time, blink_count, hex_color=WHITE):
+        sleep_time = float(tr_time + 1) / 10.0
+
+        for i in range(0, blink_count):
+            state_on = {
+                'transitiontime': tr_time,
+                'on': True,
+                'bri': 254,
+                'sat': 254,
+                'xy': list(Converter().hex_to_xy(hex_color))
+            }
+
+            state_off = {
+                'transitiontime': tr_time,
+                'on': False,
+            }
+
+            PHue.send(device, state_on)
+            sleep(sleep_time)
+            PHue.send(device, state_off)
+            sleep(sleep_time)
+
+        PHue.turn_off(device)
 
     @staticmethod
     def wait(device, sleep_time):
