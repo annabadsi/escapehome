@@ -7,14 +7,17 @@ from api.serializers import CancelSerializer
 from core.models import Riddle, ActiveScenario, Command
 from escapehome import settings
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 @api_view(['POST', 'GET'])
 def commands(request):
     try:
         with open(f'{settings.PROJECT_DIR}/escapehome/api/resources/protocol_commands.json') as json_file:
             data = json.load(json_file)
-    except:
-        print("Fehler!")
+    except Exception as e:
+        logger.debug("Fehler!", e)
         data = {}
 
     return Response(status=200, data=data)

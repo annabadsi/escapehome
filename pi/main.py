@@ -21,6 +21,8 @@ wait_time = 1
 last_response = None
 user_id = None
 logger = logging.getLogger(__name__)
+KILL_FLAG = False
+
 
 def update_devices():
     """
@@ -53,12 +55,16 @@ def execute_commands(loops, args):
 
     args is a list of commands 
     """
+    global KILL_FLAG
     for _ in range(loops):
-        print('in the loop')
+        logger.debug('in the loop')
+        if KILL_FLAG:
+            logger.debug('KILLED')
+            break
         for command in args:
             devices = command['devices']
             for device in devices:
-                print(device)
+                logger.debug(device)
                 # execute steps for each device
                 th = Thread(
                     target=execute_actions,
@@ -84,6 +90,7 @@ def ping_server():
         result = None
     return result
 
+
 # TODO: nur Test, noch rausnehmen
 def ping_file():
     dat = open("test/test.json").read()
@@ -98,26 +105,29 @@ def check_server(server=True):
     global command_threads
     global last_response
     global user_id
+    global KILL_FLAG
     while True:
         if server:
             response = ping_server()
         else:
             response = ping_file()
         if response == last_response:
-            print('i do nothing', execute_thread, command_threads)
+            logger.debug('i do nothing')
             continue
         if not response:
             logger.error('No response')
             continue
 
-        print(response)
         last_response = response
         data = json.loads(response)
+        logger.debug("data", data)
         if data:
             try:
                 # stop currcent thread
                 if execute_thread:
+                    KILL_FLAG = True
                     execute_thread.join()
+                    KILL_FLAG = False
 
                 if command_threads:
                     for cth in command_threads:
