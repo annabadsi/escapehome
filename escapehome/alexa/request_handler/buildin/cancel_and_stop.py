@@ -19,6 +19,7 @@ def cancel_and_stop_request(handler_input, quit_minus_points):
 
         # reopen box
         box_command_to_json(Command.objects.get(name='modbus box öffnen'), user)
+        session_attributes['box'] = True
 
         # get scenario from session attributes
         scenario = Scenario.objects.filter(id=session_attributes.get('scenario', None)).first()

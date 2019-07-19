@@ -16,6 +16,7 @@ def exception_request(handler_input, exception, logger):
     if not session_attributes.get('box'):
         # reopen box
         box_command_to_json(Command.objects.get(name='modbus box öffnen'), user)
+        session_attributes['box'] = True
 
         # get scenario from session attributes
         scenario = Scenario.objects.filter(id=session_attributes.get('scenario', None)).first()
