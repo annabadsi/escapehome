@@ -73,9 +73,13 @@ def execute_commands(loops, args):
 
 
 def ping_server():
-    res = requests.post(API_URL, timeout=5)
-    result = res.text
-    res.connection.close()
+    try:
+        res = requests.post(API_URL, timeout=5)
+        result = res.text
+        res.connection.close()
+    except Exception as e:
+        print(e)
+        result = ""
     return result
 
 # TODO: nur Test, noch rausnehmen
