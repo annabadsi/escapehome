@@ -17,7 +17,7 @@ devices = {}
 execute_thread = None
 command_threads = []
 
-wait_time = 2
+wait_time = 1
 last_response = None
 user_id = None
 logger = logging.getLogger(__name__)
