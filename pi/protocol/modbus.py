@@ -13,7 +13,7 @@ logger.setLevel(logging.DEBUG)
 
 config = configparser.ConfigParser()
 f = config.read("conf/modbus.conf")
-BOX_IP = config['DEFAULT']['IP_ADDRESS']
+BOX_IP = '192.168.43.151'
 
 class Modbus(Protocol):
     """
@@ -37,16 +37,12 @@ class Modbus(Protocol):
 
         try:
 
-            #client = ModbusTcpClient(BOX_IP, port=502, timeout=10)
-            #client.write_coil(int(device), value['value'])
-            #result = client.read_coils(int(device), 1)
-            #logger.debug(result)
-            #client.close()
-            client = ModbusTcpClient('192.168.43.151', port=502, timeout=10)
-            client.write_coil(1, False)
-            result = client.read_coils(1, 1)
+            client = ModbusTcpClient(BOX_IP, port=502, timeout=10)
+            client.write_coil(int(device), value['value'])
+            result = client.read_coils(int(device), 1)
             logger.debug(result)
             client.close()
+
         except RuntimeError as err:
             logger.debug(err)
 
