@@ -1,10 +1,11 @@
 import os
-import ast
 
 from .protocol import Protocol
 
 import logging
+
 logger = logging.getLogger(__name__)
+
 
 class KNX(Protocol):
     """
@@ -28,7 +29,7 @@ class KNX(Protocol):
         except Exception as e:
             print("execute without function")
             KNX.send(
-                device, 
+                device,
                 **eval(action['parameters'])
             )
 

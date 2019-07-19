@@ -20,7 +20,6 @@ class Protocol(ABC):
     def send(*args, **kwargs):
         pass
 
-    # TODO: erkennt sleep_time nicht!
     @staticmethod
     def wait(**kwargs):
         sleep(kwargs['sleep_time'])

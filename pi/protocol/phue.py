@@ -21,8 +21,7 @@ class PHue(Protocol):
             fun = getattr(PHue, action['function'])
             fun(device, **eval(action['parameters']))
         except Exception as e:
-            print("execute without function")
-            print(e)
+            print("execute without function: ", e)
             print(action['parameters'])
             PHue.send(device, *eval(action['parameters']))
 
@@ -115,7 +114,7 @@ class PHue(Protocol):
         }
         PHue.send(device, value)
 
-    # TODO: rausnehmen? b returnen?
+    # TODO: wird die Methode verwendet?
     @staticmethod
     def connect():
         b = Bridge(IP_ADDRESS)
