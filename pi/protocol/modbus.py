@@ -37,8 +37,8 @@ class Modbus(Protocol):
 
         try:
             client = ModbusTcpClient(BOX_IP, port=502, timeout=10)
-            client.write_coil(device, value['value'])
-            result = client.read_coils(device, 1)
+            client.write_coil(int(device), value['value'])
+            result = client.read_coils(int(device), 1)
             logger.debug(result)
             client.close()
         except RuntimeError as err:
