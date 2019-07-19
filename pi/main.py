@@ -16,7 +16,7 @@ devices = {}
 execute_thread = None
 command_threads = []
 
-wait_time = 0.5
+wait_time = 2
 last_response = None
 user_id = None
 
@@ -99,7 +99,8 @@ def check_server(server=True):
             response = ping_file()
         if response == last_response:
             print('i do nothing', execute_thread, command_threads)
-            return
+            continue
+        print(response)
         last_response = response
         data = json.loads(response)
         if data:
@@ -135,6 +136,7 @@ def check_server(server=True):
                 for cth in command_threads:
                     cth.join()
                 command_threads = []
+    sleep(wait_time)
 
 
 # TODO: wait_time wird hier wohl nicht verwendet!
