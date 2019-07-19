@@ -11,15 +11,15 @@ def help_request(handler_input, minus_points, quit_minus_points):
     session_attributes = handler_input.attributes_manager.session_attributes
     user = handler_input.request_envelope.context.system.user.user_id
     active_scenario = ActiveScenario.objects.get(user=user)
+    hint = None
 
     # if box was opened in game
     if not session_attributes.get('box') and active_scenario.box:
         return cancel_and_stop_request(handler_input, quit_minus_points)
 
     if session_attributes.get('scenario') and not session_attributes.get('box'):
-        scenario = Scenario.objects.get(id=session_attributes['scenario'])
-        riddle = scenario.riddles.get(id=session_attributes.get('riddle'))
-        session_attributes['score'] += minus_points
+        scenario = Scenario.objects.get(id=session_attributes.get('scenario', None))
+        riddle = scenario.riddles.get(id=session_attributes.get('riddle', None))
 
         # set und get hint counter
         counter = session_attributes.get('hint_counter', 0)
@@ -27,7 +27,9 @@ def help_request(handler_input, minus_points, quit_minus_points):
 
         hints = riddle.hints.split('|')
         # if all notes run through, always use the last one.
-        hint = hints[counter].strip() if len(hints) > counter else hints[-1]
+        if hints:
+            hint = hints[counter].strip() if len(hints) > counter else hints[-1]
+            session_attributes['score'] += minus_points
 
         header = 'Hinweis'
         speech_text = get_template('skill/hint.html').render({'hint': hint})
