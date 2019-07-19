@@ -25,11 +25,7 @@ class Modbus(Protocol):
 
     @staticmethod
     def execute(device, action):
-        try:
-            fun = getattr(Modbus, action['function'])
-            fun(**eval(action['parameters']))
-        except Exception:
-            Modbus.send(device, eval(action['parameters']))
+        Modbus.send(device, eval(action['parameters']))
 
     @staticmethod
     def send(device, value):
@@ -37,7 +33,7 @@ class Modbus(Protocol):
         This function writes a new value to a device of the given ip address.
         The value has to be a boolean. For example: True, to open the box by the motor (False -> close the box).
         """
-        logger.debug('send method with device: {device} and value = {value}',device=str(device), value=str(value))
+        logger.debug('send method with device: {device} and value = {value}', device=str(device), value=str(value))
 
         try:
             client = ModbusTcpClient(BOX_IP, port=502, timeout=10)
