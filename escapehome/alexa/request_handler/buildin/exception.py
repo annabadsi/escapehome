@@ -1,3 +1,7 @@
+import datetime
+
+from ask_sdk_model.ui import SimpleCard
+from bs4 import BeautifulSoup
 from django.template.loader import get_template
 
 from api.views import box_command_to_json
@@ -12,29 +16,35 @@ def exception_request(handler_input, exception, logger):
     if not session_attributes.get('box'):
         # reopen box
         box_command_to_json(Command.objects.get(name='modbus box öffnen'), user)
-        session_attributes['box'] = True
 
-        if session_attributes.get('scenario') and session_attributes.get('riddle') and session_attributes.get(
-                'score') and session_attributes.get('counter'):
-            # get session attributes
-            scenario = Scenario.objects.get(id=session_attributes['scenario'])
-            riddle = scenario.riddles.get(id=session_attributes['riddle'])
-            score = session_attributes['score']
-            counter = session_attributes['counter']
+        # get scenario from session attributes
+        scenario = Scenario.objects.filter(id=session_attributes.get('scenario', None)).first()
 
-            # save attributes in database
-            active_scenario = ActiveScenario.objects.get(user=user)
-            active_scenario.scenario = scenario
-            active_scenario.riddle = riddle
-            active_scenario.score = score
-            active_scenario.state = counter
-            active_scenario.save()
-        else:
-            print("Something went wrong while handling the exception")
+        # get playing time
+        start_time = datetime.datetime.strptime(session_attributes.get('start_time'), '%Y-%m-%d %H:%M:%S.%f')
+        now = datetime.datetime.now()
+
+        # save attributes in database
+        active_scenario = ActiveScenario.objects.get(user=user)
+        active_scenario.scenario = scenario
+        active_scenario.riddle = scenario.riddles.filter(id=session_attributes.get('riddle', None)).first()
+        active_scenario.players = session_attributes.get('players', 0)
+        active_scenario.state = session_attributes.get('counter', 0)
+        active_scenario.score = session_attributes.get('score', 0)
+        active_scenario.duration += (now - start_time)
+        active_scenario.save()
 
     logger.error(exception, exc_info=True)
 
     speech_text = get_template('skill/exception.html').render()
 
-    handler_input.response_builder.speak(speech_text).ask(speech_text)
-    return handler_input.response_builder.response
+    return handler_input.response_builder.speak(
+        speech_text
+    ).set_card(
+        SimpleCard(
+            "Oops, ...",
+            BeautifulSoup(speech_text, features="html.parser").text
+        )
+    ).set_should_end_session(
+        True
+    ).response

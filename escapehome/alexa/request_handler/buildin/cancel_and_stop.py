@@ -31,6 +31,7 @@ def cancel_and_stop_request(handler_input, quit_minus_points):
         active_scenario = ActiveScenario.objects.get(user=user)
         active_scenario.scenario = scenario
         active_scenario.riddle = scenario.riddles.filter(id=session_attributes.get('riddle', None)).first()
+        active_scenario.players = session_attributes.get('players', 0)
         active_scenario.state = session_attributes.get('counter', 0)
         active_scenario.score = session_attributes.get('score', 0) + quit_minus_points
         active_scenario.duration += (now - start_time)
