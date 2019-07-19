@@ -6,6 +6,7 @@ from threading import Thread
 import protocol as p
 import ast
 import configparser
+import logging
 
 API_URL = "https://homeescape.pythonanywhere.com/api/commands/"
 API_RESPONSE_URL = "https://homeescape.pythonanywhere.com/api/cancel/"
@@ -19,7 +20,7 @@ command_threads = []
 wait_time = 2
 last_response = None
 user_id = None
-
+logger = logging.getLogger(__name__)
 
 def update_devices():
     """
@@ -79,7 +80,7 @@ def ping_server():
         res.connection.close()
     except Exception as e:
         print(e)
-        result = ""
+        result = None
     return result
 
 # TODO: nur Test, noch rausnehmen
@@ -104,6 +105,10 @@ def check_server(server=True):
         if response == last_response:
             print('i do nothing', execute_thread, command_threads)
             continue
+        if not response:
+            logger.error('No response')
+            continue
+
         print(response)
         last_response = response
         data = json.loads(response)
