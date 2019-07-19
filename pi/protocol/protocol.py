@@ -22,4 +22,4 @@ class Protocol(ABC):
 
     @staticmethod
     def wait(**kwargs):
-        sleep(sleep_time)
+        sleep(kwargs['sleep_time'])

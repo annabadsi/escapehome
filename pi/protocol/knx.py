@@ -3,6 +3,8 @@ import ast
 
 from .protocol import Protocol
 
+import logging
+logger = logging.getLogger(__name__)
 
 class KNX(Protocol):
     """
@@ -17,20 +19,27 @@ class KNX(Protocol):
         # TODO: anpassen
         print(device, action)
         try:
+            if not action['function']:
+                action['function'] = ""
             fun = getattr(KNX, action['function'])
-            fun(action['parameters'])
-        except Exception:
+            print('parameter', action['parameters'], type(action['parameters']))
+            print(fun)
+            fun(**eval(action['parameters']))
+        except Exception as e:
             print("execute without function")
-            # TODO: **eval(action['parameters'])
             KNX.send(
-                ast.literal_eval(action['parameters'])['value'],
-                address=device
+                device, 
+                **eval(action['parameters'])
             )
-        # KNX.execute(value, address)
 
     @staticmethod
-    def send(*value, **address):
-        print(f"knxtool groupswrite ip:localhost {address['address']} {value[0]}")
-        res = os.system("knxtool groupswrite ip:localhost {address} {value}".format(address=address['address'],value=value[0]))
+    def send(address, value):
+        print(type(value), value,type(address), address)
+        if type(value) == list:
+            value = value[0]
+        command = "knxtool groupswrite ip:localhost {address} {value}".format(address=address, value=value)
+        logger.debug('KNX command:', command)
+        res = os.system(command)
         if res:
+            logger.error('KNX Command return ', res)
             raise Exception("There was an error on KNX execution")

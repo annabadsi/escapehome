@@ -91,42 +91,47 @@ def check_server(server=True):
     global execute_thread
     global command_threads
     global last_response
-    if server:
-        response = ping_server()
-    else:
-        response = ping_file()
-    if response == last_response:
-        print('i do nothing', execute_thread, command_threads)
-        return
-    last_response = response
-    data = json.loads(response)
-    if data:
-        try:
+    while True:
+        if server:
+            response = ping_server()
+        else:
+            response = ping_file()
+        if response == last_response:
+            print('i do nothing', execute_thread, command_threads)
+            return
+        last_response = response
+        data = json.loads(response)
+        if data:
+            try:
+                # stop currcent thread
+                if execute_thread:
+                    execute_thread.join()
+
+                if command_threads:
+                    for cth in command_threads:
+                        cth.join()
+                    command_threads = []
+                # execute steps in thread
+                execute_thread = Thread(
+                        target=execute_commands,
+                        args=(data['meta']['loop'], data['commands'])
+                    )
+                print('!!', execute_thread)
+                execute_thread.start()
+                print('&&', execute_thread)
+
+            except Exception as e:
+                print("Error in json")
+                print(e)
+        else:
             # stop currcent thread
             if execute_thread:
                 execute_thread.join()
-            
-            if command_threads: 
-                for cth in command_threads: 
+
+            if command_threads:
+                for cth in command_threads:
                     cth.join()
                 command_threads = []
-            # execute steps in thread
-            execute_thread = Thread(
-                    target=execute_commands,
-                    args=(data['meta']['loop'], data['commands'])
-                )
-            print('!!', execute_thread)
-            execute_thread.start()
-            print('&&', execute_thread)
-            
-        except Exception as e:
-            print("Error in json")
-            print(e)
-    else:
-        # stop currcent thread 
-        if execute_threads:
-            for execute_thread in execute_threads:
-                execute_thread.join()
 
 
 # TODO: wait_time wird hier wohl nicht verwendet!
@@ -152,10 +157,18 @@ if __name__ == "__main__":
         BOX_MOTOR_ID = config['DEFAULT']['BOX_MOTOR_ID']
      
     wait_time = 5
-    while True:
-       try:
-           #check_box()
-           check_server(False)
-       except Exception as e:
-           print(e)
-       sleep(wait_time)
+    check_box_thread = Thread(
+                    target=check_server,
+                    args=(False,)
+                )
+    check_box_thread.start()
+    while check_box_thread:
+        pass
+
+    #while True:
+    #   try:
+    #       #check_box()
+    #       check_server(False)
+     #  except Exception as e:
+     #      print(e)
+
