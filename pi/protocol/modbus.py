@@ -40,10 +40,9 @@ class Modbus(Protocol):
         logger.debug('send method with device: {device} and value = {value}',device=str(device), value=str(value))
 
         try:
-            device_address = value['box_device']
             client = ModbusTcpClient(BOX_IP, port=502, timeout=10)
             client.write_coil(device[0], value['value'])
-            result = client.read_coils(device_address, 1)
+            result = client.read_coils(device[0], 1)
             logger.debug(result)
             client.close()
         except RuntimeError as err:
