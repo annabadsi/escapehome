@@ -86,8 +86,7 @@ def pose_riddle_request(handler_input, minus_points, quit_minus_points):
         ).set_card(
             SimpleCard(
                 f'{counter + 1}. Rästel',
-                f'Deine Antwort für die Frage: {riddle.task} lautete "{answer}"\n\n.'
-                f'{BeautifulSoup(speech_text, features="html.parser").text}'
+                BeautifulSoup(speech_text, features="html.parser").text
             )
         ).set_should_end_session(
             set_should_end_session
