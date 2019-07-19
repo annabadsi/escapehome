@@ -3,7 +3,7 @@
     "apis": {
       "custom": {
         "endpoint": {
-          "uri": "https://85527d0c.ngrok.io/alexa/",
+          "uri": "https://homeescape.pythonanywhere.com/alexa/",
           "sslCertificateType": "Wildcard"
         },
         "interfaces": []

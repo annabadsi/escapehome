@@ -140,17 +140,47 @@
           "values": [
             {
               "name": {
-                "value": "Gefangen in Hogwarts"
+                "value": "gefangen in hogwarts"
               }
             },
             {
               "name": {
-                "value": "Harry Potter"
+                "value": "harry potter"
               }
             },
             {
               "name": {
-                "value": "Hogwarts"
+                "value": "hogwarts"
+              }
+            },
+            {
+              "name": {
+                "value": "scherz fragen"
+              }
+            },
+            {
+              "name": {
+                "value": "fragen"
+              }
+            },
+            {
+              "name": {
+                "value": "lustig"
+              }
+            },
+            {
+              "name": {
+                "value": "scherz"
+              }
+            },
+            {
+              "name": {
+                "value": "funny"
+              }
+            },
+            {
+              "name": {
+                "value": "harry Potter"
               }
             }
           ],
@@ -196,6 +226,81 @@
             {
               "name": {
                 "value": "Alohomora"
+              }
+            },
+            {
+              "name": {
+                "value": "Stock"
+              }
+            },
+            {
+              "name": {
+                "value": "Dein Kopfkissen."
+              }
+            },
+            {
+              "name": {
+                "value": "Sie kriegen sich in die Wolle"
+              }
+            },
+            {
+              "name": {
+                "value": "in die Wolle kriegen"
+              }
+            },
+            {
+              "name": {
+                "value": "Dein Kopfkissen"
+              }
+            },
+            {
+              "name": {
+                "value": "das Kopfkissen"
+              }
+            },
+            {
+              "name": {
+                "value": "Kopfkissen"
+              }
+            },
+            {
+              "name": {
+                "value": "das d"
+              }
+            },
+            {
+              "name": {
+                "value": "das m"
+              }
+            },
+            {
+              "name": {
+                "value": "der buchstabe d"
+              }
+            },
+            {
+              "name": {
+                "value": "der buchstabe m"
+              }
+            },
+            {
+              "name": {
+                "value": "der erste buchstabe"
+              }
+            },
+            {
+              "name": {
+                "value": "kriegen sich in die wolle"
+              }
+            },
+            {
+              "name": {
+                "value": "sich in die Wolle kriegen"
+              }
+            },
+            {
+              "name": {
+                "value": "Kissen"
               }
             }
           ],
@@ -282,5 +387,5 @@
       }
     ]
   },
-  "version": "5"
+  "version": "9"
 }

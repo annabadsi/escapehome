@@ -1,3 +1,7 @@
 {% block content %}
-    <p>{{ riddle.hints | safe }}</p>
+    {% if hint %}
+        <p>{{ hint | safe }}</p>
+    {% else %}
+        <p>Dabei kann ich dir leider auch nicht helfen.</p>
+    {% endif %}
 {% endblock %}

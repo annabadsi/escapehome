@@ -1,9 +1,7 @@
 import logging
-
 from ask_sdk_core.skill_builder import SkillBuilder
 from ask_sdk_core.utils import is_request_type, is_intent_name
 from ask_sdk_model import DialogState
-
 from alexa.request_handler.intents.choose_scenario import choose_sceanrio_request, in_progress_choose_sceanrio_request
 from alexa.request_handler.intents.close_box_start_game import close_box_start_game_request
 from alexa.request_handler.buildin.cancel_and_stop import cancel_and_stop_request
@@ -74,11 +72,15 @@ def fallback_handler(handler_input):
     return fallback_request(handler_input, MINUS_POINTS, QUIT_MINUS_POINTS)
 
 
+@sb.request_handler(can_handle_func=lambda i: True)
+def catch_all(handler_input):
+    # is executed if no suitable request handler was found.
+    return fallback_request(handler_input, MINUS_POINTS, QUIT_MINUS_POINTS)
+
+
 @sb.request_handler(can_handle_func=is_request_type("SessionEndedRequest"))
 def session_ended_request_handler(handler_input):
     """Handler for Session End."""
-    # TODO: do something (tritt zB. auf wenn handler methode nicht gefunden wird)
-    print("SESSION ENDED method called")
     return handler_input.response_builder.response
 
 
@@ -87,6 +89,5 @@ def all_exception_handler(handler_input, exception):
     """Catch all exception handler, log exception and respond with custom message."""
     return exception_request(handler_input, exception, logger)
 
-# TODO: Fehler falls Wort nicht verstanden?? ask_sdk_runtime.exceptions.DispatchException: Unable to find a suitable request handler
 
 skill = sb.create()

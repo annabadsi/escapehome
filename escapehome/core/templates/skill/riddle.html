@@ -6,6 +6,7 @@
             <p>Super, du hast alle Rätsel richtig beantwortet!</p>
             <p>Die Box öffnet sich nun wieder, damit du den Schlüssel entnehmen kannst. Jetzt bist du frei!</p>
             <p>Du hast {{ score }} von {{ scenario.possible_points }} möglichen Punkten erreicht.</p>
+            <p>Dafür hast du insgesamt {{ duration | floatformat:0 }} Minuten gebraucht.</p>
         {% else %}
             <p>{{ riddle.correct | safe }}</p>
             <break time="2s"/>

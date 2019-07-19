@@ -1,3 +1,5 @@
+import datetime
+
 from ask_sdk_model.ui import SimpleCard
 from bs4 import BeautifulSoup
 from django.template.loader import get_template
@@ -22,6 +24,7 @@ def pose_riddle_request(handler_input, minus_points, quit_minus_points):
         slots = handler_input.request_envelope.request.intent.slots
         set_should_end_session = False
         next_riddle = None
+        duration = None
 
         # slots
         answer = slots.get("answer").value if slots.get("answer").value else slots.get("number").value
@@ -33,17 +36,26 @@ def pose_riddle_request(handler_input, minus_points, quit_minus_points):
         score = session_attributes['score']
 
         if answer in riddle.solution.lower().split(', '):
-            # Richtige Antwort
+            # Reset hint counter if answer correct
+            session_attributes['hint_counter'] = 0
+            # Set next Riddle
             counter += 1
+            # Add points to the score
             score += riddle.points
+
             if counter == scenario.riddles.count():
-                # Gewonnen: alle Rätsel beantwortet
+                # Won: all puzzles answered
                 set_should_end_session = True
 
-                # TODO: active sceanario in history speichern
                 user = handler_input.request_envelope.context.system.user.user_id
-                ActiveScenario.objects.get(user=user).delete()
                 box_command_to_json(Command.objects.get(name='modbus box öffnen'), user)
+
+                start_time = datetime.datetime.strptime(session_attributes.get('start_time'), '%Y-%m-%d %H:%M:%S.%f')
+                now = datetime.datetime.now()
+
+                duration = (active_scenario.duration + (now - start_time)).seconds / 60
+
+                active_scenario.delete()
             else:
                 # Gehe zum nächsten Rätsel
                 next_riddle = scenario.riddles.order_by('orderedriddle')[counter]
@@ -51,7 +63,7 @@ def pose_riddle_request(handler_input, minus_points, quit_minus_points):
 
                 session_attributes['riddle'] = next_riddle.id
         else:
-            # Falsche Antwort
+            # Wrong answer
             score += minus_points
 
         speech_text = get_template('skill/riddle.html').render(
@@ -61,6 +73,7 @@ def pose_riddle_request(handler_input, minus_points, quit_minus_points):
                 'scenario': scenario,
                 'riddle': riddle,
                 'next_riddle': next_riddle,
+                'duration': duration,
                 'correct': answer in riddle.solution.lower().split(', '),
             }
         )

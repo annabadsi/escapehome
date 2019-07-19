@@ -1,3 +1,5 @@
+import datetime
+
 from ask_sdk_model.ui import SimpleCard
 from bs4 import BeautifulSoup
 from django.template.loader import get_template
@@ -13,6 +15,10 @@ def launch_request(handler_input):
     active_scenario, created = ActiveScenario.objects.get_or_create(user=user)
 
     session_attributes['box'] = True
+    session_attributes['start_time'] = datetime.datetime.strftime(
+        handler_input.request_envelope.request.timestamp,
+        '%Y-%m-%d %H:%M:%S.%f'
+    )
 
     # new game
     if created or not active_scenario.scenario:
@@ -31,6 +37,13 @@ def launch_request(handler_input):
             {'active_scenario': active_scenario}
         )
 
-    # TODO Simple Card wieder einfügen?
-    handler_input.response_builder.speak(speech_text).ask(speech_text)
-    return handler_input.response_builder.response
+    return handler_input.response_builder.speak(
+        speech_text
+    ).set_card(
+        SimpleCard(
+            f'Willkommen zu Escape Home',
+            BeautifulSoup(speech_text, features="html.parser").text
+        )
+    ).set_should_end_session(
+        False
+    ).response
