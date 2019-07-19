@@ -33,7 +33,7 @@ class Modbus(Protocol):
         This function writes a new value to a device of the given ip address.
         The value has to be a boolean. For example: True, to open the box by the motor (False -> close the box).
         """
-        logger.debug('send method with device: {device} and value = {value}', device=str(device), value=str(value))
+        logger.debug('send method with device: {device} and value = {value}'.format(device=str(device), value=str(value)))
 
         try:
             client = ModbusTcpClient(BOX_IP, port=502, timeout=10)
