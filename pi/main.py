@@ -3,7 +3,6 @@ from time import sleep
 import os
 import json
 from threading import Thread
-# TODO: Wird bei mir rot makiert "no modul named protocol"
 import protocol as p
 import ast
 import configparser
@@ -19,6 +18,7 @@ command_threads = []
 
 wait_time = 0.5
 last_response = None
+user_id = None
 
 
 def update_devices():
@@ -55,7 +55,7 @@ def execute_commands(loops, args):
     for _ in range(loops):
         print('in the loop')
         for command in args:
-            devices = ast.literal_eval(command['device'])
+            devices = ast.literal_eval(command['devices'])
             for device in devices:
                 print(device)
                 # execute steps for each device
@@ -91,6 +91,7 @@ def check_server(server=True):
     global execute_thread
     global command_threads
     global last_response
+    global user_id
     while True:
         if server:
             response = ping_server()
@@ -111,6 +112,8 @@ def check_server(server=True):
                     for cth in command_threads:
                         cth.join()
                     command_threads = []
+                if not user_id:
+                    user_id = data['meta']['user_id']
                 # execute steps in thread
                 execute_thread = Thread(
                         target=execute_commands,

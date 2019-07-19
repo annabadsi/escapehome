@@ -1,10 +1,12 @@
 {
     "meta": {
-        "loop": 2
+        "loop": 2,
+        "user_id": "amzn1.ask.account.AGA5INXGWTSQGE5C6APHLEWVKMLSP3E35BO6XZ4IBXROCS5G2WJUM47DOKFQYP66RCCCYFYJ33JKLKFNSBMRR27HP46VKUZX6MMW6BLNWXT3T7LWE5KWL7JJ4Q6YFAT5T3OONJ4MXO7BEOPRIDCWNDKAAYKS4PNS5ZHPMHNNXLFN4ZOYWGSSUSRHVXTO5JTOBQGF43AOSFGV2IA"
+
     },
     "commands": [
       {
-        "device": "[1]",
+        "devices": "[1]",
         "protocol": "PHue",
         "actions": [
               {
@@ -32,7 +34,7 @@
                 "parameters": "{}"
               }]
       },{
-        "device": "['0/0/3']",
+        "devices": "['0/0/3']",
         "protocol": "KNX",
         "actions": [
               {
@@ -60,7 +62,7 @@
                 "parameters": "{'value': 0}"
               }]
       },{
-        "device": "['192.168.43.151']",
+        "devices": "['192.168.43.151']",
         "protocol": "Modbus",
         "actions": [
               {
