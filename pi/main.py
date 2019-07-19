@@ -73,7 +73,7 @@ def execute_commands(loops, args):
 
 
 def ping_server():
-    res = requests.post(API_URL, timeout=2)
+    res = requests.post(API_URL, timeout=5)
     result = res.text
     res.connection.close()
     return result
@@ -164,7 +164,7 @@ if __name__ == "__main__":
     wait_time = 5
     check_box_thread = Thread(
                     target=check_server,
-                    args=(False,)
+                    args=()
                 )
     check_box_thread.start()
     while check_box_thread:
