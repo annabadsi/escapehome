@@ -56,7 +56,7 @@ def execute_commands(loops, args):
     for _ in range(loops):
         print('in the loop')
         for command in args:
-            devices = ast.literal_eval(command['devices'])
+            devices = command['devices']
             for device in devices:
                 print(device)
                 # execute steps for each device
@@ -77,6 +77,7 @@ def ping_server():
     try:
         res = requests.post(API_URL, timeout=5)
         result = res.text
+        logger.debug(result)
         res.connection.close()
     except Exception as e:
         print(e)
