@@ -35,7 +35,7 @@ def cancel_and_stop_request(handler_input, quit_minus_points):
         active_scenario.players = session_attributes.get('players', 0)
         active_scenario.state = session_attributes.get('counter', 0)
         active_scenario.score = session_attributes.get('score', 0) + quit_minus_points
-        active_scenario.duration += (now - start_time)
+        active_scenario.duration = session_attributes.get('duration', 0) + (now - start_time)
         active_scenario.save()
 
     speech_text = get_template('skill/cancel_and_stop.html').render({'ingame': in_game})

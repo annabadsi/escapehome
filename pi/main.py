@@ -112,7 +112,7 @@ def check_server(server=True):
         else:
             response = ping_file()
         if response == last_response:
-            logger.debug('i do nothing', execute_thread, command_threads)
+            logger.debug('i do nothing')
             continue
         if not response:
             logger.error('No response')
