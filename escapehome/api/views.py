@@ -29,13 +29,13 @@ def cancel(request):
     serializer = CancelSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
 
-    exit_game = serializer.validated_data['exit_game']
+    box_status_open = serializer.validated_data['exit_game']
     user = serializer.validated_data['user']
 
-    if exit_game:
-        active_scenario = ActiveScenario.objects.get(user=user)
-        active_scenario.box = True
-        active_scenario.save()
+    #if exit_game:
+    active_scenario = ActiveScenario.objects.get(user=user)
+    active_scenario.box = box_status_open
+    active_scenario.save()
 
     return Response(status=200, data=None)
 
