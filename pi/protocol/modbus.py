@@ -50,14 +50,14 @@ class Modbus(Protocol):
             logger.debug(err)
 
     @staticmethod
-    def read(ip_address, device_address):
+    def read(device_address=2):
         """
         This function reads the state of a device at the given address.
         For example: True, if the box is opened (False -> if the box is closed).
         """
 
         try:
-            client = ModbusTcpClient(ip_address, port=502, timeout=10)
+            client = ModbusTcpClient(BOX_IP, port=502, timeout=10)
             result = client.read_coils(device_address, 1)
             logger.debug(result)
             client.close()

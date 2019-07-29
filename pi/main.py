@@ -9,7 +9,6 @@ import logging
 
 API_URL = "https://homeescape.pythonanywhere.com/api/commands/"
 API_RESPONSE_URL = "https://homeescape.pythonanywhere.com/api/cancel/"
-BOX_IP = None
 BOX_MOTOR_ID = None
 
 devices = {}
@@ -167,7 +166,7 @@ def check_box(sleep_time=2):
     global user_id
 
     while True:
-        if p.Modbus.read(BOX_IP, BOX_MOTOR_ID):
+        if p.Modbus.read():
             # TODO: user_id fehlt!
             res = requests.post(API_RESPONSE_URL, json={"exit_game": True, 'user_id': user_id})
             logger.debug(res.__dict__)
@@ -179,11 +178,11 @@ if __name__ == "__main__":
     # c_th = threading.Thread(target=check_box, args=())
 
     # make configurations
-    config = configparser.ConfigParser()
-    if not BOX_IP or not BOX_MOTOR_ID:
-        f = config.read("conf/modbus.conf")
-        BOX_IP = config['DEFAULT']['IP_ADDRESS']
-        BOX_MOTOR_ID = config['DEFAULT']['BOX_MOTOR_ID']
+    #config = configparser.ConfigParser()
+    #if not BOX_IP or not BOX_MOTOR_ID:
+    #    f = config.read("conf/modbus.conf")
+    #    BOX_IP = config['DEFAULT']['IP_ADDRESS']
+    #    BOX_MOTOR_ID = config['DEFAULT']['BOX_MOTOR_ID']
 
     wait_time = 5
     check_server_thread = Thread(
