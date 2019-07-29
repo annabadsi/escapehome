@@ -168,7 +168,7 @@ def check_box(sleep_time=2):
     while True:
         if p.Modbus.read():
             # TODO: user_id fehlt!
-            res = requests.post(API_RESPONSE_URL, json={"exit_game": True, 'user_id': user_id})
+            res = requests.post(API_RESPONSE_URL, json={"exit_game": True, 'user': user_id})
             logger.debug(res.__dict__)
         sleep(sleep_time)
 
