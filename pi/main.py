@@ -160,14 +160,18 @@ def check_server(server=True):
 
 
 # TODO: wait_time wird hier wohl nicht verwendet!
-def check_box(wait_time=5):
+def check_box(sleep_time=2):
     """
     Check the Box if the user opens it
     """
-    if p.Modbus.read(BOX_IP, BOX_MOTOR_ID):
-        # TODO: user_id fehlt!
-        res = requests.post(API_RESPONSE_URL, json={"exit_game": True})
-        exit(0)
+    global user_id
+
+    while True:
+        if p.Modbus.read(BOX_IP, BOX_MOTOR_ID):
+            # TODO: user_id fehlt!
+            res = requests.post(API_RESPONSE_URL, json={"exit_game": True, 'user_id': user_id})
+            logger.debug(res.__dict__)
+        sleep(sleep_time)
 
 
 if __name__ == "__main__":
@@ -182,12 +186,17 @@ if __name__ == "__main__":
         BOX_MOTOR_ID = config['DEFAULT']['BOX_MOTOR_ID']
 
     wait_time = 5
-    check_box_thread = Thread(
+    check_server_thread = Thread(
         target=check_server,
         args=()
     )
+    check_box_thread = Thread(
+        target=check_box,
+        args=()
+    )
+    check_server_thread.start()
     check_box_thread.start()
-    while check_box_thread:
+    while check_server_thread:
         pass
 
     # while True:

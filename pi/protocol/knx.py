@@ -63,10 +63,33 @@ class KNX(Protocol):
             logger.error('KNX Command return ', res)
             raise Exception("There was an error on KNX execution")
 
-
     @staticmethod
     def jalousie_reset(device):
+        # hack to make jalousie drive
+        KNX.send('3/2/1', 0)
+        KNX.send('3/2/2', 0)
+        KNX.send('3/2/3', 0)
+
         KNX.send(device, 0)
         sleep(65)
+
+    @staticmethod
+    def jalousie_percent(device, percent, up):
+        # hack to make jalousie drive
+        KNX.send('3/2/1', 0)
+        KNX.send('3/2/2', 0)
+        KNX.send('3/2/3', 0)
+        # send up as int (1 up 0 down)
+        KNX.send(device, int(up))
+        sleep((63/100)*percent)
+        # send stop signal
+        KNX.send(device, int(not up))
+
+
+
+
+
+
+
 
 
