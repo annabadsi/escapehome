@@ -4,7 +4,6 @@ import os
 import json
 from threading import Thread
 import protocol as p
-import ast
 import configparser
 import logging
 
@@ -75,7 +74,7 @@ def execute_commands(loops, args):
                 )
                 command_threads.append(th)
                 th.start()
-            for cth in command_threads: 
+            for cth in command_threads:
                 cth.join()
 
 
@@ -137,9 +136,9 @@ def check_server(server=True):
                     user_id = data['meta']['user_id']
                 # execute steps in thread
                 execute_thread = Thread(
-                        target=execute_commands,
-                        args=(data['meta']['loop'], data['commands'])
-                    )
+                    target=execute_commands,
+                    args=(data['meta']['loop'], data['commands'])
+                )
                 print('!!', execute_thread)
                 execute_thread.start()
                 print('&&', execute_thread)
@@ -156,6 +155,7 @@ def check_server(server=True):
                 for cth in command_threads:
                     cth.join()
                 command_threads = []
+    # TODO: unreachable code
     sleep(wait_time)
 
 
@@ -165,7 +165,7 @@ def check_box(wait_time=5):
     Check the Box if the user opens it
     """
     if p.Modbus.read(BOX_IP, BOX_MOTOR_ID):
-        # TODO: user_id fehlt
+        # TODO: user_id fehlt!
         res = requests.post(API_RESPONSE_URL, json={"exit_game": True})
         exit(0)
 
@@ -174,26 +174,25 @@ if __name__ == "__main__":
     # inital the protocols
     # c_th = threading.Thread(target=check_box, args=())
 
-    #make configurations
+    # make configurations
     config = configparser.ConfigParser()
-    if not BOX_IP or not BOX_MOTOR_ID: 
+    if not BOX_IP or not BOX_MOTOR_ID:
         f = config.read("conf/modbus.conf")
         BOX_IP = config['DEFAULT']['IP_ADDRESS']
         BOX_MOTOR_ID = config['DEFAULT']['BOX_MOTOR_ID']
-     
+
     wait_time = 5
     check_box_thread = Thread(
-                    target=check_server,
-                    args=()
-                )
+        target=check_server,
+        args=()
+    )
     check_box_thread.start()
     while check_box_thread:
         pass
 
-    #while True:
+    # while True:
     #   try:
     #       #check_box()
     #       check_server(False)
-     #  except Exception as e:
-     #      print(e)
-
+    #  except Exception as e:
+    #      print(e)
