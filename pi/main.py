@@ -166,10 +166,12 @@ def check_box(sleep_time=2):
     global user_id
 
     while True:
-        if p.Modbus.read():
-            # TODO: user_id fehlt!
-            res = requests.post(API_RESPONSE_URL, json={"exit_game": True, 'user': user_id})
+        # TODO: user_id fehlt!
+        try:
+            res = requests.post(API_RESPONSE_URL, json={"exit_game": bool(p.Modbus.read()), 'user': user_id})
             logger.debug(res.__dict__)
+        except Exception as e:
+            logger.error(e)
         sleep(sleep_time)
 
 
