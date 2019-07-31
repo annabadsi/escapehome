@@ -158,18 +158,22 @@ def check_server(server=True):
     sleep(wait_time)
 
 
-# TODO: wait_time wird hier wohl nicht verwendet!
 def check_box(sleep_time=2):
     """
     Check the Box if the user opens it
+    If the status of the Box changed, the Server will be informed
     """
     global user_id
+    prev_box_status = None
 
     while True:
-        # TODO: user_id fehlt!
         try:
-            res = requests.post(API_RESPONSE_URL, json={"exit_game": bool(p.Modbus.read()), 'user': user_id})
-            logger.debug(res.__dict__)
+            current_modbus_status = p.Modbus.read()
+            if user_id and current_modbus_status != prev_box_status:
+                # check if the user_id is set
+                # only do something if the status of the box changed
+                res = requests.post(API_RESPONSE_URL, json={"exit_game": bool(current_modbus_status), 'user': user_id})
+                logger.debug(res.__dict__)
         except Exception as e:
             logger.error(e)
         sleep(sleep_time)
