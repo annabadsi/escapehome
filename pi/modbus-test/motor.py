@@ -2,7 +2,7 @@ from pymodbus.client.sync import ModbusTcpClient
 import logging
 import time
 
-IP_ADDRESS = '192.168.137.72'
+IP_ADDRESS = '192.168.43.151'
 MOTOR_ADDRESS = 1
 MAGNET_ADDRESS = 2
 

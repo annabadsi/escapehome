@@ -53,7 +53,9 @@ class KNX(Protocol):
 
     @staticmethod
     def send(address, value):
+        logger.info("send of KNX")
         print(type(value), value, type(address), address)
+        logger.debug("{value} - {address}".format(value=value, address=address))
         if type(value) == list:
             value = value[0]
         command = "knxtool groupswrite ip:localhost {address} {value}".format(address=address, value=value)
@@ -80,10 +82,10 @@ class KNX(Protocol):
         KNX.send('3/2/2', 0)
         KNX.send('3/2/3', 0)
         # send up as int (1 up 0 down)
-        KNX.send(device, int(up))
+        KNX.send(device, str(int(not up)))
         sleep((63/100)*percent)
         # send stop signal
-        KNX.send(device, int(not up))
+        KNX.send(device, int(up))
 
 
 

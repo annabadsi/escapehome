@@ -15,7 +15,7 @@ logger.setLevel(logging.DEBUG)
 
 config = configparser.ConfigParser()
 f = config.read("conf/modbus.conf")
-BOX_IP = '192.168.43.152'
+BOX_IP = '192.168.43.151'
 
 
 class Modbus(Protocol):
