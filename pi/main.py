@@ -174,6 +174,7 @@ def check_box(sleep_time=2):
                 # only do something if the status of the box changed
                 res = requests.post(API_RESPONSE_URL, json={"exit_game": bool(current_modbus_status), 'user': user_id})
                 logger.debug(res.__dict__)
+                prev_box_status = current_modbus_status
         except Exception as e:
             logger.error(e)
         sleep(sleep_time)
