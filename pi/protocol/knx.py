@@ -72,7 +72,7 @@ class KNX(Protocol):
         KNX.send('3/2/2', 0)
         KNX.send('3/2/3', 0)
 
-        KNX.send(device, 0)
+        KNX.send(device, 1)
         sleep(65)
 
     @staticmethod
