@@ -43,7 +43,16 @@ def choose_sceanrio_request(handler_input, minus_points, quit_minus_points):
     if not session_attributes.get('box') and active_scenario.box:
         return cancel_and_stop_request(handler_input, quit_minus_points)
 
-    session_attributes['players'] = int(slots.get('players').value) if slots.get('players') else 0
+    if slots.get('players'):
+        user_input = (slots.get('players').value)
+        try:
+            number_of_players = int(user_input)
+        except ValueError:
+            number_of_players = 0
+    else:
+        number_of_players = 0
+
+    session_attributes['players'] = number_of_players
 
     # if scenario set in session
     if not session_attributes.get('scenario'):
