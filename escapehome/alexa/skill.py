@@ -85,9 +85,6 @@ def catch_all(handler_input):
 @sb.request_handler(can_handle_func=is_request_type("SessionEndedRequest"))
 def session_ended_request_handler(handler_input):
     """Handler for Session End."""
-    file_path = f"{settings.PROJECT_DIR}/escapehome/api/resources/protocol_commands.json"
-    if os.path.exists(file_path):
-        os.remove(file_path)
     return handler_input.response_builder.response
 
 
