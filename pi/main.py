@@ -73,8 +73,8 @@ def execute_commands(loops, args):
                 )
                 command_threads.append(th)
                 th.start()
-            for cth in command_threads:
-                cth.join()
+        for cth in command_threads:
+            cth.join()
 
 
 def ping_server():
