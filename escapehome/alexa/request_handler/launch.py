@@ -11,7 +11,9 @@ from escapehome import settings
 
 def launch_request(handler_input):
     """Handler for Skill Launch."""
-    os.remove(f"{settings.PROJECT_DIR}/escapehome/api/resources/protocol_commands.json")
+    file_path = f"{settings.PROJECT_DIR}/escapehome/api/resources/protocol_commands.json"
+    if os.path.exists(file_path):
+        os.remove(file_path)
 
     session_attributes = handler_input.attributes_manager.session_attributes
 

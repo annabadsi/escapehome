@@ -42,7 +42,9 @@ def cancel_and_stop_request(handler_input, quit_minus_points):
 
     speech_text = get_template('skill/cancel_and_stop.html').render({'ingame': in_game})
 
-    os.remove(f"{settings.PROJECT_DIR}/escapehome/api/resources/protocol_commands.json")
+    file_path = f"{settings.PROJECT_DIR}/escapehome/api/resources/protocol_commands.json"
+    if os.path.exists(file_path):
+        os.remove(file_path)
 
     return handler_input.response_builder.speak(
         speech_text
