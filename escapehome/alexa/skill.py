@@ -1,15 +1,19 @@
 import logging
+import os
+
 from ask_sdk_core.skill_builder import SkillBuilder
 from ask_sdk_core.utils import is_request_type, is_intent_name
 from ask_sdk_model import DialogState
-from alexa.request_handler.intents.choose_scenario import choose_sceanrio_request, in_progress_choose_sceanrio_request
-from alexa.request_handler.intents.close_box_start_game import close_box_start_game_request
+
 from alexa.request_handler.buildin.cancel_and_stop import cancel_and_stop_request
 from alexa.request_handler.buildin.exception import exception_request
 from alexa.request_handler.buildin.fallback import fallback_request
 from alexa.request_handler.buildin.help import help_request
-from alexa.request_handler.launch import launch_request
+from alexa.request_handler.intents.choose_scenario import choose_sceanrio_request, in_progress_choose_sceanrio_request
+from alexa.request_handler.intents.close_box_start_game import close_box_start_game_request
 from alexa.request_handler.intents.pose_riddle import pose_riddle_request
+from alexa.request_handler.launch import launch_request
+from escapehome import settings
 
 sb = SkillBuilder()
 
@@ -81,6 +85,7 @@ def catch_all(handler_input):
 @sb.request_handler(can_handle_func=is_request_type("SessionEndedRequest"))
 def session_ended_request_handler(handler_input):
     """Handler for Session End."""
+    os.remove(f"{settings.PROJECT_DIR}/escapehome/api/resources/protocol_commands.json")
     return handler_input.response_builder.response
 
 

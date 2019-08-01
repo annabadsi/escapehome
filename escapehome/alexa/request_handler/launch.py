@@ -1,14 +1,18 @@
 import datetime
+import os
 
 from ask_sdk_model.ui import SimpleCard
 from bs4 import BeautifulSoup
 from django.template.loader import get_template
 
 from core.models import Scenario, ActiveScenario
+from escapehome import settings
 
 
 def launch_request(handler_input):
     """Handler for Skill Launch."""
+    os.remove(f"{settings.PROJECT_DIR}/escapehome/api/resources/protocol_commands.json")
+
     session_attributes = handler_input.attributes_manager.session_attributes
 
     user = handler_input.request_envelope.context.system.user.user_id
