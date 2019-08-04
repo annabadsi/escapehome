@@ -28,7 +28,21 @@ The main.py is for the main connection to the pyhtonanywhere server and controll
 
 ##Protocols
 ###KNX
+For the KNX world you need a Modul at the Raspberry Pi to connect as an Actor 
+The execute only sends an value to a given Group e.g
+
+```
+0/0/1 1 
+```
+
+In the background it sends the command to the System
+
+```
+knxtool groupswrite ip:localhost 0/0/1 1
+```
 
 
 ###PHue
+For the Philip Hue look at the official Documentation for Phillips Hue
 ###Modbus 
+At the modbus-test folder are two file for Testing the Modbus System

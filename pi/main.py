@@ -25,6 +25,10 @@ KILL_FLAG = False
 def update_devices():
     """
     update the devices dic and get new devices (if there are new)
+
+    This function is not used yet but the Idea is to send the possible Devices to the Webserver to make
+    configurations easy.
+
     """
     devices = {}
     # open devices
@@ -39,10 +43,23 @@ def update_devices():
 
 
 def get_protocol(protocol):
+    """
+    Look up for a given Protocol define at the Protocol Package.
+    String => Class
+    :param protocol:
+    :return:
+    """
     return getattr(p, protocol)
 
 
 def execute_actions(protocol, device, actions):
+    """
+    iterate through the actions and call the execute method at the Protocol class
+    :param protocol:
+    :param device:
+    :param actions:
+    :return:
+    """
     for action in actions:
         protocol.execute(device, action)
 
@@ -57,6 +74,7 @@ def execute_commands(loops, args):
     for _ in range(loops):
         logger.debug('in the loop')
         if KILL_FLAG:
+            # Kill the Thread from outer scope
             logger.debug('KILLED')
             break
         for command in args:
@@ -78,19 +96,28 @@ def execute_commands(loops, args):
 
 
 def ping_server():
+    """
+    get the data from the server
+    if no connection can be set the return is None
+    :return:
+    """
     try:
         res = requests.post(API_URL, timeout=5)
         result = res.text
         logger.debug(result)
         res.connection.close()
     except Exception as e:
-        print(e)
+        logger.error(e)
         result = None
     return result
 
 
-# TODO: nur Test, noch rausnehmen
 def ping_file():
+    """
+    Test function for Debugging without Server
+    ! DO NOT USE IN PRODUCTION ! (Because it won't work)
+    :return:
+    """
     dat = open("test/test.json").read()
     return dat
 
@@ -108,8 +135,10 @@ def check_server(server=True):
         if server:
             response = ping_server()
         else:
+            # only for debug issiue
             response = ping_file()
         if response == last_response:
+            # The response is already processed
             logger.debug('i do nothing')
             continue
         if not response:
@@ -123,7 +152,7 @@ def check_server(server=True):
             try:
                 # stop currcent thread
                 if execute_thread:
-                    KILL_FLAG = True
+                    KILL_FLAG = True  # soft kill :D
                     execute_thread.join()
                     KILL_FLAG = False
 
@@ -132,19 +161,18 @@ def check_server(server=True):
                         cth.join()
                     command_threads = []
                 if not user_id:
-                    user_id = data['meta']['user_id']
+                    user_id = data['meta']['user_id'] # userID given from alexa to identify the player
                 # execute steps in thread
                 execute_thread = Thread(
                     target=execute_commands,
                     args=(data['meta']['loop'], data['commands'])
                 )
-                print('!!', execute_thread)
+                logger.debug(execute_thread)
                 execute_thread.start()
-                print('&&', execute_thread)
 
             except Exception as e:
-                print("Error in json")
-                print(e)
+                logger.error("Error at json parser")
+                logger.error(e)
         else:
             # stop currcent thread
             if execute_thread:
@@ -154,8 +182,7 @@ def check_server(server=True):
                 for cth in command_threads:
                     cth.join()
                 command_threads = []
-    # TODO: unreachable code
-    sleep(wait_time)
+        sleep(wait_time)
 
 
 def check_box(sleep_time=2):
@@ -181,33 +208,23 @@ def check_box(sleep_time=2):
 
 
 if __name__ == "__main__":
-    # inital the protocols
-    # c_th = threading.Thread(target=check_box, args=())
 
-    # make configurations
-    #config = configparser.ConfigParser()
-    #if not BOX_IP or not BOX_MOTOR_ID:
-    #    f = config.read("conf/modbus.conf")
-    #    BOX_IP = config['DEFAULT']['IP_ADDRESS']
-    #    BOX_MOTOR_ID = config['DEFAULT']['BOX_MOTOR_ID']
-
-    wait_time = 5
+    # Thread for check data from Server
     check_server_thread = Thread(
         target=check_server,
         args=()
     )
+
+    # Thread for check if Box was open
     check_box_thread = Thread(
         target=check_box,
         args=()
     )
+
     check_server_thread.start()
     check_box_thread.start()
+
     while check_server_thread:
+        # do not terminate System while check server thread is processing
         pass
 
-    # while True:
-    #   try:
-    #       #check_box()
-    #       check_server(False)
-    #  except Exception as e:
-    #      print(e)
