@@ -113,6 +113,7 @@ ask api get-skill-status -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29
 ```
 
 ### Update Custom Slot Types
+Relevante Daten aus DB zu Alexa Slottypes kopieren  
 Beim ersten Mal für Authentifizierung: `ask init --no-browser`
 
 Daten von Alexa holen: (nur einmal zu Beginn)
@@ -124,29 +125,6 @@ Daten von Django zu Alexa übertragen:
 2. `make skill-status`
 
 
-## SMAPI
-Skill Management API
-https://developer.amazon.com/docs/smapi/smapi-overview.html
-
-**[get-skill](https://developer.amazon.com/docs/smapi/skill-operations.html#get-skill-information)**
-```
-GET  /v1/skills/{skillId}/stages/{stage}/manifest
-```
-
-**[get-model](https://developer.amazon.com/docs/smapi/interaction-model-operations.html#get-interaction-model)**
-```
-GET /v1/skills/{skillId}/stages/{stage}/interactionModel/locales/{locale}
-```
-
-**[update-model](https://developer.amazon.com/docs/smapi/interaction-model-operations.html#update-interaction-model)**
-```
-PUT /v1/skills/{skillId}/stages/{stage}/interactionModel/locales/{locale}
-```
-
-**[get-skill-status](https://developer.amazon.com/docs/smapi/skill-operations.html#get-skill-status)**
-```
-GET /v1/skills/{skillId}/status?resource={resource1}&resource={resource2}
-```
 
 # Locales Arbeiten mit Alexa
 __NGROK einrichten__

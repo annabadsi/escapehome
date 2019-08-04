@@ -26,8 +26,6 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'homeescape.pythonanywhere.com',
-    '*',
 ]
 
 # Application definition
@@ -77,27 +75,12 @@ WSGI_APPLICATION = 'escapehome.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-if os.environ.get('DJANGO_SETTINGS_MODULE') == 'escapehome.settings.pythonanywhere':
-    # pythonanywhere
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'homeescape$homeescape',
-            'USER': 'homeescape',
-            'PASSWORD': 'BzgU3t93qMQEBxdEEbTYRBv3',
-            'HOST': 'homeescape.mysql.pythonanywhere-services.com',
-            'PORT': '3306',
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
-else:
-    # local
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
