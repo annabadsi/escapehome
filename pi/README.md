@@ -8,7 +8,7 @@ For the PHue you need nothing special
 You have to install knxd on the raspberry pi. This takes a while !!!
 https://sarwiki.informatik.hu-berlin.de/KNXD_Tutorial
 ### Modbus
-TBD
+See [dependencies](/box/README.md#install-dependencies-on-raspberry-pi-of-box).
 
 # Quick start
 1. Checkout the Project on the Raspberry Pi 
