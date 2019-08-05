@@ -1,5 +1,4 @@
 import datetime
-import os
 
 from ask_sdk_model.ui import SimpleCard
 from bs4 import BeautifulSoup
@@ -7,7 +6,6 @@ from django.template.loader import get_template
 
 from api.views import box_command_to_json
 from core.models import Scenario, ActiveScenario, Command
-from escapehome import settings
 
 
 def cancel_and_stop_request(handler_input, quit_minus_points):

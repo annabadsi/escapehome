@@ -1,7 +1,29 @@
 # EscapeHome
-escape game for your own home with Smart Home devices
+Escape Room game for your own home with Smart Home devices. 
+Create your own scenario with your Smart Home devices to play with your friends at home! 
 
-## Pythonanywhere
+Alexa is used to communicate with the players. 
+An Alexa Skill was created for this purpose. 
+This skill receives instructions via our program, which was deployed on a pythonanywhere server. 
+A [Raspberry PI](/pi/README.md) is connected to the Smart Home devices and asks the server for new events. 
+If one occurs, it forwards the steps to the respective Smart Home devices. 
+Previously, ceiling lamps and blinds were connected via KNX, Philips Hue lamps via Zigbee and a box via Modbus. 
+This [box](/box/README.md) serves to lock the room key at the beginning of the game and release it again at the end. 
+
+# README Table of Contents
+
+- [Pythonanywhere](#pythonanywhere)    
+- [Installation](#installation)  
+- [Quick start](#quick-start)  
+- [Endpoints](#endpoints)  
+- [Alexa Skill Management](#alexa-skill-management)  
+- [Working locally with Alexa](#working-locally-with-alexa)  
+
+
+- [Box](/box/README.md)
+- [Raspberry PI](/pi/README.md)
+
+# Pythonanywhere
 We deploy at Pythonanywhere in a free account. That make sometimes some struggle. 
 Steps ToDo:
 1. start new bash console (console > oher: bash) 
@@ -13,7 +35,7 @@ Steps ToDo:
     ``` shell 
     export DJANGO_SETTINGS_MODULE=escapehome.settings.pythonanywhere
     ```
-4. aktuelle Daten holen:
+4. get current data:
     ```shell
     git pull
     ```
@@ -39,7 +61,7 @@ make run
 
 This can take a longer time so grab you a coffee ☕
 
-## local setup
+## Local setup
 If you do not want to use Docker you have to setup by your own
 
 1. create a virtual env and active 
@@ -112,30 +134,31 @@ ask api update-model -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29 -f 
 ask api get-skill-status -s amzn1.ask.skill.e5c0051e-6fcc-4c73-9a22-9487ee9b0d29
 ```
 
-### Update Custom Slot Types
-Relevante Daten aus DB zu Alexa Slottypes kopieren  
-Beim ersten Mal für Authentifizierung: `ask init --no-browser`
 
-Daten von Alexa holen: (nur einmal zu Beginn)
+### Update Custom Slot Types
+Copy Relevant Data from DB to Alexa Slot Types  
+The first time for authentication: `ask init --no-browser`
+
+Get data from alexa: (only once at the beginning)
 1. `make get-model`
 2. `make get-skill`
 
-Daten von Django zu Alexa übertragen:
+Transfer data from Django to Alexa:
 1. `make update-model`
 2. `make skill-status`
 
 
 
-# Locales Arbeiten mit Alexa
-__NGROK einrichten__
-* ngrok runterladen > https://ngrok.com/download
-* starten: `./ngrok http 8000`
-* generierte URL kopieren
-    * in Alexa Developer Console > Entpoints anpassen `https://<nummer>.ngrok.io/alexa/`, zweites Auswahlfeld beachten
-    * `<nummer>.ngrok.io` (ohne https) zu `ALLOWED_HOSTS` in settings `common.py` hinzufügen
-* Django starten (mit oder ohne Docker)
+# Working locally with Alexa
+__set up NGROK__
+* download ngrok > https://ngrok.com/download
+* start `./ngrok http 8000`
+* copy generated URL
+    * in Alexa Developer Console > customize endpoints `https://<nummer>.ngrok.io/alexa/`, note second checkbox
+    * add `<nummer>.ngrok.io` (without https) to `ALLOWED_HOSTS` in settings `common.py`
+* start Django (with or without Docker)
 
-__Daten aus dem Dump übertagen__
+__transfer data from the dump__
 * `python manage.py migrate`
 * `python manage.py shell` 
 * Enter the following in the shell
