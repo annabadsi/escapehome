@@ -1,7 +1,7 @@
 alabaster==0.7.12
 ansimarkup==1.4.0
 asn1crypto==0.24.0
-Babel==2.6.0
+Babel==2.9.1
 better-exceptions-fork==0.2.1.post6
 certifi==2018.11.29
 cffi==1.11.5
