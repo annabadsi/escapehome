@@ -1,5 +1,5 @@
 phue==1.1
 pymodbus==2.2.0
-Twisted==19.2.1
+Twisted==22.2.0
 requests==2.22.0
 rgbxy==0.5
